@@ -25,14 +25,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="@string/prompt_email"/>
+                android:hint="@string/prompt_email"
+                android:background="@color/white"
+            android:alpha="0.75" />
 
         <!-- Password Label -->
         <EditText android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="@string/prompt_password"/>
+                android:layout_marginTop="5dp"
+                android:hint="@string/prompt_password"
+                android:background="@color/white"
+            android:autoText="false"
+            android:alpha="0.75" />
 
         <!-- Button Label -->
         <Button
@@ -46,9 +52,9 @@
 
     </LinearLayout>
 
-    <ImageView android:src="@drawable/logo_fib"
+    <ImageView android:src="@drawable/logo"
         android:layout_width="wrap_content"
-        android:layout_height="72dp"
+        android:layout_height="82dp"
         android:layout_above="@+id/linearLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
