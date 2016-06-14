@@ -12,7 +12,7 @@
 
     <ImageView
         android:id="@+id/main_logo"
-        android:src="@drawable/logo_fib"
+        android:src="@drawable/logo"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
