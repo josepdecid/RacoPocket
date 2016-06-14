@@ -3,10 +3,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/background_fib"
+    android:background="@color/raco_blue"
     android:scaleType = "centerCrop">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,42 +21,61 @@
         android:layout_marginBottom="79dp">
 
         <!-- Email Label -->
-        <EditText android:id="@+id/input_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="@string/prompt_email"
-                android:background="@color/white"
-            android:alpha="0.75" />
 
         <!-- Password Label -->
-        <EditText android:id="@+id/input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:layout_marginTop="5dp"
-                android:hint="@string/prompt_password"
-                android:background="@color/white"
-            android:autoText="false"
-            android:alpha="0.75" />
 
         <!-- Button Label -->
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="@string/title_activity_login"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <ImageView android:src="@drawable/logo"
+    <ImageView
+        android:src="@drawable/logo"
         android:layout_width="wrap_content"
         android:layout_height="82dp"
-        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:id="@+id/imageView3" />
+
+    <ImageView
+        android:src="@drawable/ratlles_cap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0.5"
+        android:id="@+id/imageView2" />
+
+    <EditText
+        android:id="@+id/input_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="@string/prompt_email"
+        android:layout_below="@+id/imageView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="50dp" />
+        android:paddingLeft="10dp"
+        android:layout_margin="10dp" />
+
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/prompt_password"
+        android:layout_below="@+id/input_email"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="10dp"
+        android:layout_margin="10dp" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/title_activity_login"
+        android:layout_below="@+id/input_password"
+        android:layout_marginTop="32dp"
+        android:layout_margin="20dp"/>
+
 </RelativeLayout>
