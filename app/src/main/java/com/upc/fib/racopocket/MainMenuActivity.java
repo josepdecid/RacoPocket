@@ -1,9 +1,8 @@
 package com.upc.fib.racopocket;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,20 +70,27 @@ public class MainMenuActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Fragment newFragment;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_timetable) {
-
+            newFragment = new TimetableMainMenu();
         } else if (id == R.id.nav_notifications) {
-
+            newFragment = new NotificationsMainMenu();
         } else if (id == R.id.nav_schedule) {
-
+            newFragment = new ScheduleMainMenu();
         } else if (id == R.id.nav_class_availability) {
-
+            newFragment = new ClassAvailabilityMainMenu();
         } else if (id == R.id.nav_subject_info) {
+            newFragment = new SubjectInfoMainMenu();
+        } else newFragment = null;
 
-        } else if (id == R.id.nav_share) {
-
+        if (newFragment != null) {
+            transaction.replace(R.id.main_menu_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+        } else {
+            Toast.makeText(MainMenuActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
         }
+        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
