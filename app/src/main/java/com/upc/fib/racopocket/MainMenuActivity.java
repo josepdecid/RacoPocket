@@ -1,5 +1,6 @@
 package com.upc.fib.racopocket;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -70,7 +71,7 @@ public class MainMenuActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment newFragment;
+        Fragment newFragment = null;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_timetable) {
             newFragment = new TimetableMainMenu();
@@ -82,7 +83,25 @@ public class MainMenuActivity extends AppCompatActivity
             newFragment = new ClassAvailabilityMainMenu();
         } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
-        } else newFragment = null;
+        } else if (id == R.id.nav_settings) {
+            newFragment = new SettingsMainMenu();
+        } else if (id == R.id.nav_share) {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
+            String sAux = "\nLet me recommend you this application\n\n";
+            sAux = sAux + "https://play.google.com/store/\n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "choose one"));;
+        } else if (id == R.id.nav_about) {
+            newFragment = new AboutMainMenu();
+        } else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(MainMenuActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        }
 
         if (newFragment != null) {
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
