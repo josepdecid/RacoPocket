@@ -12,16 +12,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 public class SubjectInfoMainMenu extends Fragment
 {
     EditText subjectSelector;
+    Button buttonThread;
     TextView responseView;
     ProgressBar progressBar;
     static final String API_KEY = "2222347f-468e-4167-8fab-a4aefac3db46";
@@ -33,65 +27,71 @@ public class SubjectInfoMainMenu extends Fragment
         return inflater.inflate(R.layout.subject_info_main_menu, container, false);
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        subjectSelector = (EditText) getView().findViewById(R.id.subjectSelector);
-        responseView = (TextView) getView().findViewById(R.id.responseView);
-        progressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
+        subjectSelector = (EditText) view.findViewById(R.id.subjectSelector);
+        buttonThread = (Button) view.findViewById(R.id.queryButton);
+        responseView = (TextView) view.findViewById(R.id.responseView);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        Button queryButton = (Button) getView().findViewById(R.id.queryButton);
-        queryButton.setOnClickListener(new View.OnClickListener() {
+        buttonThread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RetrieveFeedTask().execute();
+                new MyAsyncTask().execute(80);
             }
         });
+
+        progressBar.setVisibility(View.GONE);
+        progressBar.setMax(100);
     }
 
-    class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
-        private Exception exception;
+    //AsyncTask<Params, Progress, Result>
+    public class MyAsyncTask extends AsyncTask<Integer, Integer, String> {
 
-        private String subjectCode = subjectSelector.getText().toString();
-
+        @Override
         protected void onPreExecute() {
+            super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
-            responseView.setText("");
         }
 
-        protected String doInBackground(Void... urls) {
+        @Override
+        protected String doInBackground(Integer... params) {
+            int max = params[0];
 
-            try {
-                URL url = new URL(API_URL + "api/assignatures/info.json?codi_upc=" + subjectCode + "&apiKey=" + API_KEY);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            for (int i = 0; i < max; i++) {
                 try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String line;
-                    while ((line = bufferedReader.readLine()) !=  null) {
-                        stringBuilder.append(line).append('\n');
-                    }
-                    bufferedReader.close();
-                    return stringBuilder.toString();
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                finally {
-                    urlConnection.disconnect();
-                }
+
+                publishProgress(i);
             }
-            catch (Exception e) {
-                Log.e("Error", e.getMessage(), e);
-                return null;
-            }
+
+            return "Finish";
         }
 
-        protected void onPostExecute(String response) {
-            if (response == null) {
-                response = "There was an error!";
-            } progressBar.setVisibility(View.GONE);
-            Log.i("INFO", response);
-            responseView.setText(response);
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            int count = values[0];
+            String text = "Count " + count;
+            responseView.setText(text);
+            responseView.setTextSize(count);
+
+            progressBar.setProgress(count);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressBar.setVisibility(View.GONE);
+            responseView.append("\n" + s);
         }
     }
+
 
 }
