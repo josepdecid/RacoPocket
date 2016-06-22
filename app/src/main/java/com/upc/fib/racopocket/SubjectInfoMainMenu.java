@@ -11,6 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class SubjectInfoMainMenu extends Fragment
 {
@@ -18,8 +26,9 @@ public class SubjectInfoMainMenu extends Fragment
     Button buttonThread;
     TextView responseView;
     ProgressBar progressBar;
-    static final String API_KEY = "2222347f-468e-4167-8fab-a4aefac3db46";
-    static final String API_URL = "http://raco.fib.upc.edu";
+    static final String API_CUSTOMER_KEY = "2222347f-468e-4167-8fab-a4aefac3db46";
+    static final String API_SECRET_KEY = "675afff8-da2c-43fa-aefb-28d673b03091";
+    static final String API_URL = "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +47,8 @@ public class SubjectInfoMainMenu extends Fragment
         buttonThread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MyAsyncTask().execute(80);
+                String subjectCode = subjectSelector.getText().toString();
+                new HttpAsyncTask().execute(subjectCode);
             }
         });
 
@@ -47,8 +57,9 @@ public class SubjectInfoMainMenu extends Fragment
     }
 
 
+
     //AsyncTask<Params, Progress, Result>
-    public class MyAsyncTask extends AsyncTask<Integer, Integer, String> {
+    public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -57,39 +68,41 @@ public class SubjectInfoMainMenu extends Fragment
         }
 
         @Override
-        protected String doInBackground(Integer... params) {
-            int max = params[0];
+        protected String doInBackground(String... codes) {
+            String subjectCode = codes[0];
 
-            for (int i = 0; i < max; i++) {
+            try {
+                URL url = new URL(API_URL + subjectCode);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append('\n');
+                    }
+                    bufferedReader.close();
+                    return stringBuilder.toString();
                 }
-
-                publishProgress(i);
+                finally {
+                    urlConnection.disconnect();
+                }
+            } catch (Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
             }
 
-            return "Finish";
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-
-            int count = values[0];
-            String text = "Count " + count;
-            responseView.setText(text);
-            responseView.setTextSize(count);
-
-            progressBar.setProgress(count);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            if (response == null) {
+                response = "Unable to connect";
+            }
             progressBar.setVisibility(View.GONE);
-            responseView.append("\n" + s);
+            Log.i("INFO", response);
+            responseView.setText(response);
         }
     }
 
