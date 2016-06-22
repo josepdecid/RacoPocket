@@ -13,6 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,7 +29,7 @@ public class SubjectInfoMainMenu extends Fragment
 {
     EditText subjectSelector;
     Button buttonThread;
-    TextView responseView;
+    TextView subjectName, subjectTeachers, subjectDescription, subjectCredits;
     ProgressBar progressBar;
     static final String API_CUSTOMER_KEY = "2222347f-468e-4167-8fab-a4aefac3db46";
     static final String API_SECRET_KEY = "675afff8-da2c-43fa-aefb-28d673b03091";
@@ -41,7 +46,12 @@ public class SubjectInfoMainMenu extends Fragment
 
         subjectSelector = (EditText) view.findViewById(R.id.subjectSelector);
         buttonThread = (Button) view.findViewById(R.id.queryButton);
-        responseView = (TextView) view.findViewById(R.id.responseView);
+
+        subjectName = (TextView) view.findViewById(R.id.subjectName);
+        subjectTeachers = (TextView) view.findViewById(R.id.subjectTeachers);
+        subjectDescription = (TextView) view.findViewById(R.id.subjectDescription);
+        subjectCredits = (TextView) view.findViewById(R.id.subjectCredits);
+
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         buttonThread.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +75,10 @@ public class SubjectInfoMainMenu extends Fragment
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+            subjectName.setText("");
+            subjectTeachers.setText("");
+            subjectDescription.setText("");
+            subjectCredits.setText("");
         }
 
         @Override
@@ -97,12 +111,39 @@ public class SubjectInfoMainMenu extends Fragment
         @Override
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
-            if (response == null) {
-                response = "Unable to connect";
-            }
+
             progressBar.setVisibility(View.GONE);
-            Log.i("INFO", response);
-            responseView.setText(response);
+
+            if (response == null) {
+                subjectName.setText("Unable to connect");
+            }
+            else {
+                try {
+                    JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
+                    String data;
+                    //Name
+                    data = object.getString("nom") + "\n";
+                    subjectName.setText(data);
+                    //Teachers
+                    JSONArray teachers = object.getJSONArray("professors");
+                    for (int i = 0; i < teachers.length(); i++) {
+                        JSONObject teacher = teachers.getJSONObject(i);
+                        data = teacher.getString("nom") + " - " + teacher.getString("email") + "\n";
+                        subjectTeachers.append(data);
+                    }
+                    //Description
+                    JSONArray descriptions = object.getJSONArray("descripcio");
+                    for (int i = 0; i < descriptions.length(); i++) {
+                        data = descriptions.getString(i) + "\n";
+                        subjectDescription.append(data);
+                    }
+                    //Credits
+                    data = "Credits: " + object.getInt("credits");
+                    subjectCredits.setText(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
