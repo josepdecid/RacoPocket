@@ -1,2 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">RacoPocket</string>
+
+    <string name="title_activity_login">Login</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
+    <!-- Strings related to Main Menu -->
+    <string name="nav_group1">Menú</string>
+
+    <string name="nav_timetable">Horario</string>
+    <string name="nav_notifications">Notificaciones</string>
+    <string name="nav_schedule">Agenda</string>
+    <string name="nav_class_availability">Disponibilidad laboratorios</string>
+    <string name="nav_subject_info">Información de las asignaturas</string>
+
+    <string name="nav_group2">Otras características</string>
+
+    <string name="nav_settings">Configuración</string>
+    <string name="nav_share">Compartir</string>
+    <string name="nav_about">Sobre</string>
+    <string name="nav_logout">Cerrar sesión</string>
+
+    <!-- Strings related to Subject Info -->
+    <string name="connection_problems">Unable to connect</string>
+
+    <string name="credits">Credits</string>
+    <string name="description_objectives">Description and objectives</string>
+
+
+
+    <color name="white">#FFFFFF</color>
+    <string name="title_activity_main_menu">MainMenuActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
