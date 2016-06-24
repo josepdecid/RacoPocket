@@ -1,5 +1,9 @@
 package com.upc.fib.racopocket;
 
+import android.app.ActionBar;
+import android.app.FragmentManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +24,7 @@ public class MainMenuActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -85,6 +90,8 @@ public class MainMenuActivity extends AppCompatActivity
         } else newFragment = null;
 
         if (newFragment != null) {
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
             transaction.addToBackStack(null);
         } else {

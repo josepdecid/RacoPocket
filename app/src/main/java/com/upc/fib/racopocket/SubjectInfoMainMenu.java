@@ -3,6 +3,7 @@ package com.upc.fib.racopocket;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,20 +19,16 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SubjectInfoMainMenu extends Fragment
 {
     EditText subjectSelector;
     Button buttonThread;
-    TextView subjectName, subjectTeachers, subjectDescription, subjectCredits;
+    TextView subjectName, subjectData;
     ProgressBar progressBar;
-    static final String API_CUSTOMER_KEY = "2222347f-468e-4167-8fab-a4aefac3db46";
-    static final String API_SECRET_KEY = "675afff8-da2c-43fa-aefb-28d673b03091";
     static final String API_URL = "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=";
 
     @Override
@@ -48,9 +44,7 @@ public class SubjectInfoMainMenu extends Fragment
         buttonThread = (Button) view.findViewById(R.id.queryButton);
 
         subjectName = (TextView) view.findViewById(R.id.subjectName);
-        subjectTeachers = (TextView) view.findViewById(R.id.subjectTeachers);
-        subjectDescription = (TextView) view.findViewById(R.id.subjectDescription);
-        subjectCredits = (TextView) view.findViewById(R.id.subjectCredits);
+        subjectData = (TextView) view.findViewById(R.id.subjectData);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
@@ -66,8 +60,6 @@ public class SubjectInfoMainMenu extends Fragment
         progressBar.setMax(100);
     }
 
-
-
     //AsyncTask<Params, Progress, Result>
     public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -75,10 +67,8 @@ public class SubjectInfoMainMenu extends Fragment
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
-            subjectName.setText("");
-            subjectTeachers.setText("");
-            subjectDescription.setText("");
-            subjectCredits.setText("");
+            subjectName.setText("\n");
+            subjectData.setText("\n");
         }
 
         @Override
@@ -115,7 +105,7 @@ public class SubjectInfoMainMenu extends Fragment
             progressBar.setVisibility(View.GONE);
 
             if (response == null) {
-                subjectName.setText("Unable to connect");
+                subjectName.setText(getResources().getString(R.string.connection_problems));
             }
             else {
                 try {
@@ -123,23 +113,25 @@ public class SubjectInfoMainMenu extends Fragment
                     String data;
                     //Name
                     data = object.getString("nom") + "\n";
-                    subjectName.setText(data);
+                    subjectName.append(data);
                     //Teachers
                     JSONArray teachers = object.getJSONArray("professors");
                     for (int i = 0; i < teachers.length(); i++) {
                         JSONObject teacher = teachers.getJSONObject(i);
-                        data = teacher.getString("nom") + " - " + teacher.getString("email") + "\n";
-                        subjectTeachers.append(data);
-                    }
-                    //Description
-                    JSONArray descriptions = object.getJSONArray("descripcio");
-                    for (int i = 0; i < descriptions.length(); i++) {
-                        data = descriptions.getString(i) + "\n";
-                        subjectDescription.append(data);
+                        data = "- " + "<b>" + teacher.getString("nom") + ":</b> <br>\t\t" + teacher.getString("email") + "<br><br>";
+                        subjectData.append(Html.fromHtml(data));
                     }
                     //Credits
-                    data = "Credits: " + object.getInt("credits");
-                    subjectCredits.setText(data);
+                    data = "<br><b>" + getString(R.string.credits) + ":</b> " + object.getInt("credits") + "<br><br>";
+                    subjectData.append(Html.fromHtml(data));
+                    //Description
+                    data = "<br><b>" + getString(R.string.description_objectives) + ":</b><br><br>";
+                    subjectData.append(Html.fromHtml(data));
+                    JSONArray descriptions = object.getJSONArray("descripcio");
+                    for (int i = 0; i < descriptions.length(); i++) {
+                        data = "- " + descriptions.getString(i) + "\n\n";
+                        subjectData.append(data);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
