@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingRight="@dimen/activity_horizontal_margin">
+
             <TextView
                 android:id="@+id/subjectName"
                 android:layout_width="match_parent"
@@ -65,13 +66,34 @@
                 android:textSize="12sp"
                 android:textColor="@color/black"/>
 
+            <ImageButton
+                android:id="@+id/dataRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/refresh"
+                android:src="@drawable/ic_autorenew_black_24dp"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageButton
+                android:id="@+id/dataRemove"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/delete"
+                android:src="@drawable/ic_delete_black_24dp"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageButton
+                android:id="@+id/dataError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:src="@drawable/ic_cloud_off_black_24dp"/>
+
         </LinearLayout>
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/connection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
 
 </RelativeLayout>

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,11 +38,12 @@ public class SubjectInfoMainMenu extends Fragment
     AutoCompleteTextView subjectSelector;
     Button buttonSearch;
     TextView subjectName, subjectData;
-    ImageView connectionStatus;
+    ImageButton dataRefresh, dataRemove, dataError;
     ProgressBar progressBar;
 
     String subjectsListData;
     String subjectDataWithCode;
+    String currentCode;
 
     ArrayList<Pair<String, String>> subjects_name = new ArrayList<>();
 
@@ -56,8 +58,11 @@ public class SubjectInfoMainMenu extends Fragment
         subjectName = (TextView) view.findViewById(R.id.subjectName);
         subjectData = (TextView) view.findViewById(R.id.subjectData);
         buttonSearch = (Button) view.findViewById(R.id.queryButton);
-        connectionStatus = (ImageView) view.findViewById(R.id.connection);
         subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
+
+        dataRefresh = (ImageButton) view.findViewById(R.id.dataRefresh);
+        dataRemove = (ImageButton) view.findViewById(R.id.dataRemove);
+        dataError = (ImageButton) view.findViewById(R.id.dataError);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -94,6 +99,7 @@ public class SubjectInfoMainMenu extends Fragment
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideImageButtons();
                 String subjectName = subjectSelector.getText().toString();
                 if (subjectName.length() == 0) {
                     Toast.makeText(getActivity(), "Type something to search!", Toast.LENGTH_SHORT).show();
@@ -102,11 +108,11 @@ public class SubjectInfoMainMenu extends Fragment
                     for (int i = 0; i < subjects_name.size() && !found; i++) {
                         if (subjects_name.get(i).getFirst().equals(subjectName)) {
                             found = true;
-                            String subjectCode = subjects_name.get(i).getSecond();
+                            currentCode = subjects_name.get(i).getSecond();
 
                             String fetchSubjectData = "false";
                             try {
-                                InputStream inputStream = getContext().openFileInput("subject_" + subjectCode + ".json");
+                                InputStream inputStream = getContext().openFileInput("subject_" + currentCode + ".json");
                                 if (inputStream != null) {
                                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -122,18 +128,46 @@ public class SubjectInfoMainMenu extends Fragment
                                 }
 
                             } catch (FileNotFoundException e) {
-                                Log.i("FILE", "File does not exist, proceeding to get subject_" + subjectCode + ".json");
+                                Log.i("FILE", "File does not exist, proceeding to get subject_" + currentCode + ".json");
                                 fetchSubjectData = "true";
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
 
-                            new GetSubjectInfoWithCode().execute(fetchSubjectData, subjectCode);
+                            new GetSubjectInfoWithCode().execute(fetchSubjectData);
                         }
                     }
                 }
             }
         });
+
+        dataRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GetSubjectInfoWithCode().execute("true");
+            }
+        });
+
+        dataRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File file = new File(getContext().getFilesDir(), "subject_" + currentCode + ".json");
+                if (file.delete()) {
+                    hideImageButtons();
+                    Toast.makeText(getContext(), "Data removed successfully", Toast.LENGTH_SHORT).show();
+                    subjectName.setText("");
+                    subjectData.setText("");
+                } else {
+                    Toast.makeText(getContext(), "Error while trying to remove the data", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void hideImageButtons() {
+        dataError.setVisibility(View.GONE);
+        dataRefresh.setVisibility(View.GONE);
+        dataRemove.setVisibility(View.GONE);
     }
 
     public class GetSubjectsInfo extends AsyncTask<Boolean, Void, String> {
@@ -141,6 +175,7 @@ public class SubjectInfoMainMenu extends Fragment
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            hideImageButtons();
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -234,11 +269,10 @@ public class SubjectInfoMainMenu extends Fragment
         protected String doInBackground(String... params) {
 
             String fetchData = params[0];
-            String subjectCode = params[1];
 
             if (fetchData.equals("true")) {
                 try {
-                    URL url = new URL("https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode);
+                    URL url = new URL("https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + currentCode);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     try {
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -251,26 +285,25 @@ public class SubjectInfoMainMenu extends Fragment
 
                         subjectDataWithCode = stringBuilder.toString();
                         try {
-                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getContext().openFileOutput("subject_" + subjectCode + ".json", Context.MODE_PRIVATE));
+                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getContext().openFileOutput("subject_" + currentCode + ".json", Context.MODE_PRIVATE));
                             outputStreamWriter.write(subjectDataWithCode);
                             outputStreamWriter.close();
                         } catch (IOException e) {
                             Log.e("FILE", "File write failed: " + e.toString());
                         }
 
-                        return "OK";
-
                     } finally {
                         urlConnection.disconnect();
                     }
                 } catch (Exception e) {
                     Log.e("ERROR", e.getMessage(), e);
+                    return null;
                 }
             } else {
                 return "Already Fetched";
             }
 
-            return null;
+            return "OK";
 
         }
 
@@ -280,8 +313,13 @@ public class SubjectInfoMainMenu extends Fragment
             super.onPostExecute(response);
 
             if (response == null) {
-                connectionStatus.setImageResource(R.drawable.connection);
+                subjectName.setText("Unable to connect");
+                dataError.setVisibility(View.VISIBLE);
             } else {
+                subjectSelector.setText("");
+                dataRefresh.setVisibility(View.VISIBLE);
+                dataRemove.setVisibility(View.VISIBLE);
+
                 try {
                     JSONObject object = (JSONObject) new JSONTokener(subjectDataWithCode).nextValue();
                     String data;
@@ -306,8 +344,9 @@ public class SubjectInfoMainMenu extends Fragment
                     data = "<br><b>" + getString(R.string.description_objectives) + ":</b><br><br>";
                     subjectData.append(Html.fromHtml(data));
 
-                    if (object.getString("objectius") != null) {
-                        data = "<i>" + object.getString("objectius") + "</i><br><br>";
+                    data = object.getString("objectius");
+                    if (data != null) {
+                        data = "<i>" + data + "</i><br><br>";
                         subjectData.append(Html.fromHtml(data));
                     } else {
                         subjectData.append("No data found");
@@ -341,8 +380,9 @@ public class SubjectInfoMainMenu extends Fragment
                     e.printStackTrace();
                 }
 
-                progressBar.setVisibility(View.GONE);
             }
+
+            progressBar.setVisibility(View.GONE);
 
         }
     }

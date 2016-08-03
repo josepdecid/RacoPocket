@@ -7,4 +7,7 @@
     <color name="black">#000</color>
     <color name="black_overlay">#66000000</color>
     <color name="raco_blue">#208ED9</color>
+
+    <color name="refresh">#449D44</color>
+    <color name="delete">#C9302C</color>
 </resources>
