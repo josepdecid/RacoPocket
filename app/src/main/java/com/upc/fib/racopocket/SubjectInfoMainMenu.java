@@ -1,6 +1,5 @@
 package com.upc.fib.racopocket;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,16 +22,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,7 +42,6 @@ public class SubjectInfoMainMenu extends Fragment
 
     String subjectsListData;
     String subjectDataWithCode;
-    String fetchSubjectData = "false";
 
     ArrayList<Pair<String, String>> subjects_name = new ArrayList<>();
 
@@ -71,24 +65,26 @@ public class SubjectInfoMainMenu extends Fragment
 
         Boolean fetchData = false;
         try {
-            FileInputStream fi = getContext().openFileInput("subjectsList.json");
-            BufferedInputStream bi = new BufferedInputStream(fi);
-            StringBuilder buffer = new StringBuilder();
+            InputStream inputStream = getContext().openFileInput("subjectsList.json");
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString;
+                StringBuilder stringBuilder = new StringBuilder();
 
-            while (bi.available() != 0) {
-                char c = (char) bi.read();
-                buffer.append(c);
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                subjectsListData = stringBuilder.toString();
             }
-
-            fi.close();
-            bi.close();
-
-            subjectsListData = buffer.toString();
 
         } catch (FileNotFoundException e) {
             Log.i("FILE", "File does not exist, proceeding to get subjectsList.json");
             fetchData = true;
         } catch (IOException e) {
+            Log.e("FILE", "Can not read file: " + e.toString());
             e.printStackTrace();
         }
 
@@ -108,21 +104,22 @@ public class SubjectInfoMainMenu extends Fragment
                             found = true;
                             String subjectCode = subjects_name.get(i).getSecond();
 
-                            fetchSubjectData = "false";
+                            String fetchSubjectData = "false";
                             try {
-                                FileInputStream fi = getContext().openFileInput("subject_" + subjectCode + ".json");
-                                BufferedInputStream bi = new BufferedInputStream(fi);
-                                StringBuilder buffer = new StringBuilder();
+                                InputStream inputStream = getContext().openFileInput("subject_" + subjectCode + ".json");
+                                if (inputStream != null) {
+                                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                                    String receiveString;
+                                    StringBuilder stringBuilder = new StringBuilder();
 
-                                while (bi.available() != 0) {
-                                    char c = (char) bi.read();
-                                    buffer.append(c);
+                                    while ((receiveString = bufferedReader.readLine()) != null) {
+                                        stringBuilder.append(receiveString);
+                                    }
+
+                                    inputStream.close();
+                                    subjectDataWithCode = stringBuilder.toString();
                                 }
-
-                                fi.close();
-                                bi.close();
-
-                                subjectDataWithCode = buffer.toString();
 
                             } catch (FileNotFoundException e) {
                                 Log.i("FILE", "File does not exist, proceeding to get subject_" + subjectCode + ".json");
@@ -167,11 +164,11 @@ public class SubjectInfoMainMenu extends Fragment
                         // Store data in file subjectsList.json
                         subjectsListData = buffer.toString();
                         try {
-                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("subjectsList.json"), "UTF-8"));
-                            out.write(subjectsListData);
-                            out.close();
+                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getContext().openFileOutput("subjectsList.json", Context.MODE_PRIVATE));
+                            outputStreamWriter.write(subjectsListData);
+                            outputStreamWriter.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e("FILE", "File write failed: " + e.toString());
                         }
 
                         return "OK";
@@ -181,12 +178,11 @@ public class SubjectInfoMainMenu extends Fragment
                     }
                 } catch (Exception e) {
                     Log.e("ERROR", e.getMessage(), e);
+                    return null;
                 }
-            } else {
-                return "Already Fetched";
             }
 
-            return null;
+            return "Already Fetched";
 
         }
 
@@ -255,11 +251,11 @@ public class SubjectInfoMainMenu extends Fragment
 
                         subjectDataWithCode = stringBuilder.toString();
                         try {
-                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("subject_" + subjectCode + ".json"), "UTF-8"));
-                            out.write(subjectDataWithCode);
-                            out.close();
+                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getContext().openFileOutput("subject_" + subjectCode + ".json", Context.MODE_PRIVATE));
+                            outputStreamWriter.write(subjectDataWithCode);
+                            outputStreamWriter.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e("FILE", "File write failed: " + e.toString());
                         }
 
                         return "OK";
@@ -294,10 +290,14 @@ public class SubjectInfoMainMenu extends Fragment
                     subjectName.append(data);
 
                     JSONArray teachers = object.getJSONArray("professors");
-                    for (int i = 0; i < teachers.length(); i++) {
-                        JSONObject teacher = teachers.getJSONObject(i);
-                        data = "- " + "<b>" + teacher.getString("nom") + ":</b> <br>\t\t" + teacher.getString("email") + "<br><br>";
-                        subjectData.append(Html.fromHtml(data));
+                    if (teachers != null) {
+                        for (int i = 0; i < teachers.length(); i++) {
+                            JSONObject teacher = teachers.getJSONObject(i);
+                            data = "- " + "<b>" + teacher.getString("nom") + ":</b> <br>\t\t" + teacher.getString("email") + "<br><br>";
+                            subjectData.append(Html.fromHtml(data));
+                        }
+                    } else {
+                        subjectData.append("No data found");
                     }
 
                     data = "<br><b>" + getString(R.string.credits) + ":</b> " + object.getInt("credits") + "<br><br>";
@@ -305,11 +305,38 @@ public class SubjectInfoMainMenu extends Fragment
 
                     data = "<br><b>" + getString(R.string.description_objectives) + ":</b><br><br>";
                     subjectData.append(Html.fromHtml(data));
-                    JSONArray descriptions = object.getJSONArray("descripcio");
-                    for (int i = 0; i < descriptions.length(); i++) {
-                        data = "- " + descriptions.getString(i) + "\n\n";
-                        subjectData.append(data);
+
+                    if (object.getString("objectius") != null) {
+                        data = "<i>" + object.getString("objectius") + "</i><br><br>";
+                        subjectData.append(Html.fromHtml(data));
+                    } else {
+                        subjectData.append("No data found");
                     }
+
+                    JSONArray descriptions = object.getJSONArray("descripcio");
+                    if (descriptions != null) {
+                        for (int i = 0; i < descriptions.length(); i++) {
+                            data = "- " + descriptions.getString(i) + "\n\n";
+                            subjectData.append(data);
+                        }
+                    } else {
+                        subjectData.append("No data found");
+                    }
+
+                    data = "<br><b>" + getString(R.string.bibliography) + ":</b><br><br>";
+                    subjectData.append(Html.fromHtml(data));
+
+                    JSONArray bibliography = object.getJSONArray("bibliografia");
+                    if (bibliography != null) {
+                        for (int i = 0; i < bibliography.length(); i++) {
+                            JSONObject book = bibliography.getJSONObject(i);
+                            data = "- " + "<a href=\"" + book.getString("url") + "\">" + book.getString("text") + "</a><br><br>";
+                            subjectData.append(Html.fromHtml(data));
+                        }
+                    } else {
+                        subjectData.append("No data found");
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
