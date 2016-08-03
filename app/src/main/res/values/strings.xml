@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RacoPocket</string>
 
-    <string name="title_activity_login">Login</string>
+    <string name="title_activity_login">RacoPocket</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

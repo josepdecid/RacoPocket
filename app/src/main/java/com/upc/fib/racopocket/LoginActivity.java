@@ -39,19 +39,6 @@ public class LoginActivity extends Activity {
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: GET OTHER DATA TO STORAGE IN LOCAL
-
-                //Get subjectsInformation.json
-                File subjectsList = getApplication().getFilesDir();
-                String path = subjectsList.getAbsolutePath();
-                File file = new File(path);
-                if (file.exists()) {
-                    Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "File already exitsts", Toast.LENGTH_SHORT).show();
-                } else {
-                    new GetSubjectsInformation().execute(path);
-                }
-
                 Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
