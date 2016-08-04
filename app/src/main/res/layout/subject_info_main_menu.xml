@@ -12,11 +12,11 @@
         android:id="@+id/subjectSelector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Write subject initials"
+        android:hint="@string/write_subject_initials"
         android:completionThreshold="1"
         android:singleLine="true"
         android:layout_toLeftOf="@+id/queryButton"
-        android:layout_toStartOf="@+id/queryButton" />
+        android:layout_toStartOf="@+id/queryButton"/>
 
     <Button
         android:id="@+id/queryButton"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:text="Search"
+        android:text="@string/search"
         android:layout_alignBottom="@+id/subjectSelector"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
@@ -43,12 +43,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/subjectSelector"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/subjectName"
@@ -74,7 +74,8 @@
                 android:background="@color/refresh"
                 android:src="@drawable/ic_autorenew_black_24dp"
                 android:padding="10dp"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/refresh_image_button" />
 
             <ImageButton
                 android:id="@+id/dataRemove"
@@ -84,14 +85,18 @@
                 android:background="@color/delete"
                 android:src="@drawable/ic_delete_black_24dp"
                 android:padding="10dp"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/delete_image_button" />
 
             <ImageButton
                 android:id="@+id/dataError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:src="@drawable/ic_cloud_off_black_24dp"/>
+                android:src="@drawable/ic_cloud_off_black_24dp"
+                android:clickable="false"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/connection_image_button" />
 
         </LinearLayout>
     </ScrollView>

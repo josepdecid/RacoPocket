@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,10 @@ public class SubjectInfoMainMenu extends Fragment
         progressBar.setVisibility(View.GONE);
         progressBar.setMax(100);
 
+        // Enable bibliography redirect onClick
+        subjectData.setClickable(true);
+        subjectData.setMovementMethod(LinkMovementMethod.getInstance());
+
         Boolean fetchData = false;
         try {
             InputStream inputStream = getContext().openFileInput("subjectsList.json");
@@ -102,7 +107,7 @@ public class SubjectInfoMainMenu extends Fragment
                 hideImageButtons();
                 String subjectName = subjectSelector.getText().toString();
                 if (subjectName.length() == 0) {
-                    Toast.makeText(getActivity(), "Type something to search!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
                 } else {
                     Boolean found = false;
                     for (int i = 0; i < subjects_name.size() && !found; i++) {
@@ -313,7 +318,7 @@ public class SubjectInfoMainMenu extends Fragment
             super.onPostExecute(response);
 
             if (response == null) {
-                subjectName.setText("Unable to connect");
+                subjectName.setText(getResources().getString(R.string.connection_problems));
                 dataError.setVisibility(View.VISIBLE);
             } else {
                 subjectSelector.setText("");
@@ -334,22 +339,18 @@ public class SubjectInfoMainMenu extends Fragment
                             data = "- " + "<b>" + teacher.getString("nom") + ":</b> <br>\t\t" + teacher.getString("email") + "<br><br>";
                             subjectData.append(Html.fromHtml(data));
                         }
-                    } else {
-                        subjectData.append("No data found");
                     }
 
-                    data = "<br><b>" + getString(R.string.credits) + ":</b> " + object.getInt("credits") + "<br><br>";
+                    data = "<br><b>" + getResources().getString(R.string.credits) + ":</b> " + object.getInt("credits") + "<br><br>";
                     subjectData.append(Html.fromHtml(data));
 
-                    data = "<br><b>" + getString(R.string.description_objectives) + ":</b><br><br>";
+                    data = "<br><b>" + getResources().getString(R.string.description_objectives) + ":</b><br><br>";
                     subjectData.append(Html.fromHtml(data));
 
                     data = object.getString("objectius");
                     if (data != null) {
                         data = "<i>" + data + "</i><br><br>";
                         subjectData.append(Html.fromHtml(data));
-                    } else {
-                        subjectData.append("No data found");
                     }
 
                     JSONArray descriptions = object.getJSONArray("descripcio");
@@ -358,11 +359,9 @@ public class SubjectInfoMainMenu extends Fragment
                             data = "- " + descriptions.getString(i) + "\n\n";
                             subjectData.append(data);
                         }
-                    } else {
-                        subjectData.append("No data found");
                     }
 
-                    data = "<br><b>" + getString(R.string.bibliography) + ":</b><br><br>";
+                    data = "<br><b>" + getResources().getString(R.string.bibliography) + ":</b><br><br>";
                     subjectData.append(Html.fromHtml(data));
 
                     JSONArray bibliography = object.getJSONArray("bibliografia");
@@ -372,8 +371,6 @@ public class SubjectInfoMainMenu extends Fragment
                             data = "- " + "<a href=\"" + book.getString("url") + "\">" + book.getString("text") + "</a><br><br>";
                             subjectData.append(Html.fromHtml(data));
                         }
-                    } else {
-                        subjectData.append("No data found");
                     }
 
                 } catch (JSONException e) {
@@ -398,13 +395,9 @@ public class SubjectInfoMainMenu extends Fragment
             this.second = second;
         }
 
-        public A getFirst() {
-            return this.first;
-        }
+        public A getFirst() { return this.first; }
 
-        public B getSecond() {
-            return this.second;
-        }
+        public B getSecond() { return this.second; }
     }
 
 }
