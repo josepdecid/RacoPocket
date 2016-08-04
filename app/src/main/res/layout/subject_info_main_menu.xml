@@ -45,27 +45,41 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:scrollbars="none">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Name -->
             <TextView
                 android:id="@+id/subjectName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textColor="@color/black"/>
+
+            <!-- General data -->
             <TextView
                 android:id="@+id/subjectData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textColor="@color/black"/>
 
+            <!-- Bibliography -->
+            <TextView
+                android:id="@+id/subjectBibliography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:textSize="14sp"
+                android:textColor="@color/black"/>
+
+            <!-- Status ImageButtons -->
             <ImageButton
                 android:id="@+id/dataRefresh"
                 android:layout_width="match_parent"

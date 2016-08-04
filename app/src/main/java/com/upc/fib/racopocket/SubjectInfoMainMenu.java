@@ -38,7 +38,7 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     Button buttonSearch;
-    TextView subjectName, subjectData;
+    TextView subjectName, subjectData, subjectBibliography;
     ImageButton dataRefresh, dataRemove, dataError;
     ProgressBar progressBar;
 
@@ -58,6 +58,7 @@ public class SubjectInfoMainMenu extends Fragment
 
         subjectName = (TextView) view.findViewById(R.id.subjectName);
         subjectData = (TextView) view.findViewById(R.id.subjectData);
+        subjectBibliography = (TextView) view.findViewById(R.id.subjectBibliography);
         buttonSearch = (Button) view.findViewById(R.id.queryButton);
         subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
 
@@ -70,8 +71,8 @@ public class SubjectInfoMainMenu extends Fragment
         progressBar.setMax(100);
 
         // Enable bibliography redirect onClick
-        subjectData.setClickable(true);
-        subjectData.setMovementMethod(LinkMovementMethod.getInstance());
+        subjectBibliography.setClickable(true);
+        subjectBibliography.setMovementMethod(LinkMovementMethod.getInstance());
 
         Boolean fetchData = false;
         try {
@@ -105,7 +106,7 @@ public class SubjectInfoMainMenu extends Fragment
             @Override
             public void onClick(View v) {
                 hideImageButtons();
-                String subjectName = subjectSelector.getText().toString();
+                String subjectName = subjectSelector.getText().toString().toUpperCase();
                 if (subjectName.length() == 0) {
                     Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
                 } else {
@@ -162,6 +163,7 @@ public class SubjectInfoMainMenu extends Fragment
                     Toast.makeText(getContext(), "Data removed successfully", Toast.LENGTH_SHORT).show();
                     subjectName.setText("");
                     subjectData.setText("");
+                    subjectBibliography.setText("");
                 } else {
                     Toast.makeText(getContext(), "Error while trying to remove the data", Toast.LENGTH_SHORT).show();
                 }
@@ -267,6 +269,7 @@ public class SubjectInfoMainMenu extends Fragment
             super.onPreExecute();
             subjectName.setText("");
             subjectData.setText("");
+            subjectBibliography.setText("");
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -348,7 +351,7 @@ public class SubjectInfoMainMenu extends Fragment
                     subjectData.append(Html.fromHtml(data));
 
                     data = object.getString("objectius");
-                    if (data != null) {
+                    if (!data.equals("null")) {
                         data = "<i>" + data + "</i><br><br>";
                         subjectData.append(Html.fromHtml(data));
                     }
@@ -362,14 +365,14 @@ public class SubjectInfoMainMenu extends Fragment
                     }
 
                     data = "<br><b>" + getResources().getString(R.string.bibliography) + ":</b><br><br>";
-                    subjectData.append(Html.fromHtml(data));
+                    subjectBibliography.append(Html.fromHtml(data));
 
                     JSONArray bibliography = object.getJSONArray("bibliografia");
                     if (bibliography != null) {
                         for (int i = 0; i < bibliography.length(); i++) {
                             JSONObject book = bibliography.getJSONObject(i);
                             data = "- " + "<a href=\"" + book.getString("url") + "\">" + book.getString("text") + "</a><br><br>";
-                            subjectData.append(Html.fromHtml(data));
+                            subjectBibliography.append(Html.fromHtml(data));
                         }
                     }
 
