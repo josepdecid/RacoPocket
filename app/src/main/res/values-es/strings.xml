@@ -49,4 +49,7 @@
     <string name="delete_image_button">Borrar</string>
     <string name="empty_field">Escribe algo para buscar</string>
     <string name="write_subject_initials">Siglas de la asignatura</string>
+    <string name="delete_data">Borrar todos los datos</string>
+    <string name="new_language">Lenguaje cambiado a castellano</string>
+    <string name="language">Lenguaje</string>
 </resources>

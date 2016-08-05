@@ -49,4 +49,7 @@
     <string name="delete_image_button">Esborrar</string>
     <string name="empty_field">Escriu alguna cosa per cercar</string>
     <string name="write_subject_initials">Sigles de l\'assignatura</string>
+    <string name="delete_data">Esborrar totes les dades</string>
+    <string name="new_language">Llenguatge establert a català</string>
+    <string name="language">Llenguatge</string>
 </resources>
