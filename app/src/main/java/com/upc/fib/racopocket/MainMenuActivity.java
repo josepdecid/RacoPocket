@@ -2,6 +2,7 @@ package com.upc.fib.racopocket;
 
 import android.app.ActionBar;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -63,7 +64,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
         } else if (id == R.id.nav_settings) {
-            newFragment = new SettingsMainMenu();
+            //newFragment = new SettingsMainMenu();
         } else if (id == R.id.nav_share) {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
@@ -73,7 +74,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "choose one"));;
         } else if (id == R.id.nav_about) {
-            newFragment = new AboutMainMenu();
+            //newFragment = new AboutMainMenu();
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(MainMenuActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
