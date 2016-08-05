@@ -65,4 +65,13 @@
         <item>English</item>
     </string-array>
 
+    <!-- About -->
+    <string name="raco_title">Racó for Android</string>
+    <string name="version">Version</string>
+    <string name="description_about"><b>RacóPocket</b> is an OpenSource project created by
+        <b><a href="https://es.linkedin.com/in/josep-de-cid-rodr%C3%ADguez">Josep de Cid</a></b> and
+        <b><a href="https://es.linkedin.com/in/pau-risa-7ba98aba">Pau Risa</a></b>, oriented to FIB - UPC students.
+        Feel free to take a look at our <b><a href="https://github.com/JosepRivaille/RacoPocket">Github</a></b>
+        public repository and contribute.</string>
+
 </resources>

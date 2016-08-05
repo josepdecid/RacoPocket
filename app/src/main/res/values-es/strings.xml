@@ -52,4 +52,14 @@
     <string name="delete_data">Borrar todos los datos</string>
     <string name="new_language">Lenguaje cambiado a castellano</string>
     <string name="language">Lenguaje</string>
+
+    <!-- About -->
+    <string name="raco_title">Racó para Android</string>
+    <string name="version">Versión</string>
+    <string name="description_about"><b>RacóPocket</b> es un proyecto de código libre creado por
+        <b><a href="https://es.linkedin.com/in/josep-de-cid-rodr%C3%ADguez">Josep de Cid</a></b> y
+        <b><a href="https://es.linkedin.com/in/pau-risa-7ba98aba">Pau Risa</a></b>, orientado a estudiantes de la FIB - UPC.
+        Siéntete libre de visitar nuestro repositorio público de <b><a href="https://github.com/JosepRivaille/RacoPocket">Github</a></b>
+        i contribuir.</string>
+
 </resources>

@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.Locale;
 
 
@@ -20,6 +23,7 @@ public class SettingsMainMenu extends Fragment  {
 
     Spinner spinnerLanguage;
     Button commitSettings;
+
     String localeCode;
 
 
@@ -45,7 +49,7 @@ public class SettingsMainMenu extends Fragment  {
         });
 
         spinnerLanguage = (Spinner) view.findViewById(R.id.spinnerLanguage);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.languages_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.languages_array, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinnerLanguage.setAdapter(adapter);
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

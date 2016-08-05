@@ -44,7 +44,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        Boolean isActivity = false;
+
         int id = item.getItemId();
         Fragment newFragment = null;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -61,6 +62,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_settings) {
             newFragment = new SettingsMainMenu();
         } else if (id == R.id.nav_share) {
+            isActivity = true;
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
@@ -69,7 +71,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "choose one"));;
         } else if (id == R.id.nav_about) {
-            //newFragment = new AboutMainMenu();
+            isActivity = true;
+            Intent intent = new Intent(MainMenuActivity.this, AboutActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(MainMenuActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -83,7 +87,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
             transaction.addToBackStack(null);
-        } else {
+        } else if (!isActivity) {
             Toast.makeText(MainMenuActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
         }
         transaction.commit();
