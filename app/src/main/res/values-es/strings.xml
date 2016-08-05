@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Strings related to login -->
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Entrar</string>
+    <string name="error_invalid_email">Esta dirección de correo es inválida</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
+
+    <!-- Strings related to Main Menu -->
+    <string name="nav_group1">Menú</string>
+
+    <string name="nav_timetable">Horario</string>
+    <string name="nav_notifications">Notificaciones</string>
+    <string name="nav_schedule">Agenda</string>
+    <string name="nav_class_availability">Disponibilidad laboratorios</string>
+    <string name="nav_subject_info">Información de las asignaturas</string>
+
+    <string name="nav_group2">Otras características</string>
+
+    <string name="nav_settings">Configuración</string>
+    <string name="nav_share">Compartir</string>
+    <string name="nav_about">Sobre</string>
+    <string name="nav_logout">Cerrar sesión</string>
+
+    <!-- Strings related to Subject Info -->
+    <string name="connection_problems">Error al establecer una conexión</string>
+
+    <string name="credits">Créditos</string>
+    <string name="description_objectives">Descripción y objetivos</string>
+
+
+
+    <color name="white">#FFFFFF</color>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="refresh_image_button">Actualizar</string>
+    <string name="search">Buscar</string>
+    <string name="bibliography">Bibliografía</string>
+    <string name="connection_image_button">Conexión</string>
+    <string name="data_not_found">No se encontraron datos</string>
+    <string name="data_remove_fail">Error al intentar eliminar los datos</string>
+    <string name="data_remove_ok">Datos eliminados correctamente</string>
+    <string name="delete_image_button">Borrar</string>
+    <string name="empty_field">Escribe algo para buscar</string>
+    <string name="write_subject_initials">Siglas de la asignatura</string>
+</resources>

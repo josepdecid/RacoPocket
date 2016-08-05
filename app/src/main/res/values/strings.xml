@@ -1,12 +1,10 @@
 <resources>
-    <string name="app_name">RacoPocket</string>
+    <string name="app_name" translatable="false">RacoPocket</string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_login">Login</string>
+    <string name="title_activity_login" translatable="false">Login</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email" translatable="false">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -14,7 +12,6 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
 
     <!-- Strings related to Main Menu -->
     <string name="nav_group1">Menu</string>
@@ -32,13 +29,29 @@
     <string name="nav_about">About</string>
     <string name="nav_logout">LogOut</string>
 
+    <!-- Strings related to Subject Info -->
+    <string name="write_subject_initials">Write subject initials</string>
+    <string name="search">Search</string>
 
+    <string name="empty_field">Type something to search</string>
+    <string name="data_remove_ok">Data removed successfully</string>
+    <string name="data_remove_fail">Error while trying to remove the data</string>
 
+    <string name="refresh_image_button">Refresh</string>
+    <string name="delete_image_button">Delete</string>
+    <string name="connection_image_button">Connection</string>
+
+    <string name="connection_problems">Unable to establish a connection</string>
+    <string name="data_not_found">Data not found</string>
+
+    <string name="credits">Credits</string>
+    <string name="description_objectives">Description and objectives</string>
+    <string name="bibliography">Bibliography</string>
+
+    <!-- -->
     <color name="white">#FFFFFF</color>
-    <string name="title_activity_main_menu">MainMenuActivity</string>
+    <string name="title_activity_main_menu" translatable="false">MainMenuActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
 </resources>

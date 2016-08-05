@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Strings related to login -->
+    <string name="prompt_password">Contrassenya</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Entrar</string>
+    <string name="error_invalid_email">Aquesta direcció de correu és invàlida</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">Aquesta contrassenya és incorrecta</string>
+    <string name="error_field_required">Aquest camp es obligatori</string>
+
+    <!-- Strings related to Main Menu -->
+    <string name="nav_group1">Menú</string>
+
+    <string name="nav_timetable">Horari</string>
+    <string name="nav_notifications">Notificacions</string>
+    <string name="nav_schedule">Agenda</string>
+    <string name="nav_class_availability">Disponibilitat laboratoris</string>
+    <string name="nav_subject_info">Informació de les assignatures</string>
+
+    <string name="nav_group2">Altres característiques</string>
+
+    <string name="nav_settings">Configuració</string>
+    <string name="nav_share">Compartir</string>
+    <string name="nav_about">Sobre</string>
+    <string name="nav_logout">Tancar sessió</string>
+
+    <!-- Strings related to Subject Info -->
+    <string name="connection_problems">Error al establir una connexió</string>
+
+    <string name="credits">Crèdits</string>
+    <string name="description_objectives">Descripció i objectius</string>
+
+
+
+    <color name="white">#FFFFFF</color>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="refresh_image_button">Actualitzar</string>
+    <string name="search">Cercar</string>
+    <string name="bibliography">Bibliografia</string>
+    <string name="connection_image_button">Connexió</string>
+    <string name="data_not_found">No s\'han trobat dades</string>
+    <string name="data_remove_fail">Error al intentar esborrar les dades</string>
+    <string name="data_remove_ok">Dades esborrades correctament</string>
+    <string name="delete_image_button">Esborrar</string>
+    <string name="empty_field">Escriu alguna cosa per cercar</string>
+    <string name="write_subject_initials">Sigles de l\'assignatura</string>
+</resources>
