@@ -21,7 +21,7 @@
 
     <string name="nav_group2">Altres característiques</string>
 
-    <string name="nav_settings">Configuració</string>
+    <string name="nav_language">Idioma</string>
     <string name="nav_share">Compartir</string>
     <string name="nav_about">Sobre</string>
     <string name="nav_logout">Tancar sessió</string>
@@ -50,8 +50,8 @@
     <string name="empty_field">Escriu alguna cosa per cercar</string>
     <string name="write_subject_initials">Sigles de l\'assignatura</string>
     <string name="delete_data">Esborrar totes les dades</string>
-    <string name="new_language">Llenguatge establert a català</string>
-    <string name="language">Llenguatge</string>
+    <string name="new_language">Idioma establert a català</string>
+    <string name="language">Idioma</string>
 
     <!-- About -->
     <string name="raco_title">Racó per a Android</string>

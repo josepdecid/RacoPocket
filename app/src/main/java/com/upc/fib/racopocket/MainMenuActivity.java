@@ -1,6 +1,8 @@
 package com.upc.fib.racopocket;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,10 +10,14 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.util.Locale;
+
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
@@ -44,7 +50,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Boolean isActivity = false;
+        Boolean isFragment = true;
 
         int id = item.getItemId();
         Fragment newFragment = null;
@@ -59,10 +65,27 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             newFragment = new ClassAvailabilityMainMenu();
         } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
-        } else if (id == R.id.nav_settings) {
-            newFragment = new SettingsMainMenu();
+        } else if (id == R.id.nav_language) {
+            isFragment = false;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    if (which == 0) {
+                        setLocale("ca");
+                    } else if (which == 1) {
+                        setLocale("es");
+                    } else {
+                        setLocale("en");
+                    }
+                    finish();
+                    Intent intent = new Intent(MainMenuActivity.this, MainMenuActivity.class);
+                    startActivity(intent);
+                }
+            });
+            builder.show();
         } else if (id == R.id.nav_share) {
-            isActivity = true;
+            isFragment = false;
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
@@ -71,10 +94,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "choose one"));;
         } else if (id == R.id.nav_about) {
-            isActivity = true;
+            isFragment = false;
             Intent intent = new Intent(MainMenuActivity.this, AboutActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
+            isFragment = false;
             Intent intent = new Intent(MainMenuActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -87,7 +111,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
             transaction.addToBackStack(null);
-        } else if (!isActivity) {
+        } else if (isFragment) {
             Toast.makeText(MainMenuActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
         }
         transaction.commit();
@@ -95,5 +119,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setLocale(String localeCode) {
+        Locale locale = new Locale(localeCode);
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        this.getResources().updateConfiguration(configuration, this.getResources().getDisplayMetrics());
+        Toast.makeText(this, getResources().getString(R.string.new_language), Toast.LENGTH_SHORT).show();
     }
 }

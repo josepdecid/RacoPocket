@@ -21,9 +21,9 @@
 
     <string name="nav_group2">Otras características</string>
 
-    <string name="nav_settings">Configuración</string>
+    <string name="nav_language">Idioma</string>
     <string name="nav_share">Compartir</string>
-    <string name="nav_about">Sobre</string>
+    <string name="nav_about">Acerca de</string>
     <string name="nav_logout">Cerrar sesión</string>
 
     <!-- Strings related to Subject Info -->
@@ -50,8 +50,8 @@
     <string name="empty_field">Escribe algo para buscar</string>
     <string name="write_subject_initials">Siglas de la asignatura</string>
     <string name="delete_data">Borrar todos los datos</string>
-    <string name="new_language">Lenguaje cambiado a castellano</string>
-    <string name="language">Lenguaje</string>
+    <string name="new_language">Ididoma cambiado a español</string>
+    <string name="language">Idioma</string>
 
     <!-- About -->
     <string name="raco_title">Racó para Android</string>
