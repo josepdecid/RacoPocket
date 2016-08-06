@@ -19,12 +19,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-        final String language = sharedPreferences.getString("language", "");
+        final String language = sharedPreferences.getString("language", "en");
         final String accessToken = sharedPreferences.getString("accessToken", "");
         Log.d("LANG_SET", language);
-        if (language.length() > 0) {
-            setLocale(language);
-        }
+        setLocale(language);
 
         new Handler().postDelayed(new Runnable() {
             @Override

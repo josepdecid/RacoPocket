@@ -96,15 +96,16 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             isFragment = false;
-            Intent intent = new Intent(MainMenuActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
 
             SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
             sharedPreferences.edit().remove("accessToken").apply();
             sharedPreferences.edit().remove("language").apply();
+
+            Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
         }
 
         if (newFragment != null) {
