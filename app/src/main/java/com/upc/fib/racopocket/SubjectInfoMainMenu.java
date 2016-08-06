@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,9 +36,8 @@ import java.util.ArrayList;
 public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
-    Button buttonSearch;
     TextView subjectName, subjectData, subjectBibliography;
-    ImageButton dataRefresh, dataRemove, dataError;
+    ImageButton buttonSearch, dataRefresh, dataRemove, dataError;
     ProgressBar progressBar;
 
     String subjectsListData;
@@ -60,9 +58,9 @@ public class SubjectInfoMainMenu extends Fragment
         subjectName = (TextView) view.findViewById(R.id.subjectName);
         subjectData = (TextView) view.findViewById(R.id.subjectData);
         subjectBibliography = (TextView) view.findViewById(R.id.subjectBibliography);
-        buttonSearch = (Button) view.findViewById(R.id.queryButton);
         subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
 
+        buttonSearch = (ImageButton) view.findViewById(R.id.queryButton);
         dataRefresh = (ImageButton) view.findViewById(R.id.dataRefresh);
         dataRemove = (ImageButton) view.findViewById(R.id.dataRemove);
         dataError = (ImageButton) view.findViewById(R.id.dataError);
@@ -104,7 +102,7 @@ public class SubjectInfoMainMenu extends Fragment
         new GetSubjectsInfo().execute(fetchData);
 
         buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
+        @Override
             public void onClick(View v) {
                 hideImageButtons();
                 String subjectName = subjectSelector.getText().toString().toUpperCase();
