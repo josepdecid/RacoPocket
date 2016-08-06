@@ -101,6 +101,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
+            SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
+            sharedPreferences.edit().remove("accessToken").apply();
+            sharedPreferences.edit().remove("language").apply();
         }
 
         if (newFragment != null) {
