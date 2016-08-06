@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,13 +50,12 @@ public class SubjectInfoMainMenu extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_subject_info));
         return inflater.inflate(R.layout.subject_info_main_menu, container, false);
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ((MainMenuActivity) getActivity()).setActionBarDesign("Subject info");
 
         subjectName = (TextView) view.findViewById(R.id.subjectName);
         subjectData = (TextView) view.findViewById(R.id.subjectData);
