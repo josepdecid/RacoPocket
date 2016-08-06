@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +56,8 @@ public class SubjectInfoMainMenu extends Fragment
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((MainMenuActivity) getActivity()).setActionBarDesign("Subject info");
 
         subjectName = (TextView) view.findViewById(R.id.subjectName);
         subjectData = (TextView) view.findViewById(R.id.subjectData);

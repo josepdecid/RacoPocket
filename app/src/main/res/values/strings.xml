@@ -3,6 +3,9 @@
 
     <string name="title_activity_login" translatable="false">Login</string>
 
+    <!-- Main Activity Strings -->
+    <string name="fib_upc" translatable="false">Facultat d\'Informàtica de Barcelona - Universitat Politècnica de Catalunya</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email" translatable="false">Email</string>
     <string name="prompt_password">Password</string>
