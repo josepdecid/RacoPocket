@@ -3,17 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/raco_blue"
-    android:scaleType = "centerCrop">
-
-    <RelativeLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:id="@+id/linearLayout" >
-
-    </RelativeLayout>
+    android:background="@color/raco_blue" >
 
     <ImageView
         android:src="@drawable/ratlles_cap"
@@ -23,20 +13,23 @@
         android:adjustViewBounds="true"
         android:alpha="0.5"
         android:id="@+id/imageView2"
-        android:layout_marginTop="-15dp"
-        android:layout_alignParentTop="false"
         android:layout_alignParentLeft="false"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/input_password"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:src="@drawable/logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="3dp"
         android:id="@+id/imageView3"
-        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/loginProgressBar"
+        android:padding="3dp" />
 
     <EditText
         android:id="@+id/input_email"
@@ -44,11 +37,13 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:hint="@string/prompt_email"
-        android:layout_below="@+id/imageView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="10dp"
-        android:layout_margin="10dp" />
+        android:padding="10dp"
+        android:background="@drawable/edittext_style"
+        android:layout_above="@+id/input_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <EditText
         android:id="@+id/input_password"
@@ -56,11 +51,13 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:hint="@string/prompt_password"
-        android:layout_below="@+id/input_email"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="10dp"
-        android:layout_margin="10dp" />
+        android:padding="10dp"
+        android:background="@drawable/edittext_style"
+        android:layout_marginBottom="50dp"
+        android:layout_above="@+id/btn_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <Button
         android:id="@+id/btn_login"
@@ -68,15 +65,19 @@
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:text="@string/title_activity_login"
-        android:layout_below="@+id/input_password"
-        android:layout_margin="20dp"
-        android:textSize="16dp" />
+        android:background="@color/white"
+        android:textSize="16sp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <ProgressBar
         android:id="@+id/loginProgressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView2"
+        android:layout_marginBottom="44dp"
+        android:layout_above="@+id/input_email"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
