@@ -31,10 +31,10 @@ public class LoginActivity extends Activity {
             "https://raco.fib.upc.edu/oauth/access_token",
             "https://raco.fib.upc.edu/oauth/protected/authorize");
 
-    String callback="raco://raco";
-    String key = "2222347f-468e-4167-8fab-a4aefac3db46";
-    String secret = "675afff8-da2c-43fa-aefb-28d673b03091";
-    DefaultOAuthConsumer consumer;
+    String callback = "raco://raco";
+    DefaultOAuthConsumer consumer = new DefaultOAuthConsumer(
+            "2222347f-468e-4167-8fab-a4aefac3db46",
+            "675afff8-da2c-43fa-aefb-28d673b03091");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class LoginActivity extends Activity {
             String authURL = null;
             try {
                 authURL = provider.retrieveRequestToken(consumer, callback);
-                //storeTokens(authURL);
+                storeTokens(authURL);
             } catch (Exception e) {
                 Toast.makeText(LoginActivity.this, "Failed consumer or callback data", Toast.LENGTH_SHORT).show();
             }
