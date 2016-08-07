@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':signpost-core-1.2.1.2'
