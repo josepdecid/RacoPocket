@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.app.Activity;
 
 import android.os.Bundle;
@@ -169,7 +168,7 @@ public class LoginActivity extends Activity {
     }
 
     public void getNom() {
-        String json = demana("https://raco.fib.upc.edu/api-v1/info-personal.json");
+        String json = askFor("https://raco.fib.upc.edu/api-v1/info-personal.json");
         JSONObject jObject = null;
         try {
             jObject = new JSONObject(json);
@@ -185,22 +184,28 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private String demana(String url) {
-        StringBuilder aux= new StringBuilder();
+    private String askFor(String url) {
         try {
             URL u = new URL(url);
-            HttpURLConnection request = (HttpURLConnection) u.openConnection();
-            consumer.sign(request);
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    request.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                aux.append(inputLine);
+            HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
+            consumer.sign(urlConnection);
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line).append('\n');
+                }
+                bufferedReader.close();
+
+                return stringBuilder.toString();
+            } finally {
+                urlConnection.disconnect();
             }
         } catch (Exception e) {
-            Log.i("oauth",e.getMessage());
+            Log.i("oauth", "" + e.getMessage());
+            return null;
         }
-        return aux.toString();
 
     }
 
