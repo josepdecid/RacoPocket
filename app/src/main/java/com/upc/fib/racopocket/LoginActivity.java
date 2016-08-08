@@ -1,5 +1,6 @@
 package com.upc.fib.racopocket;
 
+import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
@@ -20,19 +21,27 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class LoginActivity extends Activity {
 
     Button signInButton;
     ProgressBar progressBar;
 
-    // Oauth initialize with api keys and URLs
+    // Oauth initialize with URLs
     OAuthProvider provider = new DefaultOAuthProvider(
             "https://raco.fib.upc.edu/oauth/request_token",
             "https://raco.fib.upc.edu/oauth/access_token",
             "https://raco.fib.upc.edu/oauth/protected/authorize");
 
     String callback = "raco://raco";
-    DefaultOAuthConsumer consumer = new DefaultOAuthConsumer(
+    OAuthConsumer consumer = new DefaultOAuthConsumer(
             "2222347f-468e-4167-8fab-a4aefac3db46",
             "675afff8-da2c-43fa-aefb-28d673b03091");
 
@@ -49,11 +58,6 @@ public class LoginActivity extends Activity {
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);*/
                 new AskForRequestTokenAsync().execute();
             }
         });
@@ -65,21 +69,21 @@ public class LoginActivity extends Activity {
         if (exit) {
             finish();
         } else {
-            Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
             exit = true;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     exit = false;
                 }
-            }, 3000);
+            }, 3000);*/
+            getNom();
         }
     }
 
     public void onResume() {
         super.onResume();
         Uri uri = this.getIntent().getData();
-        //recoverTokens();
 
         // This is the case when we receive token
         if (uri != null && uri.toString().startsWith(callback)) {
@@ -101,7 +105,7 @@ public class LoginActivity extends Activity {
             String authURL = null;
             try {
                 authURL = provider.retrieveRequestToken(consumer, callback);
-                storeTokens(authURL);
+                storeTokens();
             } catch (Exception e) {
                 Toast.makeText(LoginActivity.this, "Failed consumer or callback data", Toast.LENGTH_SHORT).show();
             }
@@ -129,8 +133,11 @@ public class LoginActivity extends Activity {
         protected Void doInBackground(Void... params) {
 
             try {
+                String request_token = recoverToken("token");
+                String request_token_secret = recoverToken("token_secret");
+                consumer.setTokenWithSecret(request_token, request_token_secret);
                 provider.retrieveAccessToken(consumer, null);
-                //storeTokens(true);
+                storeTokens();
             } catch (Exception e) {
                 Log.d("OAUTH", "Access token failed");
             }
@@ -140,20 +147,61 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void result) {
-            SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-            String requestToken = sharedPreferences.getString("request_token", "");
-            String accessToken = "asd";
-            consumer.setTokenWithSecret(requestToken, accessToken);
+            String access_token = consumer.getToken();
+            String secret_token = consumer.getTokenSecret();
+            consumer.setTokenWithSecret(access_token, secret_token);
             progressBar.setVisibility(View.GONE);
         }
 
     }
 
-    private void storeTokens(String authUrl) {
+    private void storeTokens() {
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("request_token", authUrl);
+        editor.putString("token", consumer.getToken());
+        editor.putString("token_secret", consumer.getTokenSecret());
         editor.apply();
+    }
+
+    private String recoverToken(String tokenName) {
+        SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(tokenName, "");
+    }
+
+    public void getNom() {
+        String json = demana("https://raco.fib.upc.edu/api-v1/info-personal.json");
+        JSONObject jObject = null;
+        try {
+            jObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (jObject != null) {
+            try {
+                Toast.makeText(LoginActivity.this, jObject.getString("nom"), Toast.LENGTH_SHORT).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String demana(String url) {
+        StringBuilder aux= new StringBuilder();
+        try {
+            URL u = new URL(url);
+            HttpURLConnection request = (HttpURLConnection) u.openConnection();
+            consumer.sign(request);
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    request.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                aux.append(inputLine);
+            }
+        } catch (Exception e) {
+            Log.i("oauth",e.getMessage());
+        }
+        return aux.toString();
+
     }
 
 
