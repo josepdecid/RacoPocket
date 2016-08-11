@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.app.Activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +31,7 @@ import java.net.URL;
 
 public class LoginActivity extends Activity {
 
-    Button signInButton;
+    Button signInButton, nom;
     ProgressBar progressBar;
 
     // Oauth initialize with URLs
@@ -53,11 +54,20 @@ public class LoginActivity extends Activity {
         progressBar.setVisibility(View.GONE);
         progressBar.setMax(100);
 
+        nom = (Button) findViewById(R.id.name);
+
         signInButton = (Button) findViewById(R.id.btn_login);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 new AskForRequestTokenAsync().execute();
+            }
+        });
+
+        nom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getNom();
             }
         });
     }
@@ -68,21 +78,21 @@ public class LoginActivity extends Activity {
         if (exit) {
             finish();
         } else {
-            /*Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
             exit = true;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     exit = false;
                 }
-            }, 3000);*/
-            getNom();
+            }, 3000);
         }
     }
 
     public void onResume() {
         super.onResume();
         Uri uri = this.getIntent().getData();
+        recoverTokens();
 
         // This is the case when we receive token
         if (uri != null && uri.toString().startsWith(callback)) {
@@ -132,9 +142,6 @@ public class LoginActivity extends Activity {
         protected Void doInBackground(Void... params) {
 
             try {
-                String request_token = recoverToken("token");
-                String request_token_secret = recoverToken("token_secret");
-                consumer.setTokenWithSecret(request_token, request_token_secret);
                 provider.retrieveAccessToken(consumer, null);
                 storeTokens();
             } catch (Exception e) {
@@ -146,9 +153,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void result) {
-            String access_token = consumer.getToken();
-            String secret_token = consumer.getTokenSecret();
-            consumer.setTokenWithSecret(access_token, secret_token);
+            recoverTokens();
             progressBar.setVisibility(View.GONE);
         }
 
@@ -162,9 +167,11 @@ public class LoginActivity extends Activity {
         editor.apply();
     }
 
-    private String recoverToken(String tokenName) {
+    private void recoverTokens() {
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-        return sharedPreferences.getString(tokenName, "");
+        String token = sharedPreferences.getString("token", "");
+        String token_secret = sharedPreferences.getString("token_secret", "");
+        consumer.setTokenWithSecret(token, token_secret);
     }
 
     public void getNom() {
@@ -173,7 +180,7 @@ public class LoginActivity extends Activity {
         try {
             jObject = new JSONObject(json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Toast.makeText(LoginActivity.this, "Json null!", Toast.LENGTH_SHORT).show();
         }
         if (jObject != null) {
             try {
@@ -186,7 +193,7 @@ public class LoginActivity extends Activity {
 
     private String askFor(String url) {
         try {
-            URL u = new URL(url);
+            URL u =  new URL(url);
             HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
             consumer.sign(urlConnection);
             try {
