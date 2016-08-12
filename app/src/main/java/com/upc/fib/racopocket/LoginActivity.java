@@ -34,6 +34,11 @@ public class LoginActivity extends Activity {
     Button signInButton, nom;
     ProgressBar progressBar;
 
+    // Consumer object with the Consumer key and Consumer Secret
+    OAuthConsumer consumer = new DefaultOAuthConsumer(
+            "2222347f-468e-4167-8fab-a4aefac3db46",
+            "675afff8-da2c-43fa-aefb-28d673b03091");
+
     // Oauth initialize with URLs
     OAuthProvider provider = new DefaultOAuthProvider(
             "https://raco.fib.upc.edu/oauth/request_token",
@@ -41,9 +46,6 @@ public class LoginActivity extends Activity {
             "https://raco.fib.upc.edu/oauth/protected/authorize");
 
     String callback = "raco://raco";
-    OAuthConsumer consumer = new DefaultOAuthConsumer(
-            "2222347f-468e-4167-8fab-a4aefac3db46",
-            "675afff8-da2c-43fa-aefb-28d673b03091");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +199,7 @@ public class LoginActivity extends Activity {
             HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
             consumer.sign(urlConnection);
             try {
+                urlConnection.connect();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();
                 String line;
@@ -213,7 +216,6 @@ public class LoginActivity extends Activity {
             Log.i("oauth", "" + e.getMessage());
             return null;
         }
-
     }
 
 
