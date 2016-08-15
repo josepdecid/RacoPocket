@@ -1,5 +1,6 @@
 package com.upc.fib.racopocket;
 
+import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -35,17 +36,10 @@ public class LoginActivity extends Activity {
     ProgressBar progressBar;
 
     // Consumer object with the Consumer key and Consumer Secret
-    OAuthConsumer consumer = new DefaultOAuthConsumer(
-            "2222347f-468e-4167-8fab-a4aefac3db46",
-            "675afff8-da2c-43fa-aefb-28d673b03091");
+    OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
     // Oauth initialize with URLs
-    OAuthProvider provider = new DefaultOAuthProvider(
-            "https://raco.fib.upc.edu/oauth/request_token",
-            "https://raco.fib.upc.edu/oauth/access_token",
-            "https://raco.fib.upc.edu/oauth/protected/authorize");
-
-    String callback = "raco://raco";
+    OAuthProvider provider = new DefaultOAuthProvider(Constants.REQUEST_URL, Constants.ACCESS_URL, Constants.AUTHORIZE_URL);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,15 +88,21 @@ public class LoginActivity extends Activity {
     public void onResume() {
         super.onResume();
         Uri uri = this.getIntent().getData();
-        recoverTokens();
+
+        String token = recoverTokens("OAUTH_TOKEN");
+        String secret = recoverTokens("OAUTH_TOKEN_SECRET");
+
+        consumer.setTokenWithSecret(token, secret);
 
         // This is the case when we receive token
-        if (uri != null && uri.toString().startsWith(callback)) {
+        if (uri != null && uri.toString().startsWith(Constants.CALLBACK)) {
+            Log.i("OAuth", "Callback received : " + uri);
+            Log.i("OAuth", "Retrieving Access Token");
             new AskForAccessTokenAsync().execute();
         }
     }
 
-    private class AskForRequestTokenAsync extends AsyncTask<Void, Void, String> {
+    private class AskForRequestTokenAsync extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -111,28 +111,29 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
 
-            String authURL = null;
             try {
-                authURL = provider.retrieveRequestToken(consumer, callback);
+                Log.i("OAuth", "Retrieving request token from Raco servers");
+                String authURL = provider.retrieveRequestToken(consumer, Constants.CALLBACK);
                 storeTokens();
+                Log.i("OAuth", "Popping a browser with the authorize URL : " + authURL);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authURL)));
             } catch (Exception e) {
                 Toast.makeText(LoginActivity.this, "Failed consumer or callback data", Toast.LENGTH_SHORT).show();
             }
 
-            return authURL;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String authURL) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authURL)));
+        protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
         }
 
     }
 
-    private class AskForAccessTokenAsync extends  AsyncTask<Void, Void, Void> {
+    private class AskForAccessTokenAsync extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -146,16 +147,21 @@ public class LoginActivity extends Activity {
             try {
                 provider.retrieveAccessToken(consumer, null);
                 storeTokens();
+
+                String token = recoverTokens("OAUTH_TOKEN");
+                String secret = recoverTokens("OAUTH_TOKEN_SECRET");
+
+                consumer.setTokenWithSecret(token, secret);
+                Log.i("OAuth", "OAUTH STAGE TWO OK!");
             } catch (Exception e) {
-                Log.d("OAUTH", "Access token failed");
+                Log.d("OAuth", "Access token failed");
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            recoverTokens();
+        protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
         }
 
@@ -164,16 +170,14 @@ public class LoginActivity extends Activity {
     private void storeTokens() {
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("token", consumer.getToken());
-        editor.putString("token_secret", consumer.getTokenSecret());
+        editor.putString("OAUTH_TOKEN", consumer.getToken());
+        editor.putString("OAUTH_TOKEN_SECRET", consumer.getTokenSecret());
         editor.apply();
     }
 
-    private void recoverTokens() {
+    private String recoverTokens(String preference_name) {
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
-        String token_secret = sharedPreferences.getString("token_secret", "");
-        consumer.setTokenWithSecret(token, token_secret);
+        return sharedPreferences.getString(preference_name, "");
     }
 
     public void getNom() {
@@ -197,6 +201,7 @@ public class LoginActivity extends Activity {
         try {
             URL u =  new URL(url);
             HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
+            Log.i("OAuth" ,"Requesting URL : " + url);
             consumer.sign(urlConnection);
             try {
                 urlConnection.connect();
@@ -213,7 +218,7 @@ public class LoginActivity extends Activity {
                 urlConnection.disconnect();
             }
         } catch (Exception e) {
-            Log.i("oauth", "" + e.getMessage());
+            Log.i("OAuth", "" + e.getMessage());
             return null;
         }
     }
