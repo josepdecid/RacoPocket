@@ -28,6 +28,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        String extra = getIntent().getStringExtra("name");
+        Toast.makeText(MainMenuActivity.this, extra, Toast.LENGTH_SHORT).show();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -168,4 +171,5 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         editor.apply();
 
     }
+
 }

@@ -20,19 +20,20 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
         final String language = sharedPreferences.getString("language", "en");
-        final String accessToken = sharedPreferences.getString("accessToken", "");
         Log.d("LANG_SET", language);
         setLocale(language);
+
+        final Intent intent;
+        if (TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("")
+                || TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
+            intent = new Intent("MainActivity.this, LoginActivity.class");
+        } else {
+            intent = new Intent(MainActivity.this, LoginActivity.class);
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent;
-                if (accessToken.length() > 0) {
-                    intent = new Intent(MainActivity.this, MainMenuActivity.class);
-                } else {
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
