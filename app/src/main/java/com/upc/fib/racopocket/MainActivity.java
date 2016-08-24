@@ -4,21 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,14 +17,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Get and set app language, english by default
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
         final String language = sharedPreferences.getString("language", "en");
         Log.d("LANG_SET", language);
         setLocale(language);
 
         final Intent intent;
-        if (TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("")
-                || TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
+        // If tokens don't exist, go to Login, else go to MainMenu
+        if (TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("") || TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
             intent = new Intent(MainActivity.this, LoginActivity.class);
         } else {
             intent = new Intent(MainActivity.this, MainMenuActivity.class);
@@ -49,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }
-        }, 2000);
+        }, 1000);
     }
 
     private void setLocale(String localeCode) {
