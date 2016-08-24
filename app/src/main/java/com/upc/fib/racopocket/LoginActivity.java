@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -59,7 +58,6 @@ public class LoginActivity extends Activity {
 
     // Don't close immediately on back pressed
     private Boolean exit = false;
-
     public void onBackPressed() {
         if (exit) {
             finish();
@@ -75,24 +73,22 @@ public class LoginActivity extends Activity {
         }
     }
 
+    // When back from authorizing requestToken, recover them and start accessToken exchange
     public void onResume() {
         super.onResume();
         Uri uri = this.getIntent().getData();
 
         String token = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
         String secret = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
-
         consumer.setTokenWithSecret(token, secret);
 
-        // This is the case when we receive token
+        // This is the case when we receive a token
         if (uri != null && uri.toString().startsWith(Constants.CALLBACK)) {
             Log.i("OAuth", "Callback received : " + uri);
             Log.i("OAuth", "Retrieving Access Token");
             new AskForAccessTokenAsync().execute();
         }
     }
-
-
 
     private class AskForRequestTokenAsync extends AsyncTask<Void, Void, Void> {
 
@@ -112,7 +108,8 @@ public class LoginActivity extends Activity {
                 Log.i("OAuth", "Popping a browser with the authorize URL : " + authURL);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authURL)));
             } catch (Exception e) {
-                Toast.makeText(LoginActivity.this, "Failed consumer or callback data", Toast.LENGTH_SHORT).show();
+                Log.d("OAuth", "Request token failed");
+                Toast.makeText(LoginActivity.this, "Something went wrong, try it again", Toast.LENGTH_SHORT).show();
             }
 
             return null;
@@ -140,16 +137,19 @@ public class LoginActivity extends Activity {
                 provider.retrieveAccessToken(consumer, null);
                 TokensStorage.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
 
+                //TODO: Check if necessary
+
                 String token = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
                 String secret = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
 
                 consumer.setTokenWithSecret(token, secret);
-                Log.i("OAuth", "OAUTH STAGE TWO OK!");
             } catch (Exception e) {
                 Log.d("OAuth", "Access token failed");
+                Toast.makeText(LoginActivity.this, "Something went wrong, try it again", Toast.LENGTH_SHORT).show();
             }
 
             return null;
+
         }
 
         @Override
@@ -171,11 +171,6 @@ public class LoginActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
 
-            File file = new File(getFilesDir(), "info-personal.json");
-            if (file.exists()) {
-                file.delete();
-            }
-
             try {
                 URL url = new URL("https://raco.fib.upc.edu/api-v1/info-personal.json");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -189,9 +184,10 @@ public class LoginActivity extends Activity {
                     }
 
                     // Store data in file info-personal.json
+                    String data = buffer.toString();
                     try {
                         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("info-personal.json", Context.MODE_PRIVATE));
-                        outputStreamWriter.write(buffer.toString());
+                        outputStreamWriter.write(data);
                         outputStreamWriter.close();
                     } catch (IOException e) {
                         Log.e("FILE", "File write failed: " + e.toString());
