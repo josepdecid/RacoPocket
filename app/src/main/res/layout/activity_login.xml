@@ -45,14 +45,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        android:id="@+id/name"
-        android:layout_above="@+id/btn_login"
-        android:layout_centerHorizontal="true" />
-
     <ProgressBar
         android:id="@+id/loginProgressBar"
         android:layout_width="match_parent"

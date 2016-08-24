@@ -1,6 +1,5 @@
 package com.upc.fib.racopocket;
 
-import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -32,7 +31,7 @@ import java.net.URL;
 
 public class LoginActivity extends Activity {
 
-    Button signInButton, nom;
+    Button signInButton;
     ProgressBar progressBar;
 
     // Consumer object with the Consumer key and Consumer Secret
@@ -50,20 +49,11 @@ public class LoginActivity extends Activity {
         progressBar.setVisibility(View.GONE);
         progressBar.setMax(100);
 
-        nom = (Button) findViewById(R.id.name);
-
         signInButton = (Button) findViewById(R.id.btn_login);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 new AskForRequestTokenAsync().execute();
-            }
-        });
-
-        nom.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getNom();
             }
         });
     }
@@ -163,6 +153,8 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
+            Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
+            startActivity(intent);
         }
 
     }
@@ -179,51 +171,6 @@ public class LoginActivity extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
         return sharedPreferences.getString(preference_name, "");
     }
-
-    public void getNom() {
-        String json = askFor("https://raco.fib.upc.edu/api-v1/info-personal.json");
-        JSONObject jObject = null;
-        try {
-            jObject = new JSONObject(json);
-        } catch (JSONException e) {
-            Toast.makeText(LoginActivity.this, "Json null!", Toast.LENGTH_SHORT).show();
-        }
-        if (jObject != null) {
-            try {
-                Toast.makeText(LoginActivity.this, jObject.getString("nom"), Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private String askFor(String url) {
-        try {
-            URL u =  new URL(url);
-            HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
-            Log.i("OAuth" ,"Requesting URL : " + url);
-            consumer.sign(urlConnection);
-            try {
-                urlConnection.connect();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append('\n');
-                }
-                bufferedReader.close();
-
-                return stringBuilder.toString();
-            } finally {
-                urlConnection.disconnect();
-            }
-        } catch (Exception e) {
-            Log.i("OAuth", "" + e.getMessage());
-            return null;
-        }
-    }
-
-
 
 }
 
