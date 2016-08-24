@@ -5,6 +5,7 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,11 +20,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -91,6 +92,8 @@ public class LoginActivity extends Activity {
         }
     }
 
+
+
     private class AskForRequestTokenAsync extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -157,7 +160,7 @@ public class LoginActivity extends Activity {
 
     }
 
-    private class GetStudentInfo extends AsyncTask<Void, Void, String> {
+    private class GetStudentInfo extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -166,52 +169,49 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
 
-            StringBuilder stringBuilder = new StringBuilder();
+            File file = new File(getFilesDir(), "info-personal.json");
+            if (file.exists()) {
+                file.delete();
+            }
+
             try {
                 URL url = new URL("https://raco.fib.upc.edu/api-v1/info-personal.json");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 consumer.sign(urlConnection);
                 try {
-                    urlConnection.connect();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder buffer = new StringBuilder();
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(line).append('\n');
+                        buffer.append(line).append('\n');
                     }
-                    bufferedReader.close();
+
+                    // Store data in file info-personal.json
+                    try {
+                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("info-personal.json", Context.MODE_PRIVATE));
+                        outputStreamWriter.write(buffer.toString());
+                        outputStreamWriter.close();
+                    } catch (IOException e) {
+                        Log.e("FILE", "File write failed: " + e.toString());
+                    }
 
                 } finally {
                     urlConnection.disconnect();
                 }
             } catch (Exception e) {
                 Log.i("OAuth", "" + e.getMessage());
-                return null;
-            }
-
-            JSONObject jObject = null;
-            try {
-                jObject = new JSONObject(stringBuilder.toString());
-            } catch (JSONException e) {
-                Toast.makeText(LoginActivity.this, "Json null!", Toast.LENGTH_SHORT).show();
-            }
-            if (jObject != null) {
-                try {
-                    return jObject.getString("nom");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
 
             return null;
+
         }
 
         @Override
-        protected void onPostExecute(String response) {
+        protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-            intent.putExtra("name", response);
             startActivity(intent);
         }
 

@@ -16,20 +16,59 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    TextView welcomeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        String extra = getIntent().getStringExtra("name");
-        Toast.makeText(MainMenuActivity.this, extra, Toast.LENGTH_SHORT).show();
+        welcomeName = (TextView) findViewById(R.id.welcome_name);
+
+        String studentData = "";
+        try {
+            InputStream inputStream = openFileInput("info-personal.json");
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString;
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                studentData = stringBuilder.toString();
+            }
+        } catch (IOException e) {
+            Log.e("FILE", "Can not read file: " + e.toString());
+            e.printStackTrace();
+        }
+
+        try {
+            JSONObject object = new JSONArray(studentData).getJSONObject(0);
+            welcomeName.setText(object.getString("username"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
