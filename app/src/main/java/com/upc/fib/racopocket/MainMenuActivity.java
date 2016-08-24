@@ -65,8 +65,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         try {
-            JSONObject object = new JSONArray(studentData).getJSONObject(0);
-            welcomeName.setText(object.getString("username"));
+            JSONObject object = new JSONObject(studentData);
+            String data = "Welcome " + object.getString("nom") + " " + object.getString("cognoms");
+            welcomeName.setText(data);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -154,6 +155,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         if (newFragment != null) {
+            welcomeName.setText("");
+
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
