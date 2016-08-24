@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -139,9 +140,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_logout) {
             isFragment = false;
 
-            SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-            sharedPreferences.edit().remove("accessToken").apply();
-            sharedPreferences.edit().remove("language").apply();
+            TokensStorage.removeTokens(getApplicationContext());
+            File file = new File(getFilesDir(), "info-personal.json");
+            if (file.delete()) {
+                Toast.makeText(MainMenuActivity.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+            }
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -17,4 +17,10 @@ public class TokensStorage {
         SharedPreferences sharedPreferences = context.getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
         return sharedPreferences.getString(preference_name, "");
     }
+
+    public static void removeTokens(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
+        sharedPreferences.edit().remove("OAUTH_TOKEN").apply();
+        sharedPreferences.edit().remove("OAUTH_TOKEN_SECRET").apply();
+    }
 }
