@@ -20,7 +20,11 @@ public class FileHelpers {
         try {
             URL url = new URL(u);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            consumer.sign(urlConnection);
+
+            if (consumer != null) {
+                consumer.sign(urlConnection);
+            }
+
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder buffer = new StringBuilder();
@@ -69,6 +73,36 @@ public class FileHelpers {
         }
 
         return "";
+
+    }
+
+    public static String fetchDirectlyJSON(OAuthConsumer consumer, String u) {
+
+        StringBuilder buffer = new StringBuilder();
+
+        try {
+            URL url = new URL(u);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            if (consumer != null) {
+                consumer.sign(urlConnection);
+            }
+
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    buffer.append(line).append('\n');
+                }
+
+            } finally {
+                urlConnection.disconnect();
+            }
+        } catch (Exception e) {
+            Log.i("OAuth", "" + e.getMessage());
+        }
+
+        return buffer.toString();
 
     }
 
