@@ -16,20 +16,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,35 +37,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_main_menu);
 
         welcomeName = (TextView) findViewById(R.id.welcome_name);
-
-        String studentData = "";
-        try {
-            InputStream inputStream = openFileInput("info-personal.json");
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString;
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                studentData = stringBuilder.toString();
-            }
-        } catch (IOException e) {
-            Log.e("FILE", "Can not read file: " + e.toString());
-            e.printStackTrace();
-        }
-
-        try {
-            JSONObject object = new JSONObject(studentData);
-            String data = "Welcome " + object.getString("nom") + " " + object.getString("cognoms");
-            welcomeName.setText(data);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        setWelcomeText();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,7 +58,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Boolean isFragment = true;
 
         int id = item.getItemId();
         Fragment newFragment = null;
@@ -107,7 +73,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
         } else if (id == R.id.nav_language) {
-            isFragment = false;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {
                 @Override
@@ -126,7 +91,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             });
             builder.show();
         } else if (id == R.id.nav_share) {
-            isFragment = false;
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
@@ -135,13 +99,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "choose one"));
         } else if (id == R.id.nav_about) {
-            isFragment = false;
             Intent intent = new Intent(MainMenuActivity.this, AboutActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            isFragment = false;
-
-            TokensStorage.removeTokens(getApplicationContext());
+            TokensStorageHelpers.removeTokens(getApplicationContext());
             File file = new File(getFilesDir(), "info-personal.json");
             if (file.delete()) {
                 Toast.makeText(MainMenuActivity.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
@@ -155,16 +116,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         if (newFragment != null) {
-            welcomeName.setText("");
+            ((FrameLayout)findViewById(R.id.main_menu_fragment_container)).removeAllViews();
 
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
             transaction.addToBackStack(null);
-        } else if (isFragment) {
-            Toast.makeText(MainMenuActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+
+            transaction.commit();
         }
-        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {
@@ -215,6 +175,19 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         editor.putString("language", localeCode);
         editor.apply();
 
+    }
+
+    private void setWelcomeText() {
+
+        String studentData = FileHelpers.readFileToString(getApplicationContext(), "info-personal.json");
+
+        try {
+            JSONObject object = new JSONObject(studentData);
+            String data = "Welcome " + object.getString("nom") + " " + object.getString("cognoms");
+            welcomeName.setText(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

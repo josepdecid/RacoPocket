@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent intent;
         // If tokens don't exist, go to Login, else go to MainMenu
-        if (TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("") || TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
+        if (TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("") || TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
             intent = new Intent(MainActivity.this, LoginActivity.class);
         } else {
             intent = new Intent(MainActivity.this, MainMenuActivity.class);

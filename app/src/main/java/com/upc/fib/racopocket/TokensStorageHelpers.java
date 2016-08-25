@@ -3,7 +3,7 @@ package com.upc.fib.racopocket;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class TokensStorage {
+public class TokensStorageHelpers {
 
     public static void storeTokens(Context context, String token, String token_secret) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);

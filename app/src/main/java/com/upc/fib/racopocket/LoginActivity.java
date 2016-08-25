@@ -5,7 +5,6 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,13 +18,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class LoginActivity extends Activity {
 
@@ -78,8 +70,8 @@ public class LoginActivity extends Activity {
         super.onResume();
         Uri uri = this.getIntent().getData();
 
-        String token = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
-        String secret = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        String token = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
+        String secret = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
         // This is the case when we receive a token
@@ -104,7 +96,7 @@ public class LoginActivity extends Activity {
             try {
                 Log.i("OAuth", "Retrieving request token from Raco servers");
                 String authURL = provider.retrieveRequestToken(consumer, Constants.CALLBACK);
-                TokensStorage.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
+                TokensStorageHelpers.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
                 Log.i("OAuth", "Popping a browser with the authorize URL : " + authURL);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authURL)));
             } catch (Exception e) {
@@ -135,12 +127,12 @@ public class LoginActivity extends Activity {
 
             try {
                 provider.retrieveAccessToken(consumer, null);
-                TokensStorage.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
+                TokensStorageHelpers.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
 
                 //TODO: Check if necessary
 
-                String token = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
-                String secret = TokensStorage.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
+                String token = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
+                String secret = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
 
                 consumer.setTokenWithSecret(token, secret);
             } catch (Exception e) {
@@ -171,34 +163,8 @@ public class LoginActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
 
-            try {
-                URL url = new URL("https://raco.fib.upc.edu/api-v1/info-personal.json");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                consumer.sign(urlConnection);
-                try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    StringBuilder buffer = new StringBuilder();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        buffer.append(line).append('\n');
-                    }
-
-                    // Store data in file info-personal.json
-                    String data = buffer.toString();
-                    try {
-                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("info-personal.json", Context.MODE_PRIVATE));
-                        outputStreamWriter.write(data);
-                        outputStreamWriter.close();
-                    } catch (IOException e) {
-                        Log.e("FILE", "File write failed: " + e.toString());
-                    }
-
-                } finally {
-                    urlConnection.disconnect();
-                }
-            } catch (Exception e) {
-                Log.i("OAuth", "" + e.getMessage());
-            }
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json");
 
             return null;
 
