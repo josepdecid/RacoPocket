@@ -100,6 +100,7 @@ public class FileHelpers {
             }
         } catch (Exception e) {
             Log.i("OAuth", "" + e.getMessage());
+            return null;
         }
 
         return buffer.toString();

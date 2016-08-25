@@ -19,6 +19,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+
 public class LoginActivity extends Activity {
 
     Button signInButton;
@@ -128,13 +134,6 @@ public class LoginActivity extends Activity {
             try {
                 provider.retrieveAccessToken(consumer, null);
                 TokensStorageHelpers.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
-
-                //TODO: Check if necessary
-
-                String token = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
-                String secret = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
-
-                consumer.setTokenWithSecret(token, secret);
             } catch (Exception e) {
                 Log.d("OAuth", "Access token failed");
                 Toast.makeText(LoginActivity.this, "Something went wrong, try it again", Toast.LENGTH_SHORT).show();
@@ -163,8 +162,30 @@ public class LoginActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
 
+            // Personal Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
+            // Timetable Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json");
+            // Subjects List
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json");
+            // Subjects Data
+            String subjects = FileHelpers.readFileToString(getApplicationContext(), "llista.json");
+            try {
+                JSONArray subjectsJSONArray = new JSONArray(subjects);
+                if (subjectsJSONArray != null) {
+                    for (int i = 0; i < subjectsJSONArray.length(); i++) {
+                        JSONObject subjectJSONObject = subjectsJSONArray.getJSONObject(i);
+                        String subjectCode = subjectJSONObject.getString("codi_upc");
+                        String filename = "subject_" + subjectCode + ".json";
+                        File file = new File(getApplication().getFilesDir(), filename);
+                        if (!file.exists()) {
+                            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename);
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             return null;
 

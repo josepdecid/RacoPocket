@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
     TextView classAvailability;
+    ImageView connectionProblem;
     ProgressBar progressBar;
 
     @Override
@@ -24,6 +26,7 @@ public class ClassAvailabilityMainMenu extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         classAvailability = (TextView) view.findViewById(R.id.classAvailability);
+        connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         new GetClassroomsInfo().execute();
@@ -46,7 +49,14 @@ public class ClassAvailabilityMainMenu extends Fragment
 
         @Override
         protected void onPostExecute(String response) {
-            classAvailability.setText(response);
+
+            if (response == null) {
+                connectionProblem.setVisibility(View.VISIBLE);
+                classAvailability.setText(getResources().getString(R.string.connection_problems));
+            } else {
+                classAvailability.setText(response);
+            }
+
             progressBar.setVisibility(View.GONE);
         }
 
