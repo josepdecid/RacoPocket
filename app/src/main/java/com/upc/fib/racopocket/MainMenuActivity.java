@@ -24,7 +24,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -103,10 +102,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             TokensStorageHelpers.removeTokens(getApplicationContext());
-            File file = new File(getFilesDir(), "info-personal.json");
-            if (file.delete()) {
-                Toast.makeText(MainMenuActivity.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
-            }
+            FileHelpers.fileDelete(getApplicationContext(), "info-personal.json");
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

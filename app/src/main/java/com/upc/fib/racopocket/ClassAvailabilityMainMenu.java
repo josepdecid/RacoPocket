@@ -1,8 +1,5 @@
 package com.upc.fib.racopocket;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -24,9 +22,11 @@ import java.util.ArrayList;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
+    TextView lastUpdate;
+    ImageButton update;
     ImageView connectionProblem;
-    ProgressBar progressBar;
     ListView listView;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,9 +37,19 @@ public class ClassAvailabilityMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        lastUpdate = (TextView) view.findViewById(R.id.lastUpdate);
+        update = (ImageButton) view.findViewById(R.id.update);
         connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listView = (ListView) view.findViewById(R.id.listView);
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileHelpers.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
+                new GetClassroomsInfo().execute();
+            }
+        });
 
         new GetClassroomsInfo().execute();
     }
@@ -55,7 +65,11 @@ public class ClassAvailabilityMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params) {
 
-            return FileHelpers.fetchDirectlyJSON(null, "https://raco.fib.upc.edu/api/aules/places-lliures.json");
+            if (!FileHelpers.fileExists(getContext().getApplicationContext(), "places-lliures.json")) {
+                FileHelpers.fetchAndStoreJSONFile(getContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
+            }
+
+            return FileHelpers.readFileToString(getContext(), "places-lliures.json");
 
         }
 
@@ -68,6 +82,11 @@ public class ClassAvailabilityMainMenu extends Fragment
                 final ArrayList<ClassroomInfo> classroomsInfo = new ArrayList<>();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
+
+                    lastUpdate.setText(jsonObject.getString("update"));
+                    lastUpdate.setVisibility(View.VISIBLE);
+                    update.setVisibility(View.VISIBLE);
+
                     JSONArray classroomsJSONArray = jsonObject.getJSONArray("aules");
                     for (int i = 0; i < classroomsJSONArray.length(); i++) {
                         String name = classroomsJSONArray.getJSONObject(i).getString("nom");
@@ -104,6 +123,7 @@ public class ClassAvailabilityMainMenu extends Fragment
                         return view;
                     }
                 };
+
                 listView.setAdapter(adapter);
             }
 
