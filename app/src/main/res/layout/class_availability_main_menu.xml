@@ -17,9 +17,11 @@
         android:visibility="gone"
         android:contentDescription="@string/connection_problems" />
 
-    <TextView
-        android:id="@+id/classAvailability"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+
+    </ListView>
 
 </LinearLayout>

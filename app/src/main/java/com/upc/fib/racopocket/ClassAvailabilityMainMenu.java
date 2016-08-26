@@ -1,20 +1,32 @@
 package com.upc.fib.racopocket;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class ClassAvailabilityMainMenu extends Fragment
 {
-    TextView classAvailability;
     ImageView connectionProblem;
     ProgressBar progressBar;
+    ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,9 +37,9 @@ public class ClassAvailabilityMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        classAvailability = (TextView) view.findViewById(R.id.classAvailability);
         connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        listView = (ListView) view.findViewById(R.id.listView);
 
         new GetClassroomsInfo().execute();
     }
@@ -52,12 +64,69 @@ public class ClassAvailabilityMainMenu extends Fragment
 
             if (response == null) {
                 connectionProblem.setVisibility(View.VISIBLE);
-                classAvailability.setText(getResources().getString(R.string.connection_problems));
             } else {
-                classAvailability.setText(response);
+                final ArrayList<ClassroomInfo> classroomsInfo = new ArrayList<>();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray classroomsJSONArray = jsonObject.getJSONArray("aules");
+                    for (int i = 0; i < classroomsJSONArray.length(); i++) {
+                        String name = classroomsJSONArray.getJSONObject(i).getString("nom");
+                        int availability = classroomsJSONArray.getJSONObject(i).getInt("places");
+                        classroomsInfo.add(new ClassroomInfo(name, availability));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                final ArrayAdapter<ClassroomInfo> adapter = new ArrayAdapter<ClassroomInfo>(getContext(), R.layout.class_availability_item_list, R.id.name, classroomsInfo) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View view = super.getView(position, convertView, parent);
+                        TextView text1 = (TextView) view.findViewById(R.id.name);
+                        TextView text2 = (TextView) view.findViewById(R.id.availability);
+
+                        String name = classroomsInfo.get(position).getName().toUpperCase();
+                        int availability = classroomsInfo.get(position).getAvailability();
+
+                        text1.setText(name);
+                        text2.setText(String.valueOf(availability));
+
+                        int statusColor;
+                        if (availability == 0) {
+                            statusColor = ContextCompat.getColor(getContext(), R.color.not_available);
+                        } else if (availability < 5) {
+                            statusColor = ContextCompat.getColor(getContext(), R.color.quite_not_available);
+                        } else {
+                            statusColor = ContextCompat.getColor(getContext(), R.color.available);
+                        }
+
+                        view.setBackgroundColor(statusColor);
+                        return view;
+                    }
+                };
+                listView.setAdapter(adapter);
             }
 
             progressBar.setVisibility(View.GONE);
+        }
+
+    }
+
+    private class ClassroomInfo {
+        String name;
+        int availability;
+
+        ClassroomInfo(String name, int availability) {
+            this.name = name;
+            this.availability = availability;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public int getAvailability() {
+            return this.availability;
         }
 
     }

@@ -10,4 +10,8 @@
 
     <color name="refresh">#449D44</color>
     <color name="delete">#C9302C</color>
+
+    <color name="not_available">#C13E32</color>
+    <color name="quite_not_available">#F3A239</color>
+    <color name="available">#A4CF64</color>
 </resources>
