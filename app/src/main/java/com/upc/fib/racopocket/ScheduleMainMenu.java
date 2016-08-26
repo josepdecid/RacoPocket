@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 
 public class ScheduleMainMenu extends Fragment
 {
+    CalendarView calendar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_schedule));
@@ -17,6 +19,11 @@ public class ScheduleMainMenu extends Fragment
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        calendar = (CalendarView) view.findViewById(R.id.calendar);
+        calendar.setShowWeekNumber(false);
+        calendar.setFirstDayOfWeek(2);
+
     }
 
 }

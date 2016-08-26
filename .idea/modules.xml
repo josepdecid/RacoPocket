@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RacoPocket.iml" filepath="$PROJECT_DIR$/RacoPocket.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/signpost-core-1.2.1.2/signpost-core-1.2.1.2.iml" filepath="$PROJECT_DIR$/signpost-core-1.2.1.2/signpost-core-1.2.1.2.iml" />
     </modules>
   </component>
 </project>

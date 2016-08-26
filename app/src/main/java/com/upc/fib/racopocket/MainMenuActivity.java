@@ -17,16 +17,27 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    TextView welcomeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        welcomeName = (TextView) findViewById(R.id.welcome_name);
+        setWelcomeText();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,7 +58,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Boolean isFragment = true;
 
         int id = item.getItemId();
         Fragment newFragment = null;
@@ -63,7 +73,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
         } else if (id == R.id.nav_language) {
-            isFragment = false;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {
                 @Override
@@ -82,7 +91,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             });
             builder.show();
         } else if (id == R.id.nav_share) {
-            isFragment = false;
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
@@ -91,15 +99,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "choose one"));
         } else if (id == R.id.nav_about) {
-            isFragment = false;
             Intent intent = new Intent(MainMenuActivity.this, AboutActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            isFragment = false;
-
-            SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-            sharedPreferences.edit().remove("accessToken").apply();
-            sharedPreferences.edit().remove("language").apply();
+            TokensStorageHelpers.removeTokens(getApplicationContext());
+            File file = new File(getFilesDir(), "info-personal.json");
+            if (file.delete()) {
+                Toast.makeText(MainMenuActivity.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+            }
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -109,14 +116,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         if (newFragment != null) {
+            ((FrameLayout)findViewById(R.id.main_menu_fragment_container)).removeAllViews();
+
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
             transaction.replace(R.id.main_menu_fragment_container, newFragment);
             transaction.addToBackStack(null);
-        } else if (isFragment) {
-            Toast.makeText(MainMenuActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+
+            transaction.commit();
         }
-        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {
@@ -168,4 +176,18 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         editor.apply();
 
     }
+
+    private void setWelcomeText() {
+
+        String studentData = FileHelpers.readFileToString(getApplicationContext(), "info-personal.json");
+
+        try {
+            JSONObject object = new JSONObject(studentData);
+            String data = "Welcome " + object.getString("nom") + " " + object.getString("cognoms");
+            welcomeName.setText(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
