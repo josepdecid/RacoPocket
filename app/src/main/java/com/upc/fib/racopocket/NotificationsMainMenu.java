@@ -1,13 +1,16 @@
 package com.upc.fib.racopocket;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -19,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import oauth.signpost.OAuthConsumer;
@@ -29,8 +33,9 @@ public class NotificationsMainMenu extends Fragment
     TextView lastUpdate;
     ImageButton update;
     ImageView connectionProblem;
-    ListView listView;
     ProgressBar progressBar;
+
+    ExpandableListView expListView;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -47,7 +52,7 @@ public class NotificationsMainMenu extends Fragment
         update = (ImageButton) view.findViewById(R.id.update);
         connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        listView = (ListView) view.findViewById(R.id.listView);
+        expListView = (ExpandableListView) view.findViewById(R.id.expListView);
 
         String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
         String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
@@ -83,39 +88,126 @@ public class NotificationsMainMenu extends Fragment
         @Override
         protected void onPostExecute(String response) {
             String mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
-            List<String> subjectsId = new ArrayList<>();
+            List<String> listDataHeader = new ArrayList<>();
             try {
                 JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
                 for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
                     JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
-                    subjectsId.add(subjectJSONObject.getString("idAssig"));
+                    listDataHeader.add(subjectJSONObject.getString("idAssig"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+            HashMap<String, List<String>> listDataChild = new HashMap<>();
             try {
-                JSONObject subjectsNotifications = new JSONObject(response);
-                for (int i = 0; i < subjectsId.size(); i++) {
+                JSONObject subjectsNotificationsJSONObject = new JSONObject(response);
+                for (int i = 0; i < listDataHeader.size(); i++) {
                     // Each subject
-                    JSONArray iSubjectNotifications = subjectsNotifications.getJSONArray(subjectsId.get(i));
-                    //final ArrayList<String> specificSubjectNotificationsArray = new ArrayList<>();
-                    for (int j = 0; j < iSubjectNotifications.length(); j++) {
+                    List<String> dataChild = new ArrayList<>();
+                    JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
+                    for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
                         // Each subject notifications
-                        // specificSubjectNotificationsArray.add(iSubjectNotifications.get(j));
+                        JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
+                        String title = subjectJSONObject.getString("title");
+                        dataChild.add(title);
                     }
+                    listDataChild.put(listDataHeader.get(i), dataChild);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             // Set and display the Subjects Array
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, subjectsId);
-            listView.setAdapter(adapter);
+            ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+            expListView.setAdapter(expandableListAdapter);
 
             progressBar.setVisibility(View.GONE);
         }
 
+    }
+
+    private class ExpandableListAdapter extends BaseExpandableListAdapter {
+        private Context context;
+        private List<String> listDataHeader;
+        private HashMap<String, List<String>> listDataChild;
+
+        public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData) {
+            this.context = context;
+            this.listDataHeader = listDataHeader;
+            this.listDataChild = listChildData;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosition);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+            final String childText = (String) getChild(groupPosition, childPosition);
+
+            if (convertView == null) {
+                LayoutInflater infalInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = infalInflater.inflate(android.R.layout.simple_list_item_1, null);
+            }
+
+            TextView txtListChild = (TextView) convertView.findViewById(android.R.id.text1);
+
+            txtListChild.setText(childText);
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return this.listDataChild.get(this.listDataHeader.get(groupPosition)).size();
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return this.listDataHeader.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return this.listDataHeader.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            String headerTitle = (String) getGroup(groupPosition);
+            if (convertView == null) {
+                LayoutInflater infalInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = infalInflater.inflate(R.layout.notifications_list_group, parent, false);
+            }
+
+            TextView lblListHeader = (TextView) convertView.findViewById(R.id.notificationListHeader);
+            lblListHeader.setTypeface(null, Typeface.BOLD);
+            lblListHeader.setText(headerTitle);
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
     }
 
 }
