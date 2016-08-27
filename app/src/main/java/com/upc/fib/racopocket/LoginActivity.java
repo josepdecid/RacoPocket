@@ -168,8 +168,7 @@ public class LoginActivity extends Activity {
                         JSONObject subjectJSONObject = subjectsJSONArray.getJSONObject(i);
                         String subjectCode = subjectJSONObject.getString("codi_upc");
                         String filename = "subject_" + subjectCode + ".json";
-                        File file = new File(getApplication().getFilesDir(), filename);
-                        if (!file.exists()) {
+                        if (!FileHelpers.fileExists(getApplicationContext(), filename)) {
                             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename);
                         }
                     }
