@@ -66,7 +66,7 @@ public class ClassAvailabilityMainMenu extends Fragment
         protected String doInBackground(Void... params) {
 
             if (!FileHelpers.fileExists(getContext().getApplicationContext(), "places-lliures.json")) {
-                FileHelpers.fetchAndStoreJSONFile(getContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
+                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
             }
 
             return FileHelpers.readFileToString(getContext(), "places-lliures.json");

@@ -24,11 +24,10 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
-    ImageButton buttonSearch, dataRefresh, dataRemove, dataError;
+    ImageButton buttonSearch, dataRefresh, dataError;
     ProgressBar progressBar;
 
     String currentCode;
-
     ArrayList<Pair<String, String>> subjects_name = new ArrayList<>();
 
     @Override
@@ -47,7 +46,6 @@ public class SubjectInfoMainMenu extends Fragment
 
         buttonSearch = (ImageButton) view.findViewById(R.id.queryButton);
         dataRefresh = (ImageButton) view.findViewById(R.id.dataRefresh);
-        dataRemove = (ImageButton) view.findViewById(R.id.dataRemove);
         dataError = (ImageButton) view.findViewById(R.id.dataError);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -57,7 +55,6 @@ public class SubjectInfoMainMenu extends Fragment
         // Enable bibliography redirect onClick
         subjectBibliography.setClickable(true);
         subjectBibliography.setMovementMethod(LinkMovementMethod.getInstance());
-
         // Load Subjects into our Autocomplete
         loadSubjectsList();
 
@@ -84,35 +81,23 @@ public class SubjectInfoMainMenu extends Fragment
                 }
             }
         });
-/*
+
         dataRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetSubjectInfoWithCode().execute("true");
+                String filename = "subject_" + currentCode + ".json";
+                String url = "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + currentCode;
+                FileHelpers.fileDelete(getContext().getApplicationContext(), filename);
+                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), null, url, filename);
+                showSubjectInfo(filename);
             }
         });
 
-        dataRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File file = new File(getContext().getFilesDir(), "subject_" + currentCode + ".json");
-                if (file.delete()) {
-                    hideImageButtons();
-                    Toast.makeText(getContext(), "Data removed successfully", Toast.LENGTH_SHORT).show();
-                    subjectName.setText("");
-                    subjectData.setText("");
-                    subjectBibliography.setText("");
-                } else {
-                    Toast.makeText(getContext(), "Error while trying to remove the data", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
     }
 
     private void hideImageButtons() {
         dataError.setVisibility(View.GONE);
         dataRefresh.setVisibility(View.GONE);
-        dataRemove.setVisibility(View.GONE);
     }
 
     private void loadSubjectsList() {
@@ -152,7 +137,6 @@ public class SubjectInfoMainMenu extends Fragment
 
         subjectSelector.setText("");
         dataRefresh.setVisibility(View.VISIBLE);
-        dataRemove.setVisibility(View.VISIBLE);
 
         try {
             JSONObject object = new JSONObject(subjectInfo);

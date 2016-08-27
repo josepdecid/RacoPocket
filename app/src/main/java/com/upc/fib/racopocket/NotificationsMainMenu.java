@@ -1,6 +1,5 @@
 package com.upc.fib.racopocket;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -58,6 +62,17 @@ public class NotificationsMainMenu extends Fragment
 
         @Override
         protected void onPostExecute(String response) {
+            String mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+            List<String> subjectsId = new ArrayList<>();
+            try {
+                JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+                for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
+                    JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
+                    subjectsId.add(subjectJSONObject.getString("idAssig"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             notifications.setText(response);
             progressBar.setVisibility(View.GONE);
         }

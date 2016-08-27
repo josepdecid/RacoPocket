@@ -102,17 +102,6 @@
                 android:contentDescription="@string/refresh_image_button" />
 
             <ImageButton
-                android:id="@+id/dataRemove"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:background="@color/delete"
-                android:src="@drawable/ic_delete_black_24dp"
-                android:padding="10dp"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/delete_image_button" />
-
-            <ImageButton
                 android:id="@+id/dataError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

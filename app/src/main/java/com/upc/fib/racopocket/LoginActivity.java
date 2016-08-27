@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.app.Activity;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,23 +51,6 @@ public class LoginActivity extends Activity {
                 new AskForRequestTokenAsync().execute();
             }
         });
-    }
-
-    // Don't close immediately on back pressed
-    private Boolean exit = false;
-    public void onBackPressed() {
-        if (exit) {
-            finish();
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3000);
-        }
     }
 
     // When back from authorizing requestToken, recover them and start accessToken exchange
@@ -164,8 +146,17 @@ public class LoginActivity extends Activity {
 
             // Personal Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
+            // Personal Subjects
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json");
+
             // Timetable Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json");
+            // Notifications Data
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            // Schedule Data
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari.json");
+            // Class Availability Data
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
             // Subjects List
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json");
             // Subjects Data
@@ -195,6 +186,9 @@ public class LoginActivity extends Activity {
         protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
 
