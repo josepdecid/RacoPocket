@@ -55,9 +55,10 @@ public class NotificationsMainMenu extends Fragment
 
         @Override
         protected String doInBackground(Void... params) {
-
-            return FileHelpers.fetchDirectlyJSON(consumer, "https://raco.fib.upc.edu/api-v1/avisos.json");
-
+            if (!FileHelpers.fileExists(getContext().getApplicationContext(), "avisos.json")) {
+                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            }
+            return FileHelpers.readFileToString(getContext().getApplicationContext(), "avisos.json");
         }
 
         @Override
@@ -73,6 +74,20 @@ public class NotificationsMainMenu extends Fragment
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            try {
+                JSONObject subjectsNotifications = new JSONObject(response);
+                for (int i = 0; i < subjectsId.size(); i++) {
+                    // Each subject
+                    JSONArray iSubjectNotifications = subjectsNotifications.getJSONArray(subjectsId.get(i));
+                    for (int j = 0; j < iSubjectNotifications.length(); j++) {
+                        // Each subject notification
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             notifications.setText(response);
             progressBar.setVisibility(View.GONE);
         }
