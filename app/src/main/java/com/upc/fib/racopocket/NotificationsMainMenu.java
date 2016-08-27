@@ -3,9 +3,14 @@ package com.upc.fib.racopocket;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,7 +26,10 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 
 public class NotificationsMainMenu extends Fragment
 {
-    TextView notifications;
+    TextView lastUpdate;
+    ImageButton update;
+    ImageView connectionProblem;
+    ListView listView;
     ProgressBar progressBar;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
@@ -35,12 +43,23 @@ public class NotificationsMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        notifications = (TextView) view.findViewById(R.id.notifications);
+        lastUpdate = (TextView) view.findViewById(R.id.lastUpdate);
+        update = (ImageButton) view.findViewById(R.id.update);
+        connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        listView = (ListView) view.findViewById(R.id.listView);
 
         String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
         String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileHelpers.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
+                new GetNotifications().execute();
+            }
+        });
 
         new GetNotifications().execute();
     }
@@ -80,15 +99,20 @@ public class NotificationsMainMenu extends Fragment
                 for (int i = 0; i < subjectsId.size(); i++) {
                     // Each subject
                     JSONArray iSubjectNotifications = subjectsNotifications.getJSONArray(subjectsId.get(i));
+                    //final ArrayList<String> specificSubjectNotificationsArray = new ArrayList<>();
                     for (int j = 0; j < iSubjectNotifications.length(); j++) {
-                        // Each subject notification
+                        // Each subject notifications
+                        // specificSubjectNotificationsArray.add(iSubjectNotifications.get(j));
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            notifications.setText(response);
+            // Set and display the Subjects Array
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, subjectsId);
+            listView.setAdapter(adapter);
+
             progressBar.setVisibility(View.GONE);
         }
 
