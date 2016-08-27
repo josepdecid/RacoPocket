@@ -6,11 +6,15 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.app.Activity;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,8 +45,10 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         progressBar = (ProgressBar) findViewById(R.id.loginProgressBar);
+        progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorLogo), PorterDuff.Mode.MULTIPLY);
         progressBar.setVisibility(View.GONE);
         progressBar.setMax(100);
+
 
         signInButton = (Button) findViewById(R.id.btn_login);
         signInButton.setOnClickListener(new OnClickListener() {
@@ -148,7 +154,6 @@ public class LoginActivity extends Activity {
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
             // Personal Subjects
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json");
-
             // Timetable Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json");
             // Notifications Data
