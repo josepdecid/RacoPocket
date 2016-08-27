@@ -24,6 +24,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -102,7 +103,13 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             TokensStorageHelpers.removeTokens(getApplicationContext());
+
             FileHelpers.fileDelete(getApplicationContext(), "info-personal.json");
+            FileHelpers.fileDelete(getApplicationContext(), "assignatures.json");
+            FileHelpers.fileDelete(getApplicationContext(), "horari-setmanal.json");
+            FileHelpers.fileDelete(getApplicationContext(), "avisos.json");
+            FileHelpers.fileDelete(getApplicationContext(), "calendari-portada.ics");
+            FileHelpers.fileDelete(getApplicationContext(), "places-lliures.json");
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
