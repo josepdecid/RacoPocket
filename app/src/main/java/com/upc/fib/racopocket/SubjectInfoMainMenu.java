@@ -24,7 +24,7 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
-    ImageButton buttonSearch, dataRefresh, dataError;
+    ImageButton buttonSearch, dataError;
     ProgressBar progressBar;
 
     String currentCode;
@@ -45,7 +45,6 @@ public class SubjectInfoMainMenu extends Fragment
         subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
 
         buttonSearch = (ImageButton) view.findViewById(R.id.queryButton);
-        dataRefresh = (ImageButton) view.findViewById(R.id.dataRefresh);
         dataError = (ImageButton) view.findViewById(R.id.dataError);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -61,7 +60,7 @@ public class SubjectInfoMainMenu extends Fragment
         buttonSearch.setOnClickListener(new View.OnClickListener() {
         @Override
             public void onClick(View v) {
-                hideImageButtons();
+                dataError.setVisibility(View.GONE);
                 String subjectName = subjectSelector.getText().toString().toUpperCase();
                 if (subjectName.length() == 0) {
                     Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
@@ -82,22 +81,6 @@ public class SubjectInfoMainMenu extends Fragment
             }
         });
 
-        dataRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String filename = "subject_" + currentCode + ".json";
-                String url = "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + currentCode;
-                FileHelpers.fileDelete(getContext().getApplicationContext(), filename);
-                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), null, url, filename);
-                showSubjectInfo(filename);
-            }
-        });
-
-    }
-
-    private void hideImageButtons() {
-        dataError.setVisibility(View.GONE);
-        dataRefresh.setVisibility(View.GONE);
     }
 
     private void loadSubjectsList() {
@@ -136,7 +119,6 @@ public class SubjectInfoMainMenu extends Fragment
         String subjectInfo = FileHelpers.readFileToString(getContext().getApplicationContext(), fileName);
 
         subjectSelector.setText("");
-        dataRefresh.setVisibility(View.VISIBLE);
 
         try {
             JSONObject object = new JSONObject(subjectInfo);

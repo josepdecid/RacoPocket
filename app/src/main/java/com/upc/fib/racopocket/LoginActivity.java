@@ -26,8 +26,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-
 public class LoginActivity extends Activity {
 
     Button signInButton;
@@ -159,7 +157,7 @@ public class LoginActivity extends Activity {
             // Notifications Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
             // Schedule Data
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari.json");
+            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             // Class Availability Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
             // Subjects List

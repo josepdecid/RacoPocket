@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -46,7 +44,7 @@
                     android:singleLine="true"
                     android:layout_toLeftOf="@+id/queryButton"
                     android:layout_toStartOf="@+id/queryButton"
-                    tools:targetApi="lollipop" />
+                    tools:targetApi="lollipop"/>
 
                 <ImageButton
                     android:id="@+id/queryButton"
@@ -88,18 +86,6 @@
                 android:textIsSelectable="true"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
-
-            <!-- Status ImageButtons -->
-            <ImageButton
-                android:id="@+id/dataRefresh"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:background="@color/refresh"
-                android:src="@drawable/ic_autorenew_black_24dp"
-                android:padding="10dp"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/refresh_image_button" />
 
             <ImageButton
                 android:id="@+id/dataError"
