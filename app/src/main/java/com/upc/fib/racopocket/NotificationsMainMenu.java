@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,11 +49,11 @@ public class NotificationsMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lastUpdate = (TextView) view.findViewById(R.id.lastUpdate);
-        update = (ImageButton) view.findViewById(R.id.update);
-        connectionProblem = (ImageView) view.findViewById(R.id.connection);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        expListView = (ExpandableListView) view.findViewById(R.id.expListView);
+        lastUpdate = (TextView) view.findViewById(R.id.lastUpdateNotifications);
+        update = (ImageButton) view.findViewById(R.id.updateNotifications);
+        connectionProblem = (ImageView) view.findViewById(R.id.connectionNotifications);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBarNotifications);
+        expListView = (ExpandableListView) view.findViewById(R.id.expListViewNotifications);
 
         String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
         String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");

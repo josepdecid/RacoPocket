@@ -37,7 +37,7 @@ public class ClassAvailabilityMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lastUpdate = (TextView) view.findViewById(R.id.lastUpdate);
+        lastUpdate = (TextView) view.findViewById(R.id.lastUpdateNotifications);
         update = (ImageButton) view.findViewById(R.id.update);
         connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);

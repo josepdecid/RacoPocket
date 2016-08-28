@@ -4,46 +4,29 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarNotifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/updateNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_autorenew_black_24dp"
+        android:contentDescription="@string/refresh_image_button"/>
 
     <ImageView
-        android:id="@+id/connection"
+        android:id="@+id/connectionNotifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_cloud_off_black_24dp"
         android:visibility="gone"
         android:contentDescription="@string/connection_problems" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-        <TextView
-            android:id="@+id/lastUpdate"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".7"
-            android:visibility="gone"
-            android:gravity="center"/>
-
-        <ImageButton
-            android:id="@+id/update"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".3"
-            android:src="@drawable/ic_autorenew_black_24dp"
-            android:contentDescription="@string/refresh_image_button"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
     <ExpandableListView
-        android:id="@+id/expListView"
+        android:id="@+id/expListViewNotifications"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
     
