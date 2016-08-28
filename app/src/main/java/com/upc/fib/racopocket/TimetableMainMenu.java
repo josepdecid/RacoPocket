@@ -38,10 +38,11 @@ public class TimetableMainMenu extends Fragment
             tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 5f));
             for (int j = 0; j < 5; j++) {
                 TextView textView = new TextView(getContext());
+                textView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 12f));
                 Random rnd = new Random();
                 int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                 textView.setBackgroundColor(color);
-                textView.setText("asdf");
+                textView.setText("GRAU-EDA A5S102");
                 tableRow.addView(textView);
             }
             tableLayout.addView(tableRow);
