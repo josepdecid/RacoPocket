@@ -13,8 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/generalNoTitle"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/generalNoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,22 +26,25 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="raco" android:scheme="raco"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="raco"
+                    android:scheme="raco" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainMenuActivity"
-            android:screenOrientation="portrait"
             android:label=""
-            android:theme="@style/MainMenuTheme">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/MainMenuTheme"></activity>
         <activity
             android:name=".AboutActivity"
-            android:theme="@style/generalNoTitle">
-        </activity>
+            android:theme="@style/generalNoTitle"></activity>
+        <activity android:name=".NotificationDetailsActivity"></activity>
     </application>
 
 </manifest>
