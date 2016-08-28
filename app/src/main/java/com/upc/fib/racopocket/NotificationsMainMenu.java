@@ -35,6 +35,8 @@ public class NotificationsMainMenu extends Fragment
     ImageView connectionProblem;
     ProgressBar progressBar;
 
+    String mySubjects, myNotifications;
+
     ExpandableListView expListView;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
@@ -61,8 +63,27 @@ public class NotificationsMainMenu extends Fragment
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(getContext(), groupPosition + " " + childPosition + " " + id, Toast.LENGTH_SHORT).show();
+                String subjectName = null, title = null, description = null;
+                try {
+                    JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+                    JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(groupPosition);
+                    subjectName = subjectJSONObject.getString("idAssig");
+
+                    JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
+                    JSONArray subjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(subjectName);
+                    JSONObject subjectNotificationJSONObject = subjectNotificationsJSONArray.getJSONObject(childPosition);
+                    title = subjectNotificationJSONObject.getString("title");
+                    description = subjectNotificationJSONObject.getString("description");
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 Intent intent = new Intent(getContext(), NotificationDetailsActivity.class);
+                intent.putExtra("subjectName", subjectName);
+                intent.putExtra("title", title);
+                intent.putExtra("description", description);
                 startActivity(intent);
                 return true;
             }
@@ -71,7 +92,7 @@ public class NotificationsMainMenu extends Fragment
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileHelpers.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
+                FileHelpers.fileDelete(getContext().getApplicationContext(), "avisos.json");
                 new GetNotifications().execute();
             }
         });
@@ -97,7 +118,8 @@ public class NotificationsMainMenu extends Fragment
 
         @Override
         protected void onPostExecute(String response) {
-            String mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+            myNotifications = response;
+            mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
             List<String> listDataHeader = new ArrayList<>();
             try {
                 JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
@@ -164,13 +186,13 @@ public class NotificationsMainMenu extends Fragment
             final String childText = (String) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(android.R.layout.simple_list_item_1, null);
+                LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = layoutInflater.inflate(android.R.layout.simple_list_item_1, null);
             }
 
             TextView txtListChild = (TextView) convertView.findViewById(android.R.id.text1);
-
             txtListChild.setText(childText);
+
             return convertView;
         }
 
