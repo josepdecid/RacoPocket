@@ -136,14 +136,16 @@ public class NotificationsMainMenu extends Fragment
                 for (int i = 0; i < listDataHeader.size(); i++) {
                     // Each subject
                     List<String> dataChild = new ArrayList<>();
-                    JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
-                    for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
-                        // Each subject notifications
-                        JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
-                        String title = subjectJSONObject.getString("title");
-                        dataChild.add(title);
+                    if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
+                        JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
+                        for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
+                            // Each subject notifications
+                            JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
+                            String title = subjectJSONObject.getString("title");
+                            dataChild.add(title);
+                        }
+                        listDataChild.put(listDataHeader.get(i), dataChild);
                     }
-                    listDataChild.put(listDataHeader.get(i), dataChild);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
