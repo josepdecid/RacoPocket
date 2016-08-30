@@ -143,6 +143,9 @@ public class TimetableMainMenu extends Fragment
                             String group = currentClass.getString("Grup") + currentClass.getString("Tipus");
                             String timeStart = currentClass.getString("HoraInici") + "-" + currentClass.getString("HoraFi") + "h";
                             String classroom = currentClass.getString("Aules");
+                            classroom = classroom.replace("[","");
+                            classroom = classroom.replace("]","");
+                            classroom = classroom.replace("\"","");
                             classroomsInfo.add(new TimetableInfo(subject, group, timeStart, classroom));
                         }
                     }
