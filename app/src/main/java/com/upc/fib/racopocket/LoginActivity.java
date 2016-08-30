@@ -29,6 +29,8 @@ public class LoginActivity extends Activity {
     Button signInButton;
     ProgressBar progressBar;
 
+    Boolean workInProgress;
+
     // Consumer object with the Consumer key and Consumer Secret
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -45,12 +47,15 @@ public class LoginActivity extends Activity {
         progressBar.setVisibility(View.GONE);
         progressBar.setMax(100);
 
+        workInProgress = false;
 
         signInButton = (Button) findViewById(R.id.btn_login);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AskForRequestTokenAsync().execute();
+                if (!workInProgress) {
+                    new AskForRequestTokenAsync().execute();
+                }
             }
         });
     }
@@ -78,6 +83,7 @@ public class LoginActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+            workInProgress = true;
         }
 
         @Override
@@ -99,6 +105,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void response) {
+            workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }
 
@@ -110,6 +117,7 @@ public class LoginActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+            workInProgress = true;
         }
 
         @Override
@@ -184,6 +192,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void response) {
+            workInProgress = false;
             progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

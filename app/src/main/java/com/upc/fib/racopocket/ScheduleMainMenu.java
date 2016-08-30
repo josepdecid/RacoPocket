@@ -1,16 +1,31 @@
 package com.upc.fib.racopocket;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
 
 
 public class ScheduleMainMenu extends Fragment
 {
-    CalendarView calendar;
+    ImageButton update;
+    ImageView connection;
+    ListView eventsList;
+    ProgressBar progressBar;
+
+    Boolean workInProgress;
+
+    OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_schedule));
@@ -20,9 +35,58 @@ public class ScheduleMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        calendar = (CalendarView) view.findViewById(R.id.calendar);
-        calendar.setShowWeekNumber(false);
-        calendar.setFirstDayOfWeek(2);
+        update = (ImageButton) view.findViewById(R.id.updateSchedule);
+        connection = (ImageView) view.findViewById(R.id.connectionSchedule);
+        eventsList = (ListView) view.findViewById(R.id.listViewSchedule);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBarSchedule);
+
+        String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
+        String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        consumer.setTokenWithSecret(token, secret);
+
+        workInProgress = false;
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!workInProgress) {
+                    FileHelpers.fileDelete(getContext().getApplicationContext(), "calendari-portada.ics");
+                    new GetSchedule().execute();
+                }
+            }
+        });
+
+        new GetSchedule().execute();
+
+    }
+
+    private class GetSchedule extends AsyncTask<Void, Void, String>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+            workInProgress = true;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            if (FileHelpers.fileExists(getContext().getApplicationContext(), "calendari-portada.ics")) {
+                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+            }
+            return FileHelpers.readFileToString(getContext().getApplicationContext(), "calendari-portada.ics");
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            createSchedule(response);
+            workInProgress = false;
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    void createSchedule(String scheduleData)
+    {
 
     }
 
