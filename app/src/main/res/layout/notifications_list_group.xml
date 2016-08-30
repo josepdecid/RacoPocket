@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="8dp">
 
+    <!-- TODO: Is this file necessary when having simple_list_1? -->
     <TextView
         android:id="@+id/notificationListHeader"
         android:layout_width="fill_parent"
