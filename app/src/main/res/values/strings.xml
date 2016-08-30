@@ -32,6 +32,13 @@
     <string name="nav_about">About</string>
     <string name="nav_logout">LogOut</string>
 
+    <!-- Strings related to Timetable -->
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+
     <!-- Strings related to Subject Info -->
     <string name="write_subject_initials">Write subject initials</string>
     <string name="search">Search</string>

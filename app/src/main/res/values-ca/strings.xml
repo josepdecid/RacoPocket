@@ -26,6 +26,13 @@
     <string name="nav_about">Sobre</string>
     <string name="nav_logout">Tancar sessió</string>
 
+    <!-- Strings related to Timetable -->
+    <string name="monday">Dilluns</string>
+    <string name="tuesday">Dimarts</string>
+    <string name="wednesday">Dimecres</string>
+    <string name="thursday">Dijous</string>
+    <string name="friday">Divendres</string>
+
     <!-- Strings related to Subject Info -->
     <string name="connection_problems">Error al establir una connexió</string>
 

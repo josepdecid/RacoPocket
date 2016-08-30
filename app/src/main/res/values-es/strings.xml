@@ -26,6 +26,13 @@
     <string name="nav_about">Acerca de</string>
     <string name="nav_logout">Cerrar sesión</string>
 
+    <!-- Strings related to Timetable -->
+    <string name="monday">Lunes</string>
+    <string name="tuesday">Martes</string>
+    <string name="wednesday">Miercoles</string>
+    <string name="thursday">Jueves</string>
+    <string name="friday">Viernes</string>
+
     <!-- Strings related to Subject Info -->
     <string name="connection_problems">Error al establecer una conexión</string>
 

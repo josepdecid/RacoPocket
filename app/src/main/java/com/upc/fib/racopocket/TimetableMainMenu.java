@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -18,15 +19,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class TimetableMainMenu extends Fragment
 {
-    //ViewPager viewPager;
+    ImageView previousDay, nextDay;
+    TextView currentDayText;
     ListView listView;
     ImageView connectionProblem;
     ProgressBar progressBar;
 
+    int currentDay;
     HashMap<String, Integer> colorScheme;
 
     @Override
@@ -38,13 +42,49 @@ public class TimetableMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        previousDay = (ImageView) view.findViewById(R.id.previousDayTimetable);
+        nextDay = (ImageView) view.findViewById(R.id.nextDayTimetable);
+        currentDayText = (TextView) view.findViewById(R.id.currentDatTimetable);
         listView = (ListView) view.findViewById(R.id.listViewTimetable);
         connectionProblem = (ImageView) view.findViewById(R.id.connectionTimetable);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarTimetable);
 
+        currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
+        if (currentDay == 0 || currentDay == 6) currentDay = 1;
+        writeWeekDay();
         setColorScheme();
 
+        previousDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentDay--;
+                if (currentDay == 0) currentDay = 5;
+                writeWeekDay();
+                new GetTimetableData().execute();
+            }
+        });
+
+        nextDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentDay++;
+                if (currentDay == 6) currentDay = 1;
+                writeWeekDay();
+                new GetTimetableData().execute();
+            }
+        });
+
         new GetTimetableData().execute();
+    }
+
+    private void writeWeekDay() {
+        String day;
+        if (currentDay == 1) day = getResources().getString(R.string.monday);
+        else if (currentDay == 2) day = getResources().getString(R.string.tuesday);
+        else if (currentDay == 3) day = getResources().getString(R.string.wednesday);
+        else if (currentDay == 4) day = getResources().getString(R.string.thursday);
+        else day = getResources().getString(R.string.friday);
+        currentDayText.setText(day);
     }
 
     private void setColorScheme() {
@@ -98,11 +138,13 @@ public class TimetableMainMenu extends Fragment
                     JSONArray timetableJSONArray = new JSONArray(response);
                     for (int i = 0; i < timetableJSONArray.length(); i++) {
                         JSONObject currentClass = timetableJSONArray.getJSONObject(i);
-                        String subject = currentClass.getString("Assig");
-                        String group = currentClass.getString("Grup") + currentClass.getString("Tipus");
-                        String timeStart = currentClass.getString("HoraInici") + "-" + currentClass.getString("HoraFi") + "h";
-                        String classroom = currentClass.getString("Aules");
-                        classroomsInfo.add(new TimetableInfo(subject, group, timeStart, classroom));
+                        if (currentClass.getInt("Dia") == currentDay) {
+                            String subject = currentClass.getString("Assig");
+                            String group = currentClass.getString("Grup") + currentClass.getString("Tipus");
+                            String timeStart = currentClass.getString("HoraInici") + "-" + currentClass.getString("HoraFi") + "h";
+                            String classroom = currentClass.getString("Aules");
+                            classroomsInfo.add(new TimetableInfo(subject, group, timeStart, classroom));
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
