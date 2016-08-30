@@ -33,6 +33,11 @@
     <string name="thursday">Jueves</string>
     <string name="friday">Viernes</string>
 
+    <!-- Strings related to Class Availability -->
+    <string name="last_update">Última actualización</string>
+    <string name="class_name">Clase</string>
+    <string name="class_availability">Espacios libres</string>
+
     <!-- Strings related to Subject Info -->
     <string name="connection_problems">Error al establecer una conexión</string>
 

@@ -37,8 +37,8 @@ public class ClassAvailabilityMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lastUpdate = (TextView) view.findViewById(R.id.lastUpdateNotifications);
-        update = (ImageButton) view.findViewById(R.id.update);
+        lastUpdate = (TextView) view.findViewById(R.id.lastUpdateClassAvailability);
+        update = (ImageButton) view.findViewById(R.id.updateClassAvailability);
         connectionProblem = (ImageView) view.findViewById(R.id.connection);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listView = (ListView) view.findViewById(R.id.listView);
@@ -83,7 +83,8 @@ public class ClassAvailabilityMainMenu extends Fragment
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
-                    lastUpdate.setText(jsonObject.getString("update"));
+                    String lastUpdateText = getResources().getString(R.string.last_update) + ": " + jsonObject.getString("update");
+                    lastUpdate.setText(lastUpdateText);
                     lastUpdate.setVisibility(View.VISIBLE);
                     update.setVisibility(View.VISIBLE);
 

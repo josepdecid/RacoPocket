@@ -49,7 +49,6 @@ public class NotificationsMainMenu extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lastUpdate = (TextView) view.findViewById(R.id.lastUpdateNotifications);
         update = (ImageButton) view.findViewById(R.id.updateNotifications);
         connectionProblem = (ImageView) view.findViewById(R.id.connectionNotifications);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarNotifications);

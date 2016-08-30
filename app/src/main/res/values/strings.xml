@@ -39,6 +39,11 @@
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
 
+    <!-- Strings related to Class Availability -->
+    <string name="last_update">Last update</string>
+    <string name="class_name">Classroom</string>
+    <string name="class_availability">Free places</string>
+
     <!-- Strings related to Subject Info -->
     <string name="write_subject_initials">Write subject initials</string>
     <string name="search">Search</string>
