@@ -64,7 +64,11 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/class_info_linear_layout">
+        android:layout_below="@+id/class_info_linear_layout"
+        android:divider="#0E537B"
+        android:dividerHeight="1dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
     </ListView>
 
     <ProgressBar

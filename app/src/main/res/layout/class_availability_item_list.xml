@@ -4,12 +4,12 @@
     android:layout_height="match_parent" android:weightSum="1"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <TextView android:id="@+id/name"
+    <TextView android:id="@+id/classroomNameClassAvailability"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight=".6"/>
 
-    <TextView android:id="@+id/availability"
+    <TextView android:id="@+id/availabilityClassAvailability"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight=".4"

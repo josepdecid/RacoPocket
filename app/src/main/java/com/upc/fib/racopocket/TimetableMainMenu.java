@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -143,9 +142,10 @@ public class TimetableMainMenu extends Fragment
                             String group = currentClass.getString("Grup") + currentClass.getString("Tipus");
                             String timeStart = currentClass.getString("HoraInici") + "-" + currentClass.getString("HoraFi") + "h";
                             String classroom = currentClass.getString("Aules");
-                            classroom = classroom.replace("[","");
-                            classroom = classroom.replace("]","");
-                            classroom = classroom.replace("\"","");
+                            classroom = classroom.replace("[", "");
+                            classroom = classroom.replace("]", "");
+                            classroom = classroom.replace("\"", "");
+                            classroom = classroom.replace(",", ", ");
                             classroomsInfo.add(new TimetableInfo(subject, group, timeStart, classroom));
                         }
                     }

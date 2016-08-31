@@ -1,12 +1,17 @@
 package com.upc.fib.racopocket;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -48,6 +53,38 @@ public class ClassAvailabilityMainMenu extends Fragment
             public void onClick(View v) {
                 FileHelpers.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                WebView webView = new WebView(getContext());
+                String building;
+                if (position < 10) building = "a5";
+                else if (position < 13) building = "b5";
+                else building = "c6";
+                webView.loadUrl("https://raco.fib.upc.edu/mapa_ocupades.php?mod=" + building);
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                });
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(webView);
+                builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
             }
         });
 
@@ -98,12 +135,12 @@ public class ClassAvailabilityMainMenu extends Fragment
                     e.printStackTrace();
                 }
 
-                final ArrayAdapter<ClassroomInfo> adapter = new ArrayAdapter<ClassroomInfo>(getContext(), R.layout.class_availability_item_list, R.id.name, classroomsInfo) {
+                final ArrayAdapter<ClassroomInfo> adapter = new ArrayAdapter<ClassroomInfo>(getContext(), R.layout.class_availability_item_list, R.id.classroomNameClassAvailability, classroomsInfo) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View view = super.getView(position, convertView, parent);
-                        TextView text1 = (TextView) view.findViewById(R.id.name);
-                        TextView text2 = (TextView) view.findViewById(R.id.availability);
+                        TextView text1 = (TextView) view.findViewById(R.id.classroomNameClassAvailability);
+                        TextView text2 = (TextView) view.findViewById(R.id.availabilityClassAvailability);
 
                         String name = classroomsInfo.get(position).getName().toUpperCase();
                         int availability = classroomsInfo.get(position).getAvailability();

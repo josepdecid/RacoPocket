@@ -29,7 +29,6 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 
 public class NotificationsMainMenu extends Fragment
 {
-    TextView lastUpdate;
     ImageButton update;
     ImageView connectionProblem;
     ProgressBar progressBar;
