@@ -24,35 +24,36 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LoginActivity extends Activity {
-
+public class LoginActivity extends Activity
+{
     Button signInButton;
     ProgressBar progressBar;
 
-    Boolean workInProgress;
+    boolean workInProgress;
 
     // Consumer object with the Consumer key and Consumer Secret
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
-
-    // Oauth initialize with URLs
+    // OauthProvider initialize with URLs
     OAuthProvider provider = new DefaultOAuthProvider(Constants.REQUEST_URL, Constants.ACCESS_URL, Constants.AUTHORIZE_URL);
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        signInButton = (Button) findViewById(R.id.btn_login);
         progressBar = (ProgressBar) findViewById(R.id.loginProgressBar);
-        progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorLogo), PorterDuff.Mode.MULTIPLY);
-        progressBar.setVisibility(View.GONE);
-        progressBar.setMax(100);
 
         workInProgress = false;
 
-        signInButton = (Button) findViewById(R.id.btn_login);
-        signInButton.setOnClickListener(new OnClickListener() {
+        progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorLogo), PorterDuff.Mode.MULTIPLY);
+
+        signInButton.setOnClickListener(new OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 if (!workInProgress) {
                     new AskForRequestTokenAsync().execute();
                 }
@@ -61,7 +62,8 @@ public class LoginActivity extends Activity {
     }
 
     // When back from authorizing requestToken, recover them and start accessToken exchange
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         Uri uri = this.getIntent().getData();
 
@@ -77,18 +79,19 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private class AskForRequestTokenAsync extends AsyncTask<Void, Void, Void> {
-
+    private class AskForRequestTokenAsync extends AsyncTask<Void, Void, Void>
+    {
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
             workInProgress = true;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-
+        protected Void doInBackground(Void... params)
+        {
             try {
                 Log.i("OAuth", "Retrieving request token from Raco servers");
                 String authURL = provider.retrieveRequestToken(consumer, Constants.CALLBACK);
@@ -104,17 +107,19 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(Void response) {
+        protected void onPostExecute(Void response)
+        {
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }
 
     }
 
-    private class AskForAccessTokenAsync extends AsyncTask<Void, Void, Void> {
-
+    private class AskForAccessTokenAsync extends AsyncTask<Void, Void, Void>
+    {
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
             workInProgress = true;
@@ -122,7 +127,6 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
-
             try {
                 provider.retrieveAccessToken(consumer, null);
                 TokensStorageHelpers.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
@@ -132,28 +136,30 @@ public class LoginActivity extends Activity {
             }
 
             return null;
-
         }
 
         @Override
-        protected void onPostExecute(Void response) {
+        protected void onPostExecute(Void response)
+        {
             progressBar.setVisibility(View.GONE);
+            workInProgress = false;
             new GetStudentInfo().execute();
         }
-
     }
 
-    private class GetStudentInfo extends AsyncTask<Void, Void, Void> {
-
+    private class GetStudentInfo extends AsyncTask<Void, Void, Void>
+    {
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+            workInProgress = true;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-
+        protected Void doInBackground(Void... params)
+        {
             // Personal Data
             FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
             // Personal Subjects
@@ -187,11 +193,11 @@ public class LoginActivity extends Activity {
             }
 
             return null;
-
         }
 
         @Override
-        protected void onPostExecute(Void response) {
+        protected void onPostExecute(Void response)
+        {
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
@@ -200,7 +206,6 @@ public class LoginActivity extends Activity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
-
     }
 
 }

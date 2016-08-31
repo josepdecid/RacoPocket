@@ -23,60 +23,73 @@ import java.util.HashMap;
 
 public class TimetableMainMenu extends Fragment
 {
-    ImageView previousDay, nextDay;
-    TextView currentDayText;
+    ImageView connectionProblem, nextDay, previousDay;
     ListView listView;
-    ImageView connectionProblem;
     ProgressBar progressBar;
+    TextView currentDayText;
 
     int currentDay;
+    boolean workInProgress;
     HashMap<String, Integer> colorScheme;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_timetable));
         return inflater.inflate(R.layout.timetable_main_menu, container, false);
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
-        previousDay = (ImageView) view.findViewById(R.id.previousDayTimetable);
-        nextDay = (ImageView) view.findViewById(R.id.nextDayTimetable);
-        currentDayText = (TextView) view.findViewById(R.id.currentDatTimetable);
-        listView = (ListView) view.findViewById(R.id.listViewTimetable);
         connectionProblem = (ImageView) view.findViewById(R.id.connectionTimetable);
+        nextDay = (ImageView) view.findViewById(R.id.nextDayTimetable);
+        previousDay = (ImageView) view.findViewById(R.id.previousDayTimetable);
+        listView = (ListView) view.findViewById(R.id.listViewTimetable);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarTimetable);
+        currentDayText = (TextView) view.findViewById(R.id.currentDatTimetable);
+
+        workInProgress = false;
 
         currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
         if (currentDay == 0 || currentDay == 6) currentDay = 1;
         writeWeekDay();
         setColorScheme();
 
-        previousDay.setOnClickListener(new View.OnClickListener() {
+        previousDay.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                currentDay--;
-                if (currentDay == 0) currentDay = 5;
-                writeWeekDay();
-                new GetTimetableData().execute();
+            public void onClick(View v)
+            {
+                if (!workInProgress) {
+                    currentDay--;
+                    if (currentDay == 0) currentDay = 5;
+                    writeWeekDay();
+                    new GetTimetableData().execute();
+                }
             }
         });
 
-        nextDay.setOnClickListener(new View.OnClickListener() {
+        nextDay.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                currentDay++;
-                if (currentDay == 6) currentDay = 1;
-                writeWeekDay();
-                new GetTimetableData().execute();
+            public void onClick(View v)
+            {
+                if (!workInProgress) {
+                    currentDay++;
+                    if (currentDay == 6) currentDay = 1;
+                    writeWeekDay();
+                    new GetTimetableData().execute();
+                }
             }
         });
 
         new GetTimetableData().execute();
     }
 
-    private void writeWeekDay() {
+    private void writeWeekDay()
+    {
         String day;
         if (currentDay == 1) day = getResources().getString(R.string.monday);
         else if (currentDay == 2) day = getResources().getString(R.string.tuesday);
@@ -86,7 +99,8 @@ public class TimetableMainMenu extends Fragment
         currentDayText.setText(day);
     }
 
-    private void setColorScheme() {
+    private void setColorScheme()
+    {
         int[] colors = {
                 Color.parseColor("#DFE9C6"),
                 Color.parseColor("#FFF3BA"),
@@ -108,27 +122,27 @@ public class TimetableMainMenu extends Fragment
         }
     }
 
-    private class GetTimetableData extends AsyncTask<Void, Void, String> {
+    private class GetTimetableData extends AsyncTask<Void, Void, String>
+    {
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-
+        protected String doInBackground(Void... params)
+        {
             if (!FileHelpers.fileExists(getContext().getApplicationContext(), "horari-setmanal.json")) {
                 FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/horari-setmanal.json" , "horari-setmanal.json");
             }
-
             return FileHelpers.readFileToString(getContext(), "horari-setmanal.json");
-
         }
 
         @Override
-        protected void onPostExecute(String response) {
-
+        protected void onPostExecute(String response)
+        {
             if (response == null) {
                 connectionProblem.setVisibility(View.VISIBLE);
             } else {
@@ -183,38 +197,42 @@ public class TimetableMainMenu extends Fragment
 
             progressBar.setVisibility(View.GONE);
         }
-
     }
 
-    private class TimetableInfo {
+    private class TimetableInfo
+    {
         String name;
         String group;
         String startTime;
         String classroom;
 
-        TimetableInfo(String name, String group, String startTime, String classroom) {
+        TimetableInfo(String name, String group, String startTime, String classroom)
+        {
             this.name = name;
             this.group = group;
             this.startTime = startTime;
             this.classroom = classroom;
         }
 
-        public String getName() {
+        public String getName()
+        {
             return this.name;
         }
 
-        public String getStartTime() {
+        public String getStartTime()
+        {
             return this.startTime;
         }
 
-        public String getClassroom() {
+        public String getClassroom()
+        {
             return this.classroom;
         }
 
-        public String getGroup() {
+        public String getGroup()
+        {
             return this.group;
         }
-
     }
 
 
