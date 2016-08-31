@@ -20,7 +20,9 @@
         android:src="@drawable/ic_autorenew_black_24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/refresh_image_button"/>
+        android:contentDescription="@string/refresh_image_button"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"/>
 
     <LinearLayout
         android:id="@+id/class_info_linear_layout"
@@ -46,7 +48,8 @@
                 android:text="@string/class_name"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".6"/>
+                android:layout_weight=".6"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/header2ClassAvailability"
@@ -54,7 +57,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".4"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textStyle="bold"/>
 
         </LinearLayout>
     

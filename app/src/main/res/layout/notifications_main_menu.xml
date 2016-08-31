@@ -28,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_below="@+id/updateNotifications"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:groupIndicator="@android:color/transparent"/>
 
     <ProgressBar
         android:id="@+id/progressBarNotifications"

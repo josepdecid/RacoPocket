@@ -134,6 +134,7 @@ public class NotificationsMainMenu extends Fragment
                 for (int i = 0; i < listDataHeader.size(); i++) {
                     // Each subject
                     List<String> dataChild = new ArrayList<>();
+                    // If subject has notifications we display the subject's title
                     if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
                         JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
                         for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
@@ -143,6 +144,11 @@ public class NotificationsMainMenu extends Fragment
                             dataChild.add(title);
                         }
                         listDataChild.put(listDataHeader.get(i), dataChild);
+                    }
+                    // Otherwise we don't display the subject's title
+                    else {
+                        listDataHeader.remove(i);
+                        i--;
                     }
                 }
             } catch (JSONException e) {
