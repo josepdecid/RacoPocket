@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_main_menu);
 
         welcomeName = (TextView) findViewById(R.id.welcome_name);
+
         setWelcomeText();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -186,7 +188,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
         try {
             JSONObject object = new JSONObject(studentData);
-            String data = "Welcome " + object.getString("nom") + " " + object.getString("cognoms");
+            String data = getResources().getString(R.string.welcome).toUpperCase() + ",\n " + object.getString("nom") + " " + object.getString("cognoms");
             welcomeName.setText(data);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -6,12 +6,20 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize">
 
+    <ImageView
+        android:src="@drawable/upc_fib"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
     <TextView
         android:id="@+id/welcome_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
-        android:textSize="25sp"/>
+        android:textSize="25sp"
+        android:textColor="#000"
+        android:background="#CFFF"/>
 
 </FrameLayout>

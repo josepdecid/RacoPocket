@@ -11,6 +11,8 @@
     <string name="error_field_required">Aquest camp es obligatori</string>
 
     <!-- Strings related to Main Menu -->
+    <string name="welcome">Benvingut</string>
+
     <string name="nav_group1">Menú</string>
 
     <string name="nav_timetable">Horari</string>

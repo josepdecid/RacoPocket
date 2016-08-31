@@ -11,6 +11,8 @@
     <string name="error_field_required">Este campo es obligatorio</string>
 
     <!-- Strings related to Main Menu -->
+    <string name="welcome">Bienvenido</string>
+
     <string name="nav_group1">Menú</string>
 
     <string name="nav_timetable">Horario</string>

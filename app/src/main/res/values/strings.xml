@@ -17,6 +17,8 @@
     <string name="error_field_required">This field is required</string>
 
     <!-- Strings related to Main Menu -->
+    <string name="welcome">Welcome</string>
+
     <string name="nav_group1">Menu</string>
 
     <string name="nav_timetable">Timetable</string>
