@@ -31,11 +31,11 @@ public class NotificationsMainMenu extends Fragment
 {
     ImageButton update;
     ImageView connectionProblem;
+    ExpandableListView expListView;
     ProgressBar progressBar;
 
     String mySubjects, myNotifications;
-
-    ExpandableListView expListView;
+    List<String> listDataHeader = new ArrayList<>();
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -62,10 +62,7 @@ public class NotificationsMainMenu extends Fragment
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String subjectName = null, title = null, description = null;
                 try {
-                    JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
-                    JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(groupPosition);
-                    subjectName = subjectJSONObject.getString("idAssig");
-
+                    subjectName = listDataHeader.get(groupPosition);
                     JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
                     JSONArray subjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(subjectName);
                     JSONObject subjectNotificationJSONObject = subjectNotificationsJSONArray.getJSONObject(childPosition);
@@ -117,7 +114,6 @@ public class NotificationsMainMenu extends Fragment
         protected void onPostExecute(String response) {
             myNotifications = response;
             mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
-            List<String> listDataHeader = new ArrayList<>();
             try {
                 JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
                 for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
