@@ -40,11 +40,12 @@
             android:name=".MainMenuActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/MainMenuTheme"></activity>
+            android:theme="@style/MainMenuTheme" />
         <activity
             android:name=".AboutActivity"
-            android:theme="@style/generalNoTitle"></activity>
-        <activity android:name=".NotificationDetailsActivity"></activity>
+            android:theme="@style/generalNoTitle" />
+        <activity android:name=".NotificationDetailsActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
