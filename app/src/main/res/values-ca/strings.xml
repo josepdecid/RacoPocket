@@ -26,6 +26,7 @@
     <string name="nav_language">Idioma</string>
     <string name="nav_share">Compartir</string>
     <string name="nav_about">Sobre</string>
+    <string name="nav_settings">Configuració</string>
     <string name="nav_logout">Tancar sessió</string>
 
     <!-- Strings related to Timetable -->
