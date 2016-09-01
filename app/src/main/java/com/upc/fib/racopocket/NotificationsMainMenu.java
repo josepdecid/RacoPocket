@@ -35,7 +35,7 @@ public class NotificationsMainMenu extends Fragment
     ProgressBar progressBar;
 
     String mySubjects, myNotifications;
-    List<String> listDataHeader = new ArrayList<>();
+    List<String> listDataHeader;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -114,6 +114,7 @@ public class NotificationsMainMenu extends Fragment
         protected void onPostExecute(String response) {
             myNotifications = response;
             mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+            listDataHeader = new ArrayList<>();
             try {
                 JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
                 for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
