@@ -26,6 +26,7 @@
     <string name="nav_schedule">Schedule</string>
     <string name="nav_class_availability">Class Availability</string>
     <string name="nav_subject_info">Subject Information</string>
+    <string name="nav_uni_map">University Map</string>
 
     <string name="nav_group2">Other cool features</string>
 

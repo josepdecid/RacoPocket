@@ -20,6 +20,7 @@
     <string name="nav_schedule">Agenda</string>
     <string name="nav_class_availability">Disponibilidad laboratorios</string>
     <string name="nav_subject_info">Información de las asignaturas</string>
+    <string name="nav_uni_map">Mapa de la universidad</string>
 
     <string name="nav_group2">Otras características</string>
 

@@ -74,6 +74,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             newFragment = new ClassAvailabilityMainMenu();
         } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
+        } else if (id == R.id.nav_uni_map ) { // TODO: Complete map intent
+            newFragment = new UniversityMapMainMenu();
         } else if (id == R.id.nav_language) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {

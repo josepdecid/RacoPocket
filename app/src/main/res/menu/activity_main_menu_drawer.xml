@@ -24,6 +24,10 @@
             android:id="@+id/nav_subject_info"
             android:icon="@drawable/ic_zoom_in_black"
             android:title="@string/nav_subject_info" />
+        <item
+            android:id="@+id/nav_uni_map"
+            android:icon="@drawable/ic_map"
+            android:title="@string/nav_uni_map" />
     </group>
 
     <item android:title="@string/nav_group2">
