@@ -18,14 +18,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.upc.fib.racopocket.Utils.FileUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -111,12 +111,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_logout) {
             TokensStorageHelpers.removeTokens(getApplicationContext());
 
-            FileHelpers.fileDelete(getApplicationContext(), "info-personal.json");
-            FileHelpers.fileDelete(getApplicationContext(), "assignatures.json");
-            FileHelpers.fileDelete(getApplicationContext(), "horari-setmanal.json");
-            FileHelpers.fileDelete(getApplicationContext(), "avisos.json");
-            FileHelpers.fileDelete(getApplicationContext(), "calendari-portada.ics");
-            FileHelpers.fileDelete(getApplicationContext(), "places-lliures.json");
+            FileUtils.fileDelete(getApplicationContext(), "info-personal.json");
+            FileUtils.fileDelete(getApplicationContext(), "assignatures.json");
+            FileUtils.fileDelete(getApplicationContext(), "horari-setmanal.json");
+            FileUtils.fileDelete(getApplicationContext(), "avisos.json");
+            FileUtils.fileDelete(getApplicationContext(), "calendari-portada.ics");
+            FileUtils.fileDelete(getApplicationContext(), "places-lliures.json");
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -189,7 +189,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     private void setWelcomeText() {
 
-        String studentData = FileHelpers.readFileToString(getApplicationContext(), "info-personal.json");
+        String studentData = FileUtils.readFileToString(getApplicationContext(), "info-personal.json");
 
         try {
             JSONObject object = new JSONObject(studentData);

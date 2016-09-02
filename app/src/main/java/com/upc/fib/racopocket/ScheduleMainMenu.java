@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
@@ -50,7 +52,7 @@ public class ScheduleMainMenu extends Fragment
             @Override
             public void onClick(View v) {
                 if (!workInProgress) {
-                    FileHelpers.fileDelete(getContext().getApplicationContext(), "calendari-portada.ics");
+                    FileUtils.fileDelete(getContext().getApplicationContext(), "calendari-portada.ics");
                     new GetSchedule().execute();
                 }
             }
@@ -71,10 +73,10 @@ public class ScheduleMainMenu extends Fragment
 
         @Override
         protected String doInBackground(Void... params) {
-            if (FileHelpers.fileExists(getContext().getApplicationContext(), "calendari-portada.ics")) {
-                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+            if (FileUtils.fileExists(getContext().getApplicationContext(), "calendari-portada.ics")) {
+                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             }
-            return FileHelpers.readFileToString(getContext().getApplicationContext(), "calendari-portada.ics");
+            return FileUtils.readFileToString(getContext().getApplicationContext(), "calendari-portada.ics");
         }
 
         @Override

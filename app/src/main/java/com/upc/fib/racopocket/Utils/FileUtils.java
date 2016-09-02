@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,54 +14,64 @@ import java.net.URL;
 
 import oauth.signpost.OAuthConsumer;
 
-public class FileHelpers {
+public class FileUtils {
 
+    // Checks if 'filename' file, exists in the given context.
     public static boolean fileExists(Context context, String fileName) {
         File file = new File(context.getFilesDir(), fileName);
         return file.exists();
     }
 
+    // Tries delete 'filename' file in the given context, and returns if file has been deleted.
     public static boolean fileDelete(Context context, String fileName) {
         File file = new File(context.getFilesDir(), fileName);
         return file.delete();
     }
 
-    public static void fetchAndStoreJSONFile(Context context, OAuthConsumer consumer, String u, String outputFile) {
+    // Fetch and store url data into 'outputFile' if statusCode is OK, and returns statusCode.
+    public static int fetchAndStoreFile(Context context, OAuthConsumer consumer, String u, String outputFile) {
 
         try {
             URL url = new URL(u);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-            if (consumer != null) {
+            if (consumer != null)
                 consumer.sign(urlConnection);
-            }
 
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder buffer = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    buffer.append(line).append('\n');
-                }
 
-                String data = buffer.toString();
-                try {
-                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(outputFile, Context.MODE_PRIVATE));
-                    outputStreamWriter.write(data);
-                    outputStreamWriter.close();
-                } catch (IOException e) {
-                    Log.e("File", "File write failed: " + e.toString());
+                String line;
+                while ((line = bufferedReader.readLine()) != null)
+                    buffer.append(line).append('\n');
+
+                int statusCode = urlConnection.getResponseCode();
+
+                if (statusCode == 200) {
+                    String data = buffer.toString();
+                    try {
+                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(outputFile, Context.MODE_PRIVATE));
+                        outputStreamWriter.write(data);
+                        outputStreamWriter.close();
+                    } catch (IOException e) {
+                        Log.e("File", "File write failed: " + e.toString());
+                    }
                 }
+                return statusCode;
 
             } finally {
                 urlConnection.disconnect();
             }
         } catch (Exception e) {
-            Log.i("OAuth", "" + e.getMessage());
+            Log.i("FILE", "" + e.getMessage());
         }
+
+        return -1;
 
     }
 
+    // Reads a file from 'inputFile' and returns the string if read successfully, otherwise, null.
     public static String readFileToString(Context context, String inputFile) {
 
         try {
@@ -72,9 +82,8 @@ public class FileHelpers {
                 String receiveString;
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ((receiveString = bufferedReader.readLine()) != null) {
+                while ((receiveString = bufferedReader.readLine()) != null)
                     stringBuilder.append(receiveString);
-                }
 
                 inputStream.close();
                 return stringBuilder.toString();
@@ -83,38 +92,7 @@ public class FileHelpers {
             Log.e("FILE", "Can not read file: " + e.toString());
         }
 
-        return "";
-
-    }
-
-    public static String fetchDirectlyJSON(OAuthConsumer consumer, String u) {
-
-        StringBuilder buffer = new StringBuilder();
-
-        try {
-            URL url = new URL(u);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-            if (consumer != null) {
-                consumer.sign(urlConnection);
-            }
-
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    buffer.append(line).append('\n');
-                }
-
-            } finally {
-                urlConnection.disconnect();
-            }
-        } catch (Exception e) {
-            Log.i("OAuth", "" + e.getMessage());
-            return null;
-        }
-
-        return buffer.toString();
+        return null;
 
     }
 

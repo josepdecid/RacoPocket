@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +88,7 @@ public class NotificationsMainMenu extends Fragment
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileHelpers.fileDelete(getContext().getApplicationContext(), "avisos.json");
+                FileUtils.fileDelete(getContext().getApplicationContext(), "avisos.json");
                 new GetNotifications().execute();
             }
         });
@@ -104,16 +106,16 @@ public class NotificationsMainMenu extends Fragment
 
         @Override
         protected String doInBackground(Void... params) {
-            if (!FileHelpers.fileExists(getContext().getApplicationContext(), "avisos.json")) {
-                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            if (!FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json")) {
+                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
             }
-            return FileHelpers.readFileToString(getContext().getApplicationContext(), "avisos.json");
+            return FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json");
         }
 
         @Override
         protected void onPostExecute(String response) {
             myNotifications = response;
-            mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+            mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
             listDataHeader = new ArrayList<>();
             try {
                 JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);

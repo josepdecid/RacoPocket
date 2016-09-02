@@ -19,6 +19,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +53,7 @@ public class ClassAvailabilityMainMenu extends Fragment
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileHelpers.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
+                FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
             }
         });
@@ -102,11 +104,11 @@ public class ClassAvailabilityMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params) {
 
-            if (!FileHelpers.fileExists(getContext().getApplicationContext(), "places-lliures.json")) {
-                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
+            if (!FileUtils.fileExists(getContext().getApplicationContext(), "places-lliures.json")) {
+                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
             }
 
-            return FileHelpers.readFileToString(getContext(), "places-lliures.json");
+            return FileUtils.readFileToString(getContext(), "places-lliures.json");
 
         }
 

@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +87,7 @@ public class SubjectInfoMainMenu extends Fragment
 
     private void loadSubjectsList() {
 
-        String subjectsListData = FileHelpers.readFileToString(getContext().getApplicationContext(), "llista.json");
+        String subjectsListData = FileUtils.readFileToString(getContext().getApplicationContext(), "llista.json");
         try {
             JSONArray subjectsJSONArray = new JSONArray(subjectsListData);
             for (int i = 0; i < subjectsJSONArray.length(); i++) {
@@ -116,7 +118,7 @@ public class SubjectInfoMainMenu extends Fragment
         subjectData.setText("");
         subjectBibliography.setText("");
 
-        String subjectInfo = FileHelpers.readFileToString(getContext().getApplicationContext(), fileName);
+        String subjectInfo = FileUtils.readFileToString(getContext().getApplicationContext(), fileName);
 
         subjectSelector.setText("");
 

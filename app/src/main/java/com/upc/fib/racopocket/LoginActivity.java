@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,21 +163,21 @@ public class LoginActivity extends Activity
         protected Void doInBackground(Void... params)
         {
             // Personal Data
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json");
             // Personal Subjects
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json");
             // Timetable Data
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json");
             // Notifications Data
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
             // Schedule Data
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             // Class Availability Data
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
             // Subjects List
-            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json");
+            FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json");
             // Subjects Data
-            String subjects = FileHelpers.readFileToString(getApplicationContext(), "llista.json");
+            String subjects = FileUtils.readFileToString(getApplicationContext(), "llista.json");
             try {
                 JSONArray subjectsJSONArray = new JSONArray(subjects);
                 if (subjectsJSONArray != null) {
@@ -183,8 +185,8 @@ public class LoginActivity extends Activity
                         JSONObject subjectJSONObject = subjectsJSONArray.getJSONObject(i);
                         String subjectCode = subjectJSONObject.getString("codi_upc");
                         String filename = "subject_" + subjectCode + ".json";
-                        if (!FileHelpers.fileExists(getApplicationContext(), filename)) {
-                            FileHelpers.fetchAndStoreJSONFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename);
+                        if (!FileUtils.fileExists(getApplicationContext(), filename)) {
+                            FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename);
                         }
                     }
                 }

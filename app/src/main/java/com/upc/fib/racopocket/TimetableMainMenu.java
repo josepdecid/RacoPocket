@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,7 +112,7 @@ public class TimetableMainMenu extends Fragment
         };
 
         colorScheme = new HashMap<>();
-        String mySubjects = FileHelpers.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+        String mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
         try {
             JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
             for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
@@ -134,10 +136,10 @@ public class TimetableMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params)
         {
-            if (!FileHelpers.fileExists(getContext().getApplicationContext(), "horari-setmanal.json")) {
-                FileHelpers.fetchAndStoreJSONFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/horari-setmanal.json" , "horari-setmanal.json");
+            if (!FileUtils.fileExists(getContext().getApplicationContext(), "horari-setmanal.json")) {
+                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/horari-setmanal.json" , "horari-setmanal.json");
             }
-            return FileHelpers.readFileToString(getContext(), "horari-setmanal.json");
+            return FileUtils.readFileToString(getContext(), "horari-setmanal.json");
         }
 
         @Override
