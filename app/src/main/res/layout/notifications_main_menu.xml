@@ -3,32 +3,41 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/white">
 
-    <ImageButton
-        android:id="@+id/updateNotifications"
-        android:src="@drawable/ic_autorenew_black_24dp"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/connectionProblemTextNotifications"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/refresh_image_button"/>
-
-    <ImageView
-        android:id="@+id/connectionNotifications"
-        android:src="@drawable/ic_cloud_off_black_24dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/connection_failed"
         android:layout_gravity="center"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="gone"
-        android:contentDescription="@string/connection_problems" />
+        android:textColor="@color/raco_blue"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:text="@string/connection_problems"
+        android:visibility="gone"/>
 
     <ExpandableListView
         android:id="@+id/expListViewNotifications"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_below="@+id/updateNotifications"
+        android:layout_above="@id/updateNotifications"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+
+    <ImageButton
+        android:id="@+id/updateNotifications"
+        android:src="@drawable/ic_autorenew_black_24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/refresh_image_button"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@drawable/refresh_gradient"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ProgressBar
         android:id="@+id/progressBarNotifications"

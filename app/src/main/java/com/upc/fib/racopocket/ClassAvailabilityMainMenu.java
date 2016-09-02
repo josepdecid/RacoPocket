@@ -14,7 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,30 +29,34 @@ import java.util.ArrayList;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
-    TextView lastUpdate;
+    TextView lastUpdate, connectionProblemText;
     ImageButton update;
-    ImageView connectionProblem;
     ListView listView;
     ProgressBar progressBar;
+    LinearLayout classAvailabilityInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_class_availability));
-        return inflater.inflate(R.layout.class_availability_main_menu, container, false);
+        View rootView = inflater.inflate(R.layout.class_availability_main_menu, container, false);
+
+        lastUpdate = (TextView) rootView.findViewById(R.id.lastUpdateClassAvailability);
+        update = (ImageButton) rootView.findViewById(R.id.updateNotifications);
+        connectionProblemText = (TextView) rootView.findViewById(R.id.connectionProblemTextClassAvailability);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        listView = (ListView) rootView.findViewById(R.id.listView);
+        classAvailabilityInfo = (LinearLayout) rootView.findViewById(R.id.class_info_linear_layout);
+
+        return rootView;
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lastUpdate = (TextView) view.findViewById(R.id.lastUpdateClassAvailability);
-        update = (ImageButton) view.findViewById(R.id.updateClassAvailability);
-        connectionProblem = (ImageView) view.findViewById(R.id.connection);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        listView = (ListView) view.findViewById(R.id.listView);
-
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                connectionProblemText.setVisibility(View.GONE);
                 FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
             }
@@ -116,7 +120,7 @@ public class ClassAvailabilityMainMenu extends Fragment
         protected void onPostExecute(String response) {
 
             if (response == null) {
-                connectionProblem.setVisibility(View.VISIBLE);
+                connectionProblemText.setVisibility(View.VISIBLE);
             } else {
                 final ArrayList<ClassroomInfo> classroomsInfo = new ArrayList<>();
                 try {
@@ -168,6 +172,7 @@ public class ClassAvailabilityMainMenu extends Fragment
             }
 
             progressBar.setVisibility(View.GONE);
+            classAvailabilityInfo.setVisibility(View.VISIBLE);
         }
 
     }

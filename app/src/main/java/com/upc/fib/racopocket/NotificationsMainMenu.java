@@ -32,7 +32,7 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 public class NotificationsMainMenu extends Fragment
 {
     ImageButton update;
-    ImageView connectionProblem;
+    TextView connectionProblem;
     ExpandableListView expListView;
     ProgressBar progressBar;
 
@@ -51,7 +51,7 @@ public class NotificationsMainMenu extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         update = (ImageButton) view.findViewById(R.id.updateNotifications);
-        connectionProblem = (ImageView) view.findViewById(R.id.connectionNotifications);
+        connectionProblem = (TextView) view.findViewById(R.id.connectionProblemTextNotifications);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarNotifications);
         expListView = (ExpandableListView) view.findViewById(R.id.expListViewNotifications);
 
