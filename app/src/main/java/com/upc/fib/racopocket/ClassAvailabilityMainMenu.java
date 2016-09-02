@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.upc.fib.racopocket.Utils.FileUtils;
 
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
-    TextView lastUpdate, header1ClassAvailability, header2ClassAvailability;
+    TextView lastUpdate, connectionProblemText, header1ClassAvailability, header2ClassAvailability;
     ImageButton update;
     ListView listView;
     ProgressBar progressBar;
@@ -43,6 +42,7 @@ public class ClassAvailabilityMainMenu extends Fragment
 
         lastUpdate = (TextView) rootView.findViewById(R.id.lastUpdateClassAvailability);
         update = (ImageButton) rootView.findViewById(R.id.updateNotifications);
+        connectionProblemText = (TextView) rootView.findViewById(R.id.connectionProblemTextClassAvailability);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         listView = (ListView) rootView.findViewById(R.id.listView);
         classAvailabilityInfo = (LinearLayout) rootView.findViewById(R.id.class_info_linear_layout);
@@ -58,6 +58,8 @@ public class ClassAvailabilityMainMenu extends Fragment
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                connectionProblemText.setVisibility(View.GONE);
+                FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
             }
         });
@@ -120,11 +122,8 @@ public class ClassAvailabilityMainMenu extends Fragment
         protected void onPostExecute(String response) {
 
             if (response == null) {
-                header1ClassAvailability.setVisibility(View.GONE);
-                header2ClassAvailability.setVisibility(View.GONE);
-                Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
+                connectionProblemText.setVisibility(View.VISIBLE);
             } else {
-                FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 final ArrayList<ClassroomInfo> classroomsInfo = new ArrayList<>();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -140,8 +139,6 @@ public class ClassAvailabilityMainMenu extends Fragment
                         int availability = classroomsJSONArray.getJSONObject(i).getInt("places");
                         classroomsInfo.add(new ClassroomInfo(name, availability));
                     }
-                    header1ClassAvailability.setVisibility(View.VISIBLE);
-                    header2ClassAvailability.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -177,6 +174,8 @@ public class ClassAvailabilityMainMenu extends Fragment
             }
 
             progressBar.setVisibility(View.GONE);
+            header1ClassAvailability.setVisibility(View.VISIBLE);
+            header2ClassAvailability.setVisibility(View.VISIBLE);
             classAvailabilityInfo.setVisibility(View.VISIBLE);
         }
 
