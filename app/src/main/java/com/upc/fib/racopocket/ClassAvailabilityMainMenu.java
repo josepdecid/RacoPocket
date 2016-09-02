@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Models.ClassroomModel;
 import com.upc.fib.racopocket.Utils.FileUtils;
 
 import org.json.JSONArray;
@@ -29,14 +30,15 @@ import java.util.ArrayList;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
-    TextView lastUpdate, connectionProblemText, header1ClassAvailability, header2ClassAvailability;
+    TextView connectionProblemText, lastUpdate, header1ClassAvailability, header2ClassAvailability;
     ImageButton update;
     ListView listView;
     ProgressBar progressBar;
     LinearLayout classAvailabilityInfo;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_class_availability));
         View rootView = inflater.inflate(R.layout.class_availability_main_menu, container, false);
 
@@ -52,32 +54,37 @@ public class ClassAvailabilityMainMenu extends Fragment
         return rootView;
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                header1ClassAvailability.setVisibility(View.GONE);
+                header2ClassAvailability.setVisibility(View.GONE);
                 connectionProblemText.setVisibility(View.GONE);
                 FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 WebView webView = new WebView(getContext());
                 String building;
+                // TODO: Get by two first letters instead of HARDCODE!
                 if (position < 10) building = "a5";
                 else if (position < 13) building = "b5";
                 else building = "c6";
                 webView.loadUrl("https://raco.fib.upc.edu/mapa_ocupades.php?mod=" + building);
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    public boolean shouldOverrideUrlLoading(WebView view, String url)
+                    {
                         view.loadUrl(url);
                         return true;
                     }
@@ -87,7 +94,8 @@ public class ClassAvailabilityMainMenu extends Fragment
                 builder.setView(webView);
                 builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
                         dialog.dismiss();
                     }
                 });
@@ -110,21 +118,20 @@ public class ClassAvailabilityMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params) {
 
-            if (!FileUtils.fileExists(getContext().getApplicationContext(), "places-lliures.json")) {
+            if (!FileUtils.fileExists(getContext().getApplicationContext(), "places-lliures.json"))
                 FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
-            }
 
             return FileUtils.readFileToString(getContext(), "places-lliures.json");
 
         }
 
         @Override
-        protected void onPostExecute(String response) {
-
-            if (response == null) {
+        protected void onPostExecute(String response)
+        {
+            if (response == null)
                 connectionProblemText.setVisibility(View.VISIBLE);
-            } else {
-                final ArrayList<ClassroomInfo> classroomsInfo = new ArrayList<>();
+            else {
+                final ArrayList<ClassroomModel> classroomsInfo = new ArrayList<>();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
@@ -137,13 +144,13 @@ public class ClassAvailabilityMainMenu extends Fragment
                     for (int i = 0; i < classroomsJSONArray.length(); i++) {
                         String name = classroomsJSONArray.getJSONObject(i).getString("nom");
                         int availability = classroomsJSONArray.getJSONObject(i).getInt("places");
-                        classroomsInfo.add(new ClassroomInfo(name, availability));
+                        classroomsInfo.add(new ClassroomModel(name, availability));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                final ArrayAdapter<ClassroomInfo> adapter = new ArrayAdapter<ClassroomInfo>(getContext(), R.layout.class_availability_item_list, R.id.classroomNameClassAvailability, classroomsInfo) {
+                final ArrayAdapter<ClassroomModel> adapter = new ArrayAdapter<ClassroomModel>(getContext(), R.layout.class_availability_item_list, R.id.classroomNameClassAvailability, classroomsInfo) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View view = super.getView(position, convertView, parent);
@@ -157,13 +164,12 @@ public class ClassAvailabilityMainMenu extends Fragment
                         text2.setText(String.valueOf(availability));
 
                         int statusColor;
-                        if (availability == 0) {
+                        if (availability == 0)
                             statusColor = ContextCompat.getColor(getContext(), R.color.not_available);
-                        } else if (availability < 5) {
+                        else if (availability < 5)
                             statusColor = ContextCompat.getColor(getContext(), R.color.quite_not_available);
-                        } else {
+                        else
                             statusColor = ContextCompat.getColor(getContext(), R.color.available);
-                        }
 
                         view.setBackgroundColor(statusColor);
                         return view;
@@ -171,31 +177,13 @@ public class ClassAvailabilityMainMenu extends Fragment
                 };
 
                 listView.setAdapter(adapter);
+
+                header1ClassAvailability.setVisibility(View.VISIBLE);
+                header2ClassAvailability.setVisibility(View.VISIBLE);
+                classAvailabilityInfo.setVisibility(View.VISIBLE);
             }
 
             progressBar.setVisibility(View.GONE);
-            header1ClassAvailability.setVisibility(View.VISIBLE);
-            header2ClassAvailability.setVisibility(View.VISIBLE);
-            classAvailabilityInfo.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    private class ClassroomInfo {
-        String name;
-        int availability;
-
-        ClassroomInfo(String name, int availability) {
-            this.name = name;
-            this.availability = availability;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public int getAvailability() {
-            return this.availability;
         }
 
     }

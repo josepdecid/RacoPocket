@@ -43,7 +43,7 @@
     <string name="class_availability">Espais lliures</string>
 
     <!-- Strings related to Subject Info -->
-    <string name="connection_problems">Error al establir una connexió, intenta-ho de nou.</string>
+    <string name="connection_problems">Servei temporalment no disponible, intenta-ho més tard.</string>
 
     <string name="credits">Crèdits</string>
     <string name="description_objectives">Descripció i objectius</string>

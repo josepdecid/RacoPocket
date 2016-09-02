@@ -34,7 +34,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     TextView welcomeName;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
@@ -48,46 +49,46 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        if (drawer != null) {
+        if (drawer != null)
             drawer.addDrawerListener(toggle);
-        }
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
+        if (navigationView != null)
             navigationView.setNavigationItemSelectedListener(this);
-        }
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
         int id = item.getItemId();
         Fragment newFragment = null;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (id == R.id.nav_timetable) {
+        if (id == R.id.nav_timetable)
             newFragment = new TimetableMainMenu();
-        } else if (id == R.id.nav_notifications) {
+        else if (id == R.id.nav_notifications)
             newFragment = new NotificationsMainMenu();
-        } else if (id == R.id.nav_schedule) {
+        else if (id == R.id.nav_schedule)
             newFragment = new ScheduleMainMenu();
-        } else if (id == R.id.nav_class_availability) {
+        else if (id == R.id.nav_class_availability)
             newFragment = new ClassAvailabilityMainMenu();
-        } else if (id == R.id.nav_subject_info) {
+        else if (id == R.id.nav_subject_info)
             newFragment = new SubjectInfoMainMenu();
-        } else if (id == R.id.nav_uni_map ) { // TODO: Complete map intent
-            newFragment = new UniversityMapMainMenu();
-        } else if (id == R.id.nav_language) {
+        else if (id == R.id.nav_language) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int which) {
-                    if (which == 0) {
-                        setLocale("ca");
-                    } else if (which == 1) {
-                        setLocale("es");
-                    } else {
-                        setLocale("en");
+                public void onClick(DialogInterface dialogInterface, int which)
+                {
+                    switch (which) {
+                        case 0:
+                            setLocale("ca");
+                            break;
+                        case 1:
+                            setLocale("es");
+                            break;
+                        default:
+                            setLocale("en");
                     }
                     finish();
                     Intent intent = new Intent(MainMenuActivity.this, MainMenuActivity.class);
@@ -127,7 +128,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         if (newFragment != null) {
-            ((FrameLayout)findViewById(R.id.main_menu_fragment_container)).removeAllViews();
+            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.main_menu_fragment_container);
+            if (frameLayout != null)
+                frameLayout.removeAllViews();
 
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
@@ -138,27 +141,29 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
+        if (drawer != null)
             drawer.closeDrawer(GravityCompat.START);
-        }
+
         return true;
     }
 
     private Boolean exit = false;
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if (exit) {
+        else {
+            if (exit)
                 finish();
-            } else {
+            else {
                 Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         exit = false;
                     }
                 }, 3000);
@@ -166,14 +171,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    public void setActionBarDesign(String title) {
-        if (getSupportActionBar() != null) {
+    public void setActionBarDesign(String title)
+    {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(title);
-        }
     }
 
-    private void setLocale(String localeCode) {
-
+    private void setLocale(String localeCode)
+    {
         Locale locale = new Locale(localeCode);
         Locale.setDefault(locale);
         Configuration configuration = new Configuration();
@@ -185,11 +190,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("language", localeCode);
         editor.apply();
-
     }
 
-    private void setWelcomeText() {
-
+    private void setWelcomeText()
+    {
         String studentData = FileUtils.readFileToString(getApplicationContext(), "info-personal.json");
 
         try {
