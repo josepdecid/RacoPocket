@@ -2,10 +2,12 @@ package com.upc.fib.racopocket;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.upc.fib.racopocket.Utils.FileUtils;
 
@@ -31,7 +34,6 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 public class NotificationsMainMenu extends Fragment
 {
     ImageButton update;
-    TextView connectionProblem;
     ExpandableListView expListViewNotifications;
     ProgressBar progressBar;
 
@@ -47,7 +49,6 @@ public class NotificationsMainMenu extends Fragment
         View rootView = inflater.inflate(R.layout.notifications_main_menu, container, false);
 
         update = (ImageButton) rootView.findViewById(R.id.updateNotifications);
-        connectionProblem = (TextView) rootView.findViewById(R.id.connectionProblemTextNotifications);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarNotifications);
         expListViewNotifications = (ExpandableListView) rootView.findViewById(R.id.expListViewNotifications);
 
@@ -93,9 +94,6 @@ public class NotificationsMainMenu extends Fragment
             @Override
             public void onClick(View v)
             {
-                expListViewNotifications.setVisibility(View.GONE);
-                connectionProblem.setVisibility(View.GONE);
-                FileUtils.fileDelete(getContext().getApplicationContext(), "avisos.json");
                 new GetNotifications().execute();
             }
         });
@@ -125,8 +123,9 @@ public class NotificationsMainMenu extends Fragment
         protected void onPostExecute(String response)
         {
             if (response == null)
-                connectionProblem.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
             else {
+                FileUtils.fileDelete(getContext().getApplicationContext(), "avisos.json");
                 myNotifications = response;
                 mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
                 listDataHeader = new ArrayList<>();

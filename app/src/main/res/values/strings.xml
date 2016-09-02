@@ -59,7 +59,7 @@
     <string name="delete_image_button">Delete</string>
     <string name="connection_image_button">Connection</string>
 
-    <string name="connection_problems">Unable to establish a connection</string>
+    <string name="connection_problems">Unable to establish a connection, try again.</string>
     <string name="data_not_found">Data not found</string>
 
     <string name="credits">Credits</string>
