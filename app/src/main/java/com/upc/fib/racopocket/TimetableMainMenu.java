@@ -109,6 +109,11 @@ public class TimetableMainMenu extends Fragment
                 Color.parseColor("#FFD2A7"),
                 Color.parseColor("#BDDCE9"),
                 Color.parseColor("#DDBFE4"),
+                Color.parseColor("#F4828C"),
+                Color.parseColor("#BD8B5A"),
+                Color.parseColor("#EEABCA"),
+                Color.parseColor("#C2BB63"),
+                Color.parseColor("#297DB5"),
         };
 
         colorScheme = new HashMap<>();
