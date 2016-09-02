@@ -38,19 +38,21 @@ public class TimetableMainMenu extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_timetable));
-        return inflater.inflate(R.layout.timetable_main_menu, container, false);
+        View rootView = inflater.inflate(R.layout.timetable_main_menu, container, false);
+
+        connectionProblem = (ImageView) rootView.findViewById(R.id.connectionTimetable);
+        nextDay = (ImageView) rootView.findViewById(R.id.nextDayTimetable);
+        previousDay = (ImageView) rootView.findViewById(R.id.previousDayTimetable);
+        listView = (ListView) rootView.findViewById(R.id.listViewTimetable);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarTimetable);
+        currentDayText = (TextView) rootView.findViewById(R.id.currentDatTimetable);
+
+        return rootView;
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-
-        connectionProblem = (ImageView) view.findViewById(R.id.connectionTimetable);
-        nextDay = (ImageView) view.findViewById(R.id.nextDayTimetable);
-        previousDay = (ImageView) view.findViewById(R.id.previousDayTimetable);
-        listView = (ListView) view.findViewById(R.id.listViewTimetable);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBarTimetable);
-        currentDayText = (TextView) view.findViewById(R.id.currentDatTimetable);
 
         workInProgress = false;
 
@@ -64,12 +66,10 @@ public class TimetableMainMenu extends Fragment
             @Override
             public void onClick(View v)
             {
-                if (!workInProgress) {
-                    currentDay--;
-                    if (currentDay == 0) currentDay = 5;
-                    writeWeekDay();
-                    new GetTimetableData().execute();
-                }
+                currentDay--;
+                if (currentDay == 0) currentDay = 5;
+                writeWeekDay();
+                new GetTimetableData().execute();
             }
         });
 
@@ -78,12 +78,10 @@ public class TimetableMainMenu extends Fragment
             @Override
             public void onClick(View v)
             {
-                if (!workInProgress) {
-                    currentDay++;
-                    if (currentDay == 6) currentDay = 1;
-                    writeWeekDay();
-                    new GetTimetableData().execute();
-                }
+                currentDay++;
+                if (currentDay == 6) currentDay = 1;
+                writeWeekDay();
+                new GetTimetableData().execute();
             }
         });
 

@@ -1,9 +1,9 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class TokensStorageHelpers {
+public class TokensStorageUtils {
 
     public static void storeTokens(Context context, String token, String token_secret) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
