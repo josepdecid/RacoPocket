@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
+import com.upc.fib.racopocket.Utils.TokensStorageUtils;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -42,8 +44,8 @@ public class ScheduleMainMenu extends Fragment
         eventsList = (ListView) view.findViewById(R.id.listViewSchedule);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarSchedule);
 
-        String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
-        String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        String token = TokensStorageUtils.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
+        String secret = TokensStorageUtils.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
         workInProgress = false;

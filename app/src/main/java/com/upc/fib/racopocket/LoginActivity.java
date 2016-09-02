@@ -20,7 +20,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
+import com.upc.fib.racopocket.Utils.TokensStorageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,8 +71,8 @@ public class LoginActivity extends Activity
         super.onResume();
         Uri uri = this.getIntent().getData();
 
-        String token = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
-        String secret = TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        String token = TokensStorageUtils.recoverTokens(getApplicationContext(), "OAUTH_TOKEN");
+        String secret = TokensStorageUtils.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
         // This is the case when we receive a token
@@ -97,7 +99,7 @@ public class LoginActivity extends Activity
             try {
                 Log.i("OAuth", "Retrieving request token from Raco servers");
                 String authURL = provider.retrieveRequestToken(consumer, Constants.CALLBACK);
-                TokensStorageHelpers.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
+                TokensStorageUtils.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
                 Log.i("OAuth", "Popping a browser with the authorize URL : " + authURL);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authURL)));
             } catch (Exception e) {
@@ -131,7 +133,7 @@ public class LoginActivity extends Activity
         protected Void doInBackground(Void... params) {
             try {
                 provider.retrieveAccessToken(consumer, null);
-                TokensStorageHelpers.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
+                TokensStorageUtils.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
             } catch (Exception e) {
                 Log.d("OAuth", "Access token failed");
                 Toast.makeText(LoginActivity.this, "Something went wrong, try it again", Toast.LENGTH_SHORT).show();

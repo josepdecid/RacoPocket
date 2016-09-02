@@ -7,6 +7,9 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.upc.fib.racopocket.Utils.TokensStorageUtils;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     // Intent to login or main menu according if you are already logged in or not
     private Intent nextActivity()
     {
-        if (TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("") || TokensStorageHelpers.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
+        if (TokensStorageUtils.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("") || TokensStorageUtils.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
             return new Intent(MainActivity.this, LoginActivity.class);
         } else {
             return new Intent(MainActivity.this, MainMenuActivity.class);

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upc.fib.racopocket.Utils.FileUtils;
+import com.upc.fib.racopocket.Utils.TokensStorageUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,7 +110,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(MainMenuActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            TokensStorageHelpers.removeTokens(getApplicationContext());
+            TokensStorageUtils.removeTokens(getApplicationContext());
 
             FileUtils.fileDelete(getApplicationContext(), "info-personal.json");
             FileUtils.fileDelete(getApplicationContext(), "assignatures.json");

@@ -18,7 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
+import com.upc.fib.racopocket.Utils.TokensStorageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,8 +54,8 @@ public class NotificationsMainMenu extends Fragment
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarNotifications);
         expListViewNotifications = (ExpandableListView) rootView.findViewById(R.id.expListViewNotifications);
 
-        String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
-        String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        String token = TokensStorageUtils.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
+        String secret = TokensStorageUtils.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
         return rootView;
