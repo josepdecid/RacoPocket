@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,7 +32,7 @@ public class NotificationsMainMenu extends Fragment
 {
     ImageButton update;
     TextView connectionProblem;
-    ExpandableListView expListView;
+    ExpandableListView expListViewNotifications;
     ProgressBar progressBar;
 
     String mySubjects, myNotifications;
@@ -42,26 +41,32 @@ public class NotificationsMainMenu extends Fragment
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_notifications));
-        return inflater.inflate(R.layout.notifications_main_menu, container, false);
-    }
+        View rootView = inflater.inflate(R.layout.notifications_main_menu, container, false);
 
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        update = (ImageButton) view.findViewById(R.id.updateNotifications);
-        connectionProblem = (TextView) view.findViewById(R.id.connectionProblemTextNotifications);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBarNotifications);
-        expListView = (ExpandableListView) view.findViewById(R.id.expListViewNotifications);
+        update = (ImageButton) rootView.findViewById(R.id.updateNotifications);
+        connectionProblem = (TextView) rootView.findViewById(R.id.connectionProblemTextNotifications);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarNotifications);
+        expListViewNotifications = (ExpandableListView) rootView.findViewById(R.id.expListViewNotifications);
 
         String token = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN");
         String secret = TokensStorageHelpers.recoverTokens(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        return rootView;
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        expListViewNotifications.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
+        {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
+            {
                 String subjectName = null, title = null, description = null;
                 try {
                     subjectName = listDataHeader.get(groupPosition);
@@ -70,8 +75,6 @@ public class NotificationsMainMenu extends Fragment
                     JSONObject subjectNotificationJSONObject = subjectNotificationsJSONArray.getJSONObject(childPosition);
                     title = subjectNotificationJSONObject.getString("title");
                     description = subjectNotificationJSONObject.getString("description");
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -85,9 +88,13 @@ public class NotificationsMainMenu extends Fragment
             }
         });
 
-        update.setOnClickListener(new View.OnClickListener() {
+        update.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                expListViewNotifications.setVisibility(View.GONE);
+                connectionProblem.setVisibility(View.GONE);
                 FileUtils.fileDelete(getContext().getApplicationContext(), "avisos.json");
                 new GetNotifications().execute();
             }
@@ -96,66 +103,74 @@ public class NotificationsMainMenu extends Fragment
         new GetNotifications().execute();
     }
 
-    private class GetNotifications extends AsyncTask<Void, Void, String> {
+    private class GetNotifications extends AsyncTask<Void, Void, String>
+    {
 
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-            if (!FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json")) {
+        protected String doInBackground(Void... params)
+        {
+            if (!FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json"))
                 FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            }
             return FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json");
         }
 
         @Override
-        protected void onPostExecute(String response) {
-            myNotifications = response;
-            mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
-            listDataHeader = new ArrayList<>();
-            try {
-                JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
-                for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
-                    JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
-                    listDataHeader.add(subjectJSONObject.getString("idAssig"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            HashMap<String, List<String>> listDataChild = new HashMap<>();
-            try {
-                JSONObject subjectsNotificationsJSONObject = new JSONObject(response);
-                for (int i = 0; i < listDataHeader.size(); i++) {
-                    // Each subject
-                    List<String> dataChild = new ArrayList<>();
-                    // If subject has notifications we display the subject's title
-                    // Otherwise we don't display the subject's title
-                    if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
-                        JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
-                        for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
-                            // Each subject notifications
-                            JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
-                            String title = subjectJSONObject.getString("title");
-                            dataChild.add(title);
-                        }
-                        listDataChild.put(listDataHeader.get(i), dataChild);
-                    } else {
-                        listDataHeader.remove(i--);
+        protected void onPostExecute(String response)
+        {
+            if (response == null)
+                connectionProblem.setVisibility(View.VISIBLE);
+            else {
+                myNotifications = response;
+                mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+                listDataHeader = new ArrayList<>();
+                try {
+                    JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+                    for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
+                        JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
+                        listDataHeader.add(subjectJSONObject.getString("idAssig"));
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+                HashMap<String, List<String>> listDataChild = new HashMap<>();
+                try {
+                    JSONObject subjectsNotificationsJSONObject = new JSONObject(response);
+                    for (int i = 0; i < listDataHeader.size(); i++) {
+                        // Each subject
+                        List<String> dataChild = new ArrayList<>();
+                        // If subject has notifications we display the subject's title
+                        // Otherwise we don't display the subject's title
+                        if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
+                            JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
+                            for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
+                                // Each subject notifications
+                                JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
+                                String title = subjectJSONObject.getString("title");
+                                dataChild.add(title);
+                            }
+                            listDataChild.put(listDataHeader.get(i), dataChild);
+                        } else {
+                            listDataHeader.remove(i--);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // Set and display the Subjects Array
+                ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+                expListViewNotifications.setAdapter(expandableListAdapter);
+
+                expListViewNotifications.setVisibility(View.VISIBLE);
             }
-
-            // Set and display the Subjects Array
-            ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
-            expListView.setAdapter(expandableListAdapter);
-
             progressBar.setVisibility(View.GONE);
         }
 
