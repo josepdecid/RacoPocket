@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Models.TimetableModel;
 import com.upc.fib.racopocket.Utils.FileUtils;
 
 import org.json.JSONArray;
@@ -25,14 +26,14 @@ import java.util.HashMap;
 
 public class TimetableMainMenu extends Fragment
 {
-    ImageView connectionProblem, nextDay, previousDay;
+    ImageButton previousDay, nextDay;
+    TextView currentDayText;
     ListView listView;
     ProgressBar progressBar;
-    TextView currentDayText;
 
     int currentDay;
-    boolean workInProgress;
     HashMap<String, Integer> colorScheme;
+    ArrayList<ArrayList<TimetableModel>> classroomsInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -40,9 +41,8 @@ public class TimetableMainMenu extends Fragment
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_timetable));
         View rootView = inflater.inflate(R.layout.timetable_main_menu, container, false);
 
-        connectionProblem = (ImageView) rootView.findViewById(R.id.connectionTimetable);
-        nextDay = (ImageView) rootView.findViewById(R.id.nextDayTimetable);
-        previousDay = (ImageView) rootView.findViewById(R.id.previousDayTimetable);
+        nextDay = (ImageButton) rootView.findViewById(R.id.nextDayTimetable);
+        previousDay = (ImageButton) rootView.findViewById(R.id.previousDayTimetable);
         listView = (ListView) rootView.findViewById(R.id.listViewTimetable);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarTimetable);
         currentDayText = (TextView) rootView.findViewById(R.id.currentDatTimetable);
@@ -54,48 +54,65 @@ public class TimetableMainMenu extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        workInProgress = false;
+        classroomsInfo = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            classroomsInfo.add(new ArrayList<TimetableModel>());
 
         currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
-        if (currentDay == 0 || currentDay == 6) currentDay = 1;
+        if (currentDay == 0 || currentDay == 6)
+            currentDay = 1;
+
         writeWeekDay();
         setColorScheme();
 
-        previousDay.setOnClickListener(new View.OnClickListener()
-        {
+        previousDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
                 currentDay--;
                 if (currentDay == 0) currentDay = 5;
                 writeWeekDay();
-                new GetTimetableData().execute();
+                printTimetable();
             }
         });
 
-        nextDay.setOnClickListener(new View.OnClickListener()
-        {
+        nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
                 currentDay++;
                 if (currentDay == 6) currentDay = 1;
                 writeWeekDay();
-                new GetTimetableData().execute();
+                printTimetable();
             }
         });
 
         new GetTimetableData().execute();
+
     }
 
     private void writeWeekDay()
     {
         String day;
-        if (currentDay == 1) day = getResources().getString(R.string.monday);
-        else if (currentDay == 2) day = getResources().getString(R.string.tuesday);
-        else if (currentDay == 3) day = getResources().getString(R.string.wednesday);
-        else if (currentDay == 4) day = getResources().getString(R.string.thursday);
-        else day = getResources().getString(R.string.friday);
+        switch (currentDay) {
+            case 1:
+                day = getResources().getString(R.string.monday);
+                break;
+            case 2:
+                day = getResources().getString(R.string.tuesday);
+                break;
+            case 3:
+                day = getResources().getString(R.string.wednesday);
+                break;
+            case 4:
+                day = getResources().getString(R.string.thursday);
+                break;
+            case 5:
+                day = getResources().getString(R.string.friday);
+                break;
+            default:
+                day = "";
+        }
         currentDayText.setText(day);
     }
 
@@ -139,106 +156,67 @@ public class TimetableMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params)
         {
-            if (!FileUtils.fileExists(getContext().getApplicationContext(), "horari-setmanal.json")) {
+            if (!FileUtils.fileExists(getContext().getApplicationContext(), "horari-setmanal.json"))
                 FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/horari-setmanal.json" , "horari-setmanal.json");
-            }
             return FileUtils.readFileToString(getContext(), "horari-setmanal.json");
         }
 
         @Override
         protected void onPostExecute(String response)
         {
-            if (response == null) {
-                connectionProblem.setVisibility(View.VISIBLE);
-            } else {
-                final ArrayList<TimetableInfo> classroomsInfo = new ArrayList<>();
+            if (response != null) {
                 try {
                     JSONArray timetableJSONArray = new JSONArray(response);
                     for (int i = 0; i < timetableJSONArray.length(); i++) {
                         JSONObject currentClass = timetableJSONArray.getJSONObject(i);
-                        if (currentClass.getInt("Dia") == currentDay) {
-                            String subject = currentClass.getString("Assig");
-                            String group = currentClass.getString("Grup") + currentClass.getString("Tipus");
-                            String timeStart = currentClass.getString("HoraInici") + "-" + currentClass.getString("HoraFi") + "h";
-                            String classroom = currentClass.getString("Aules");
-                            classroom = classroom.replace("[", "");
-                            classroom = classroom.replace("]", "");
-                            classroom = classroom.replace("\"", "");
-                            classroom = classroom.replace(",", ", ");
-                            classroomsInfo.add(new TimetableInfo(subject, group, timeStart, classroom));
-                        }
+                        String subject = currentClass.getString("Assig");
+                        String group = currentClass.getString("Grup") + currentClass.getString("Tipus");
+                        String timeStart = currentClass.getString("HoraInici") + "-" + currentClass.getString("HoraFi") + "h";
+                        String classroom = currentClass.getString("Aules");
+                        classroom = classroom.replace("[", "");
+                        classroom = classroom.replace("]", "");
+                        classroom = classroom.replace("\"", "");
+                        classroom = classroom.replace(",", ", ");
+                        classroomsInfo.get(currentClass.getInt("Dia") - 1).add(new TimetableModel(subject, group, timeStart, classroom));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                final ArrayAdapter<TimetableInfo> adapter = new ArrayAdapter<TimetableInfo>(getContext(), R.layout.timetable_item_list, R.id.timetableStartTime, classroomsInfo) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        View view = super.getView(position, convertView, parent);
-                        TextView text1 = (TextView) view.findViewById(R.id.timetableStartTime);
-                        TextView text2 = (TextView) view.findViewById(R.id.timetableName);
-                        TextView text3 = (TextView) view.findViewById(R.id.timetableClassroom);
-
-                        String subject = classroomsInfo.get(position).getName();
-
-                        String name = subject + " " + classroomsInfo.get(position).getGroup();
-                        String startTime = classroomsInfo.get(position).getStartTime();
-                        String classroom = classroomsInfo.get(position).getClassroom();
-
-                        text1.setText(startTime);
-                        text2.setText(name);
-                        text3.setText(classroom);
-
-                        int color = colorScheme.get(subject);
-                        view.setBackgroundColor(color);
-
-                        return view;
-                    }
-                };
-
-                listView.setAdapter(adapter);
             }
 
+            printTimetable();
             progressBar.setVisibility(View.GONE);
         }
     }
 
-    private class TimetableInfo
+    void printTimetable()
     {
-        String name;
-        String group;
-        String startTime;
-        String classroom;
+        final ArrayAdapter<TimetableModel> adapter = new ArrayAdapter<TimetableModel>(getContext(), R.layout.timetable_item_list, R.id.timetableStartTime, classroomsInfo.get(currentDay - 1)) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent)
+            {
+                View view = super.getView(position, convertView, parent);
+                TextView text1 = (TextView) view.findViewById(R.id.timetableStartTime);
+                TextView text2 = (TextView) view.findViewById(R.id.timetableName);
+                TextView text3 = (TextView) view.findViewById(R.id.timetableClassroom);
 
-        TimetableInfo(String name, String group, String startTime, String classroom)
-        {
-            this.name = name;
-            this.group = group;
-            this.startTime = startTime;
-            this.classroom = classroom;
-        }
+                String subject = classroomsInfo.get(currentDay - 1).get(position).getName();
 
-        public String getName()
-        {
-            return this.name;
-        }
+                String name = subject + " " + classroomsInfo.get(currentDay - 1).get(position).getGroup();
+                String startTime = classroomsInfo.get(currentDay - 1).get(position).getStartTime();
+                String classroom = classroomsInfo.get(currentDay - 1).get(position).getClassroom();
 
-        public String getStartTime()
-        {
-            return this.startTime;
-        }
+                text1.setText(startTime);
+                text2.setText(name);
+                text3.setText(classroom);
 
-        public String getClassroom()
-        {
-            return this.classroom;
-        }
+                int color = colorScheme.get(subject);
+                view.setBackgroundColor(color);
 
-        public String getGroup()
-        {
-            return this.group;
-        }
+                return view;
+            }
+        };
+        listView.setAdapter(adapter);
     }
-
 
 }
