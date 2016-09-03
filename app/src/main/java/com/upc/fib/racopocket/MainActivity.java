@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     // Set application language
     private void setLocale()
     {
-        String localeCode = PreferencesUtils.recoverPreference(getApplicationContext(), "language");
+        String localeCode = PreferencesUtils.recoverStringPreference(getApplicationContext(), "language");
         if (localeCode.equals(""))
             localeCode = "ca";
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     // Intent to login or main menu according if you are already logged in or not
     private Intent nextActivity()
     {
-        if (PreferencesUtils.recoverPreference(getApplicationContext(), "OAUTH_TOKEN").equals("") || PreferencesUtils.recoverPreference(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
+        if (PreferencesUtils.recoverStringPreference(getApplicationContext(), "OAUTH_TOKEN").equals("") || PreferencesUtils.recoverStringPreference(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
             return new Intent(MainActivity.this, LoginActivity.class);
         } else {
             return new Intent(MainActivity.this, MainMenuActivity.class);

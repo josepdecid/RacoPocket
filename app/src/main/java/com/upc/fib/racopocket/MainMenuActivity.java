@@ -140,7 +140,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                         exit = false;
                     }
                 }, 3000);*/
-                String asd = PreferencesUtils.recoverPreference(getApplicationContext(), "language");
+                String asd = PreferencesUtils.recoverStringPreference(getApplicationContext(), "language");
                 Toast.makeText(MainMenuActivity.this, asd, Toast.LENGTH_SHORT).show();
             }
         }

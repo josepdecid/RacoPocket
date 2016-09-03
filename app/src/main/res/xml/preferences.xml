@@ -8,7 +8,6 @@
             android:title="@string/nav_language"
             android:summary="@string/description_language"
             android:key="language"
-            android:defaultValue="ca"
             android:entries="@array/languages_array"
             android:entryValues="@array/languages_array_values" />
 
@@ -40,19 +39,15 @@
         android:title="@string/reports">
 
         <Preference
+            android:key="emailReport"
             android:title="@string/reports_mail"
             android:summary="@string/reports_mail_description">
-            <intent
-                android:action="android.intent.action.SEND" />
         </Preference>
 
         <Preference
+            android:key="gitHubReport"
             android:title="@string/reports_github"
             android:summary="@string/reports_github_description">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetPackage="com.upc.fib.racopocket"
-                android:targetClass="com.upc.fib.racopocket.SettingsActivity" />
         </Preference>
 
     </PreferenceCategory>

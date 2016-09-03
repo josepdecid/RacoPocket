@@ -53,8 +53,8 @@ public class NotificationsMainMenu extends Fragment
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBarNotifications);
         expListViewNotifications = (ExpandableListView) rootView.findViewById(R.id.expListViewNotifications);
 
-        String token = PreferencesUtils.recoverPreference(getContext().getApplicationContext(), "OAUTH_TOKEN");
-        String secret = PreferencesUtils.recoverPreference(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        String token = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "OAUTH_TOKEN");
+        String secret = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
         return rootView;

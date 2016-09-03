@@ -14,9 +14,14 @@ public class PreferencesUtils {
         editor.apply();
     }
 
-    public static String recoverPreference(Context context, String preference_name) {
+    public static String recoverStringPreference(Context context, String preference_name) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(preference_name, "");
+    }
+
+    public static boolean recoverBooleanPreference(Context context, String preference_name) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(preference_name, false);
     }
 
     public static void removeTokens(Context context) {

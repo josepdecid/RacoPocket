@@ -22,7 +22,6 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 public class ScheduleMainMenu extends Fragment
 {
     ImageButton update;
-    ImageView connection;
     ListView eventsList;
     ProgressBar progressBar;
 
@@ -40,12 +39,11 @@ public class ScheduleMainMenu extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         update = (ImageButton) view.findViewById(R.id.updateSchedule);
-        connection = (ImageView) view.findViewById(R.id.connectionSchedule);
         eventsList = (ListView) view.findViewById(R.id.listViewSchedule);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarSchedule);
 
-        String token = PreferencesUtils.recoverPreference(getContext().getApplicationContext(), "OAUTH_TOKEN");
-        String secret = PreferencesUtils.recoverPreference(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
+        String token = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "OAUTH_TOKEN");
+        String secret = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "OAUTH_TOKEN_SECRET");
         consumer.setTokenWithSecret(token, secret);
 
         workInProgress = false;
