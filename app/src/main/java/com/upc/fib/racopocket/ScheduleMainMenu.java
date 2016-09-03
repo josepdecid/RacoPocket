@@ -15,6 +15,10 @@ import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.TokensStorageUtils;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
@@ -83,15 +87,24 @@ public class ScheduleMainMenu extends Fragment
 
         @Override
         protected void onPostExecute(String response) {
-            createSchedule(response);
+
+            /*StringReader stringReader = new StringReader(response);
+            CalendarBuilder builder = new CalendarBuilder();
+            try {
+                Calendar calendar = builder.build(stringReader);
+
+                ArrayList<ScheduleModel> scheduleEventsList = new ArrayList<>();
+                for (Object event : calendar.getComponents(Component.VEVENT)) {
+                    Date dateStart = ((VEvent) event).getStartDate().getDate();
+                    Date dateEnd = ((VEvent) event).getEndDate().getDate();
+                }
+            } catch (IOException | ParserException e) {
+                e.printStackTrace();
+            }*/
+
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }
-    }
-
-    void createSchedule(String scheduleData)
-    {
-
     }
 
 }
