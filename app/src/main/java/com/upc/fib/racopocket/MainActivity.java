@@ -1,14 +1,12 @@
 package com.upc.fib.racopocket;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.upc.fib.racopocket.Utils.TokensStorageUtils;
+import com.upc.fib.racopocket.Utils.PreferencesUtils;
 
 import java.util.Locale;
 
@@ -39,8 +37,9 @@ public class MainActivity extends AppCompatActivity
     // Set application language
     private void setLocale()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-        final String localeCode = sharedPreferences.getString("language", "en");
+        String localeCode = PreferencesUtils.recoverPreference(getApplicationContext(), "language");
+        if (localeCode.equals(""))
+            localeCode = "ca";
 
         Locale locale = new Locale(localeCode);
         Locale.setDefault(locale);
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     // Intent to login or main menu according if you are already logged in or not
     private Intent nextActivity()
     {
-        if (TokensStorageUtils.recoverTokens(getApplicationContext(), "OAUTH_TOKEN").equals("") || TokensStorageUtils.recoverTokens(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
+        if (PreferencesUtils.recoverPreference(getApplicationContext(), "OAUTH_TOKEN").equals("") || PreferencesUtils.recoverPreference(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
             return new Intent(MainActivity.this, LoginActivity.class);
         } else {
             return new Intent(MainActivity.this, MainMenuActivity.class);

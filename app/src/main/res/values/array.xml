@@ -7,9 +7,9 @@
     </string-array>
 
     <string-array name="languages_array_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>ca</item>
+        <item>es</item>
+        <item>en</item>
     </string-array>
 
     <string-array name="listUpdateElements">

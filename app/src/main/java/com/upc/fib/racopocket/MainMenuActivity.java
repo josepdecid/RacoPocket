@@ -1,19 +1,13 @@
 package com.upc.fib.racopocket;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -22,12 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upc.fib.racopocket.Utils.FileUtils;
-import com.upc.fib.racopocket.Utils.TokensStorageUtils;
+import com.upc.fib.racopocket.Utils.PreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,29 +66,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             newFragment = new ClassAvailabilityMainMenu();
         else if (id == R.id.nav_subject_info)
             newFragment = new SubjectInfoMainMenu();
-        else if (id == R.id.nav_language) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int which)
-                {
-                    switch (which) {
-                        case 0:
-                            setLocale("ca");
-                            break;
-                        case 1:
-                            setLocale("es");
-                            break;
-                        default:
-                            setLocale("en");
-                    }
-                    finish();
-                    Intent intent = new Intent(MainMenuActivity.this, MainMenuActivity.class);
-                    startActivity(intent);
-                }
-            });
-            builder.show();
-        } else if (id == R.id.nav_share) {
+         else if (id == R.id.nav_share) {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
@@ -109,9 +79,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(MainMenuActivity.this, SettingsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            TokensStorageUtils.removeTokens(getApplicationContext());
+            PreferencesUtils.removeTokens(getApplicationContext());
 
             FileUtils.fileDelete(getApplicationContext(), "info-personal.json");
             FileUtils.fileDelete(getApplicationContext(), "assignatures.json");
@@ -158,7 +131,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             if (exit)
                 finish();
             else {
-                Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -166,7 +139,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     {
                         exit = false;
                     }
-                }, 3000);
+                }, 3000);*/
+                String asd = PreferencesUtils.recoverPreference(getApplicationContext(), "language");
+                Toast.makeText(MainMenuActivity.this, asd, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -175,21 +150,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(title);
-    }
-
-    private void setLocale(String localeCode)
-    {
-        Locale locale = new Locale(localeCode);
-        Locale.setDefault(locale);
-        Configuration configuration = new Configuration();
-        configuration.locale = locale;
-        this.getResources().updateConfiguration(configuration, this.getResources().getDisplayMetrics());
-        Toast.makeText(this, getResources().getString(R.string.new_language), Toast.LENGTH_SHORT).show();
-
-        SharedPreferences sharedPreferences = getSharedPreferences("racopocket.preferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("language", localeCode);
-        editor.apply();
     }
 
     private void setWelcomeText()

@@ -8,7 +8,7 @@
             android:title="@string/nav_language"
             android:summary="@string/description_language"
             android:key="language"
-            android:defaultValue="1"
+            android:defaultValue="ca"
             android:entries="@array/languages_array"
             android:entryValues="@array/languages_array_values" />
 
@@ -40,7 +40,6 @@
         android:title="@string/reports">
 
         <Preference
-            android:key="reportViaMail"
             android:title="@string/reports_mail"
             android:summary="@string/reports_mail_description">
             <intent
@@ -48,7 +47,6 @@
         </Preference>
 
         <Preference
-            android:key="reportViaGithub"
             android:title="@string/reports_github"
             android:summary="@string/reports_github_description">
             <intent
