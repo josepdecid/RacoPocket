@@ -2,6 +2,7 @@ package com.upc.fib.racopocket;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -69,10 +70,10 @@ public class SubjectInfoMainMenu extends Fragment
                 } else {
                     Boolean found = false;
                     for (int i = 0; i < subjects_name.size() && !found; i++) {
-                        if (subjects_name.get(i).getFirst().equals(subjectName)) {
+                        if (subjects_name.get(i).first.equals(subjectName)) {
 
                             found = true;
-                            currentCode = subjects_name.get(i).getSecond();
+                            currentCode = subjects_name.get(i).second;
                             String fileName = "subject_" + currentCode + ".json";
 
                             showSubjectInfo(fileName);
@@ -104,7 +105,7 @@ public class SubjectInfoMainMenu extends Fragment
 
         ArrayList<String> subjectsId = new ArrayList<>();
         for (int i = 0; i < subjects_name.size(); i++) {
-            subjectsId.add(subjects_name.get(i).getFirst());
+            subjectsId.add(subjects_name.get(i).first);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, subjectsId);
@@ -174,22 +175,6 @@ public class SubjectInfoMainMenu extends Fragment
             e.printStackTrace();
         }
 
-    }
-
-    // Simplified Pair Implementation
-    private class Pair<A, B> {
-        private A first;
-        private B second;
-
-        public Pair(A first, B second) {
-            super();
-            this.first = first;
-            this.second = second;
-        }
-
-        public A getFirst() { return this.first; }
-
-        public B getSecond() { return this.second; }
     }
 
 }

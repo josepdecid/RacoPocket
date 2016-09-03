@@ -2,12 +2,11 @@ package com.upc.fib.racopocket;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +64,7 @@ public class NotificationsMainMenu extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        expListViewNotifications.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
-        {
+        expListViewNotifications.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
             {
@@ -91,8 +89,7 @@ public class NotificationsMainMenu extends Fragment
             }
         });
 
-        update.setOnClickListener(new View.OnClickListener()
-        {
+        update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -103,7 +100,7 @@ public class NotificationsMainMenu extends Fragment
         new GetNotifications().execute();
     }
 
-    private class GetNotifications extends AsyncTask<Void, Void, String>
+    private class GetNotifications extends AsyncTask<Void, Void, Pair<Integer, String>>
     {
 
         @Override
@@ -114,64 +111,61 @@ public class NotificationsMainMenu extends Fragment
         }
 
         @Override
-        protected String doInBackground(Void... params)
+        protected Pair<Integer, String> doInBackground(Void... params)
         {
-            if (!FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json"))
-                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            return FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json");
+            int status = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            return new Pair<>(status, FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json"));
         }
 
         @Override
-        protected void onPostExecute(String response)
+        protected void onPostExecute(Pair response)
         {
-            if (response == null)
+            if (!response.first.toString().equals("200"))
                 Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
-            else {
-                FileUtils.fileDelete(getContext().getApplicationContext(), "avisos.json");
-                myNotifications = response;
-                mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
-                listDataHeader = new ArrayList<>();
-                try {
-                    JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
-                    for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
-                        JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
-                        listDataHeader.add(subjectJSONObject.getString("idAssig"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+            myNotifications = response.second.toString();
+            mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+            listDataHeader = new ArrayList<>();
+            try {
+                JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+                for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
+                    JSONObject subjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
+                    listDataHeader.add(subjectJSONObject.getString("idAssig"));
                 }
-
-                HashMap<String, List<String>> listDataChild = new HashMap<>();
-                try {
-                    JSONObject subjectsNotificationsJSONObject = new JSONObject(response);
-                    for (int i = 0; i < listDataHeader.size(); i++) {
-                        // Each subject
-                        List<String> dataChild = new ArrayList<>();
-                        // If subject has notifications we display the subject's title
-                        // Otherwise we don't display the subject's title
-                        if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
-                            JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
-                            for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
-                                // Each subject notifications
-                                JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
-                                String title = subjectJSONObject.getString("title");
-                                dataChild.add(title);
-                            }
-                            listDataChild.put(listDataHeader.get(i), dataChild);
-                        } else {
-                            listDataHeader.remove(i--);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                // Set and display the Subjects Array
-                ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
-                expListViewNotifications.setAdapter(expandableListAdapter);
-
-                expListViewNotifications.setVisibility(View.VISIBLE);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+            HashMap<String, List<String>> listDataChild = new HashMap<>();
+            try {
+                JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
+                for (int i = 0; i < listDataHeader.size(); i++) {
+                    // Each subject
+                    List<String> dataChild = new ArrayList<>();
+                    // If subject has notifications we display the subject's title
+                    // Otherwise we don't display the subject's title
+                    if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
+                        JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
+                        for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
+                            // Each subject notifications
+                            JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
+                            String title = subjectJSONObject.getString("title");
+                            dataChild.add(title);
+                        }
+                        listDataChild.put(listDataHeader.get(i), dataChild);
+                    } else {
+                        listDataHeader.remove(i--);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            // Set and display the Subjects Array
+            ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+            expListViewNotifications.setAdapter(expandableListAdapter);
+
+            expListViewNotifications.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
 
