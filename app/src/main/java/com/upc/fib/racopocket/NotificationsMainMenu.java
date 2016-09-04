@@ -166,12 +166,13 @@ public class NotificationsMainMenu extends Fragment
                 e.printStackTrace();
             }
 
-            HashMap<String, List<String>> listDataChild = new HashMap<>();
+            // TODO: Implement file download
+            HashMap<String, List<Pair<String, String>>> listDataChild = new HashMap<>();
             try {
                 JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
                 for (int i = 0; i < listDataHeader.size(); i++) {
                     // Each subject
-                    List<String> dataChild = new ArrayList<>();
+                    List<Pair<String, String>> dataChild = new ArrayList<>();
                     // If subject has notifications we display the subject's title
                     // Otherwise we don't display the subject's title
                     if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
@@ -180,7 +181,9 @@ public class NotificationsMainMenu extends Fragment
                             // Each subject notifications
                             JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
                             String title = subjectJSONObject.getString("title");
-                            dataChild.add(title);
+                            String date = subjectJSONObject.getString("pubDate");
+                            date = date.substring(5, date.length() - 6);
+                            dataChild.add(new Pair<>(title, date));
                         }
                         listDataChild.put(listDataHeader.get(i), dataChild);
                     } else {
@@ -204,16 +207,16 @@ public class NotificationsMainMenu extends Fragment
     private class ExpandableListAdapter extends BaseExpandableListAdapter {
         private Context context;
         private List<String> listDataHeader;
-        private HashMap<String, List<String>> listDataChild;
+        private HashMap<String, List<Pair<String, String>>> listDataChild;
 
-        public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData) {
+        public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<Pair<String, String>>> listChildData) {
             this.context = context;
             this.listDataHeader = listDataHeader;
             this.listDataChild = listChildData;
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
+        public Pair<String, String> getChild(int groupPosition, int childPosition) {
             return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosition);
         }
 
@@ -225,15 +228,17 @@ public class NotificationsMainMenu extends Fragment
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final String childText = (String) getChild(groupPosition, childPosition);
-
             if (convertView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = layoutInflater.inflate(android.R.layout.simple_list_item_1, null);
+                convertView = layoutInflater.inflate(R.layout.notifications_list_item, null);
             }
 
-            TextView txtListChild = (TextView) convertView.findViewById(android.R.id.text1);
-            txtListChild.setText(childText);
+            TextView titleNotifications = (TextView) convertView.findViewById(R.id.titleNotifications);
+            TextView dateNotifications = (TextView) convertView.findViewById(R.id.dateNotifications);
+
+            Pair<String, String> element = getChild(groupPosition, childPosition);
+            titleNotifications.setText(element.first);
+            dateNotifications.setText(element.second);
 
             return convertView;
         }
