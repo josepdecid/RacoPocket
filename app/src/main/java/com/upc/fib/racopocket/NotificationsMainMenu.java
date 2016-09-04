@@ -93,14 +93,14 @@ public class NotificationsMainMenu extends Fragment
             @Override
             public void onClick(View v)
             {
-                new GetNotifications().execute();
+                new GetNotifications().execute(true);
             }
         });
 
-        new GetNotifications().execute();
+        new GetNotifications().execute(false);
     }
 
-    private class GetNotifications extends AsyncTask<Void, Void, Pair<Integer, String>>
+    private class GetNotifications extends AsyncTask<Boolean, Void, Pair<Integer, String>>
     {
 
         @Override
@@ -111,10 +111,40 @@ public class NotificationsMainMenu extends Fragment
         }
 
         @Override
-        protected Pair<Integer, String> doInBackground(Void... params)
+        protected Pair<Integer, String> doInBackground(Boolean... params)
         {
-            int status = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            return new Pair<>(status, FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json"));
+            Boolean forceUpdate = params[0];
+            int statusCode = 200;
+
+            if (forceUpdate || !FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json"))
+                statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            else {
+                String performCase = "never";
+                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
+                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
+                        if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "applicationUpdates")) {
+                            performCase = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "applicationUpdates");
+                        }
+                    }
+                }
+
+                switch (performCase) {
+                    case "weekly":
+                        //TODO: Implement weekly update case
+                        break;
+                    case "daily":
+                        //TODO: Implement weekly update case
+                        break;
+                    case "always":
+                        statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+            return new Pair<>(statusCode, FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json"));
         }
 
         @Override

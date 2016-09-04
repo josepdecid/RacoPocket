@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/title_activity_login"
+        android:text="@string/action_sign_in_short"
         android:background="#CCCFD7"
         android:textColor="@color/black"
         android:textSize="20sp"

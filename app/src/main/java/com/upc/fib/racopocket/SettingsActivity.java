@@ -2,9 +2,9 @@ package com.upc.fib.racopocket;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -55,8 +54,6 @@ public class SettingsActivity extends PreferenceActivity
     public void onDestroy()
     {
         super.onDestroy();
-        //TODO: Solve IllegalStateException error
-        //getFragmentManager().popBackStack();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment
@@ -81,7 +78,8 @@ public class SettingsActivity extends PreferenceActivity
 
             language.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
-                public boolean onPreferenceClick(Preference preference) {
+                public boolean onPreferenceClick(Preference preference)
+                {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.nav_language).setItems(R.array.languages_array, new DialogInterface.OnClickListener() {
                         @Override
@@ -97,6 +95,7 @@ public class SettingsActivity extends PreferenceActivity
                                 default:
                                     setLocale("en");
                             }
+                            Toast.makeText(getActivity(), getResources().getString(R.string.new_language), Toast.LENGTH_LONG).show();
                             getActivity().recreate();
                         }
                     });

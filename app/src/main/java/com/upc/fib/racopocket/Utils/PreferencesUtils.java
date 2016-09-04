@@ -6,6 +6,12 @@ import android.preference.PreferenceManager;
 
 public class PreferencesUtils
 {
+    public static boolean preferenceExists(Context context, String preferenceKey)
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.contains(preferenceKey);
+    }
+
     public static void storeStringPreference(Context context, String preferenceKey, String preferenceValue)
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +22,9 @@ import com.upc.fib.racopocket.Utils.PreferencesUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+{
+    Fragment newFragment = null;
     TextView welcomeName;
 
     @Override
@@ -55,7 +56,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public boolean onNavigationItemSelected(MenuItem item)
     {
         int id = item.getItemId();
-        Fragment newFragment = null;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_timetable)
             newFragment = new TimetableMainMenu();
@@ -102,16 +102,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         if (newFragment != null) {
-            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.main_menu_fragment_container);
-            if (frameLayout != null)
-                frameLayout.removeAllViews();
-
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_menu_fragment_container, newFragment).commit();
-            transaction.replace(R.id.main_menu_fragment_container, newFragment);
-            transaction.addToBackStack(null);
-
-            transaction.commit();
+            transaction.replace(R.id.main_menu_fragment_container, newFragment).addToBackStack(null).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -129,18 +122,23 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
         else {
-            if (exit)
-                finish();
-            else {
-                Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
-                exit = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        exit = false;
-                    }
-                }, 3000);
+            if (newFragment != null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().remove(newFragment).commit();
+                newFragment = null;
+            } else {
+                if (exit)
+                    finish();
+                else {
+                    Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+                    exit = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            exit = false;
+                        }
+                    }, 3000);
+                }
             }
         }
     }
@@ -157,7 +155,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
         try {
             JSONObject object = new JSONObject(studentData);
-            String data = getResources().getString(R.string.welcome).toUpperCase() + ",\n " + object.getString("nom") + " " + object.getString("cognoms");
+            String data = getResources().getString(R.string.welcome).toUpperCase() + "\n " + object.getString("nom") + " " + object.getString("cognoms");
             welcomeName.setText(data);
         } catch (JSONException e) {
             e.printStackTrace();

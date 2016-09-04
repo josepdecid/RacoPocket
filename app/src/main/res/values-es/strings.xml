@@ -2,13 +2,7 @@
 <resources>
 
     <!-- Strings related to login -->
-    <string name="prompt_password">Contraseña</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Entrar</string>
-    <string name="error_invalid_email">Esta dirección de correo es inválida</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
-    <string name="error_field_required">Este campo es obligatorio</string>
 
     <!-- Strings related to Main Menu -->
     <string name="welcome">Bienvenido</string>
@@ -19,7 +13,7 @@
     <string name="nav_notifications">Notificaciones</string>
     <string name="nav_schedule">Agenda</string>
     <string name="nav_class_availability">Disponibilidad laboratorios</string>
-    <string name="nav_subject_info">Información de las asignaturas</string>
+    <string name="nav_subject_info">Información asignaturas</string>
     <string name="nav_uni_map">Mapa de la universidad</string>
 
     <string name="nav_group2">Otras características</string>
