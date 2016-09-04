@@ -105,7 +105,7 @@ public class LoginActivity extends Activity
         protected void onPostExecute(String response)
         {
             if (response.equals("ERROR"))
-                Toast.makeText(LoginActivity.this, "Something went wrong, check your connection and try it again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
             workInProgress = false;
         }
 
@@ -149,7 +149,7 @@ public class LoginActivity extends Activity
         @Override
         protected void onPreExecute()
         {
-            progressDialog.setTitle("Downloading necessary data");
+            progressDialog.setTitle(R.string.login_title);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setIndeterminate(false);
@@ -216,7 +216,7 @@ public class LoginActivity extends Activity
         protected void onPostExecute(String response)
         {
             if (response.equals("ERROR")) {
-                Toast.makeText(LoginActivity.this, "Something went wrong, check your connection and try it again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
                 PreferencesUtils.removeTokens(getApplicationContext());
             } else {
                 Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);

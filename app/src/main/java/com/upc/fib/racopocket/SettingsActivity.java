@@ -189,7 +189,7 @@ public class SettingsActivity extends PreferenceActivity
             @Override
             protected void onPreExecute()
             {
-                progressDialog.setTitle("Downloading necessary data");
+                progressDialog.setTitle(R.string.update_data_title);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.setIndeterminate(false);
@@ -263,9 +263,9 @@ public class SettingsActivity extends PreferenceActivity
             {
                 progressDialog.dismiss();
                 if (response.equals("ERROR"))
-                    Toast.makeText(getActivity(), "Something went wrong, check your connection and try it again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.update_data_unsuccessful, Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(getActivity(), "All data have been successfully uploaded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.update_data_successful, Toast.LENGTH_SHORT).show();
             }
         }
     }

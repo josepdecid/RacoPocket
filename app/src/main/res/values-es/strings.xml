@@ -3,6 +3,8 @@
 
     <!-- Strings related to login -->
     <string name="action_sign_in_short">Entrar</string>
+    <string name="login_title">Descargando los datos necesarios</string>
+    <string name="login_failed">Algo ha fallado, comprueba tu conexión y vuelve a intentarlo</string>
 
     <!-- Strings related to Main Menu -->
     <string name="welcome">Bienvenido</string>
@@ -86,8 +88,11 @@
     <string name="when_open_update">Actualizar cada vez que consultamos los datos</string>
 
     <string name="update_data">Actualizar todos los datos</string>
+    <string name="update_data_title">Descargando los datos necesarios</string>
     <string name="update_data_description">Actualiza todos los datos de la aplicación (Recomendado cada vez que empieza un nuevo curso).</string>
     <string name="update_data_text">Todos los datos se actualizarán, y eso puede consumir unos cuantos MB de internet. Te recomendamos activar la conexión Wi-Fi.</string>
+    <string name="update_data_successful">Todos los datos se han actualizado correctamente</string>
+    <string name="update_data_unsuccessful">Algo ha fallado, comprueba tu conexión y vuelve a intentarlo</string>
     <string name="continue_dialog">Continuar</string>
     <string name="cancel_dialog">Cancelar</string>
 

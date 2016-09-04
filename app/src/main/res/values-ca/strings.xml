@@ -2,13 +2,9 @@
 <resources>
 
     <!-- Strings related to login -->
-    <string name="prompt_password">Contrassenya</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Entrar</string>
-    <string name="error_invalid_email">Aquesta direcció de correu és invàlida</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">Aquesta contrassenya és incorrecta</string>
-    <string name="error_field_required">Aquest camp es obligatori</string>
+    <string name="login_title">Descarregant les dades necessàries</string>
+    <string name="login_failed">Algo ha fallat, comprova la teva connexió i torna a intentar-ho</string>
 
     <!-- Strings related to Main Menu -->
     <string name="welcome">Benvingut</string>
@@ -92,8 +88,11 @@
     <string name="when_open_update">Actualitzar cada cop que consultem les dades</string>
 
     <string name="update_data">Actualitzar totes les dades</string>
+    <string name="update_data_title">Descarregant les dades necessàries</string>
     <string name="update_data_description">Actualitza totes les dades de l\'aplicació (Recomanat cada cop que comença un curs nou).</string>
     <string name="update_data_text">Totes les dades s\'actualitzaran, i això pot consumir uns quants MB d\'internet. Et recomanem activar la connexió Wi-fi.</string>
+    <string name="update_data_successful">Totes les dades s'han actualitzat correctament</string>
+    <string name="update_data_unsuccessful">Algo ha fallat, comprova la teva connexió i torna a intentar-ho</string>
     <string name="continue_dialog">Continuar</string>
     <string name="cancel_dialog">Cancel·lar</string>
 
