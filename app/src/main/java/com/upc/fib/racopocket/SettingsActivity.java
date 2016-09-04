@@ -44,7 +44,7 @@ public class SettingsActivity extends PreferenceActivity
     {
         super.onDestroy();
         //TODO: Solve IllegalStateException error
-        getFragmentManager().popBackStack();
+        //getFragmentManager().popBackStack();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment

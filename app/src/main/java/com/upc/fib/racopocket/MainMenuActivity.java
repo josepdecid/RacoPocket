@@ -2,6 +2,7 @@ package com.upc.fib.racopocket;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -131,7 +132,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             if (exit)
                 finish();
             else {
-                /*Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -139,9 +140,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     {
                         exit = false;
                     }
-                }, 3000);*/
-                String asd = PreferencesUtils.recoverStringPreference(getApplicationContext(), "language");
-                Toast.makeText(MainMenuActivity.this, asd, Toast.LENGTH_SHORT).show();
+                }, 3000);
             }
         }
     }

@@ -12,17 +12,17 @@
         <item>en</item>
     </string-array>
 
-    <string-array name="listUpdateElements">
-        <item>Timetable, Schedule and Notifications</item>
-        <item>Personal information</item>
-        <item>Classrooms information</item>
-        <item>Subjects information</item>
+    <string-array name="list_update_elements">
+        <item>@string/never_update</item>
+        <item>@string/weekly_update</item>
+        <item>@string/daily_update</item>
+        <item>@string/when_open_update</item>
     </string-array>
 
-    <string-array name="listUpdateElementsValues">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
+    <string-array name="list_update_elements_values">
+        <item>never</item>
+        <item>weekly</item>
+        <item>daily</item>
+        <item>always</item>
     </string-array>
 </resources>

@@ -89,15 +89,18 @@
     <!-- Settings -->
     <string name="nav_language">Language</string>
     <string name="description_language">Change application language</string>
-    <string name="alert_language">Despite of having set English as your language, most data is only in Catalan.</string>
-    <string name="language">Language</string>
 
     <string name="storage">Storage</string>
     <string name="automatic_update">Automatic update</string>
     <string name="automatic_update_description">Enable automatic periodically updates</string>
     <string name="network_usage">Network Usage</string>
-    <string name="network_usage_description">Change data update frequency</string>
-    <string name="update_data">Update data</string>
+    <string name="network_usage_description">Change update frequency on volatile data like notifications, schedule and class availability</string>
+
+    <string name="never_update">Never (Update manually)</string>
+    <string name="weekly_update">Once a week</string>
+    <string name="daily_update">Once a day</string>
+    <string name="when_open_update">Update each time we access the feature</string>
+    <string name="update_data">Update data</string>    
     <string name="update_data_description">Update all application data (Recommended each time you start a new course)</string>
 
     <string name="reports">Report bugs</string>

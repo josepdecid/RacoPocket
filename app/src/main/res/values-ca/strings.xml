@@ -24,7 +24,6 @@
 
     <string name="nav_group2">Altres característiques</string>
 
-    <string name="nav_language">Idioma</string>
     <string name="nav_share">Compartir</string>
     <string name="nav_about">Sobre</string>
     <string name="nav_settings">Configuració</string>
@@ -67,7 +66,6 @@
     <string name="write_subject_initials">Sigles de l\'assignatura</string>
     <string name="delete_data">Esborrar totes les dades</string>
     <string name="new_language">Idioma establert a català</string>
-    <string name="language">Idioma</string>
 
     <!-- About -->
     <string name="raco_title">Racó per a Android</string>
@@ -77,5 +75,28 @@
         <b><a href="https://es.linkedin.com/in/pau-risa-7ba98aba">Pau Risa</a></b>, orientat a estudiants de la FIB - UPC students.
         Ets lliure de fer una ullada al nostre repositori públic de <b><a href="https://github.com/JosepRivaille/RacoPocket">Github</a></b>
         i contribuir-hi.</string>
+
+    <!-- Settings -->
+    <string name="nav_language">Idioma</string>
+    <string name="description_language">Canvia l\'idioma de l\'aplicació</string>
+
+        <string name="storage">Emmagatzemament</string>
+    <string name="automatic_update">Actualitzacions automàtiques</string>
+    <string name="automatic_update_description">Activar actualitzacions automàtiques periòdicament</string>
+    <string name="network_usage">Ús de la xarxa</string>
+    <string name="network_usage_description">Canviar freqüència d\'actualització de dades volàtils com notificacions, agenda i disponibilitat de classes</string>
+
+    <string name="never_update">Mai (Actualitzar manualment)</string>
+    <string name="weekly_update">Actualitzar un cop a la setmana</string>
+    <string name="daily_update">Actualitzar un cop al dia</string>
+    <string name="when_open_update">Actualitzar cada cop que consultem les dades</string>
+    <string name="update_data">Actualitzar dades</string>
+    <string name="update_data_description">Actualitza totes les dades de l\'aplicació (Recomanat cada cop que comença un curs nou)</string>
+
+    <string name="reports">Informar d\'errors</string>
+    <string name="reports_mail">E-mail</string>
+    <string name="reports_mail_description">Envia\'ns un correu explicant el teu problema</string>
+    <string name="reports_github">GitHub</string>
+    <string name="reports_github_description">Obre una \'issue\' a Github per a facilitar-nos la feina</string>
 
 </resources>
