@@ -6,12 +6,6 @@
         <item>English</item>
     </string-array>
 
-    <string-array name="languages_array_values">
-        <item>ca</item>
-        <item>es</item>
-        <item>en</item>
-    </string-array>
-
     <string-array name="list_update_elements">
         <item>@string/never_update</item>
         <item>@string/weekly_update</item>

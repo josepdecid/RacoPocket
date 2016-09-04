@@ -97,7 +97,7 @@ public class LoginActivity extends Activity
             try {
                 Log.i("OAuth", "Retrieving request token from Raco servers");
                 String authURL = provider.retrieveRequestToken(consumer, Constants.CALLBACK);
-                PreferencesUtils.storePreference(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
+                PreferencesUtils.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
                 Log.i("OAuth", "Popping a browser with the authorize URL : " + authURL);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authURL)));
             } catch (Exception e) {
@@ -133,7 +133,7 @@ public class LoginActivity extends Activity
         protected Void doInBackground(Void... params) {
             try {
                 provider.retrieveAccessToken(consumer, null);
-                PreferencesUtils.storePreference(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
+                PreferencesUtils.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
             } catch (Exception e) {
                 Log.d("OAuth", "Access token failed");
                 Toast.makeText(LoginActivity.this, "Something went wrong, try it again", Toast.LENGTH_SHORT).show();

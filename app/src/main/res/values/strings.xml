@@ -88,25 +88,29 @@
 
     <!-- Settings -->
     <string name="nav_language">Language</string>
-    <string name="description_language">Change application language</string>
+    <string name="description_language">Change application language.</string>
 
     <string name="storage">Storage</string>
     <string name="automatic_update">Automatic update</string>
-    <string name="automatic_update_description">Enable automatic periodically updates</string>
+    <string name="automatic_update_description">Enable automatic periodically updates.</string>
     <string name="network_usage">Network Usage</string>
-    <string name="network_usage_description">Change update frequency on volatile data like notifications, schedule and class availability</string>
+    <string name="network_usage_description">Change update frequency on volatile data like notifications, schedule and class availability.</string>
 
     <string name="never_update">Never (Update manually)</string>
     <string name="weekly_update">Once a week</string>
     <string name="daily_update">Once a day</string>
     <string name="when_open_update">Update each time we access the feature</string>
-    <string name="update_data">Update data</string>    
-    <string name="update_data_description">Update all application data (Recommended each time you start a new course)</string>
+
+    <string name="update_data">Update all data</string>
+    <string name="update_data_description">Update all application data (Recommended each time you start a new course).</string>
+    <string name="update_data_text">All data will be updated, and this can use a few MB of internet. We recommend you to enable your Wi-Fi connection.</string>
+    <string name="continue_dialog">Continue</string>
+    <string name="cancel_dialog">Cancel</string>
 
     <string name="reports">Report bugs</string>
     <string name="reports_mail">E-mail</string>
-    <string name="reports_mail_description">Send us a mail explaining us your problem</string>
+    <string name="reports_mail_description">Send us a mail explaining us your problem.</string>
     <string name="reports_github">GitHub</string>
-    <string name="reports_github_description">Open an issue on Github to ease our job</string>
+    <string name="reports_github_description">Open an issue on Github to ease our job.</string>
 
 </resources>

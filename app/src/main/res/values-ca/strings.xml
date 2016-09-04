@@ -78,25 +78,29 @@
 
     <!-- Settings -->
     <string name="nav_language">Idioma</string>
-    <string name="description_language">Canvia l\'idioma de l\'aplicació</string>
+    <string name="description_language">Canvia l\'idioma de l\'aplicació.</string>
 
-        <string name="storage">Emmagatzemament</string>
+    <string name="storage">Emmagatzemament</string>
     <string name="automatic_update">Actualitzacions automàtiques</string>
-    <string name="automatic_update_description">Activar actualitzacions automàtiques periòdicament</string>
+    <string name="automatic_update_description">Activar actualitzacions automàtiques periòdicament.</string>
     <string name="network_usage">Ús de la xarxa</string>
-    <string name="network_usage_description">Canviar freqüència d\'actualització de dades volàtils com notificacions, agenda i disponibilitat de classes</string>
+    <string name="network_usage_description">Canviar freqüència d\'actualització de dades volàtils com notificacions, agenda i disponibilitat de classes.</string>
 
     <string name="never_update">Mai (Actualitzar manualment)</string>
     <string name="weekly_update">Actualitzar un cop a la setmana</string>
     <string name="daily_update">Actualitzar un cop al dia</string>
     <string name="when_open_update">Actualitzar cada cop que consultem les dades</string>
-    <string name="update_data">Actualitzar dades</string>
-    <string name="update_data_description">Actualitza totes les dades de l\'aplicació (Recomanat cada cop que comença un curs nou)</string>
+
+    <string name="update_data">Actualitzar totes les dades</string>
+    <string name="update_data_description">Actualitza totes les dades de l\'aplicació (Recomanat cada cop que comença un curs nou).</string>
+    <string name="update_data_text">Totes les dades s\'actualitzaran, i això pot consumir uns quants MB d\'internet. Et recomanem activar la connexió Wi-fi.</string>
+    <string name="continue_dialog">Continuar</string>
+    <string name="cancel_dialog">Cancel·lar</string>
 
     <string name="reports">Informar d\'errors</string>
     <string name="reports_mail">E-mail</string>
-    <string name="reports_mail_description">Envia\'ns un correu explicant el teu problema</string>
+    <string name="reports_mail_description">Envia\'ns un correu explicant el teu problema.</string>
     <string name="reports_github">GitHub</string>
-    <string name="reports_github_description">Obre una \'issue\' a Github per a facilitar-nos la feina</string>
+    <string name="reports_github_description">Obre una \'issue\' a Github per a facilitar-nos la feina.</string>
 
 </resources>

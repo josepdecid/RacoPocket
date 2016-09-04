@@ -3,12 +3,10 @@
     <PreferenceCategory
         android:title="@string/nav_language">
 
-        <ListPreference
+        <Preference
             android:key="language"
             android:title="@string/nav_language"
-            android:summary="@string/description_language"
-            android:entries="@array/languages_array"
-            android:entryValues="@array/languages_array_values" />
+            android:summary="@string/description_language"/>
 
     </PreferenceCategory>
     <PreferenceCategory

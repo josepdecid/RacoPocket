@@ -45,7 +45,9 @@
             android:name=".AboutActivity"
             android:theme="@style/generalNoTitle" />
         <activity android:name=".NotificationDetailsActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
