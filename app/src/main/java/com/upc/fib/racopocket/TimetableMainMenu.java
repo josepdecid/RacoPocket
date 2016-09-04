@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.upc.fib.racopocket.Models.TimetableModel;
 import com.upc.fib.racopocket.Utils.FileUtils;
+import com.upc.fib.racopocket.Utils.OnSwipeTouchListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,6 +80,26 @@ public class TimetableMainMenu extends Fragment
         nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
+            {
+                currentDay++;
+                if (currentDay == 6) currentDay = 1;
+                writeWeekDay();
+                printTimetable();
+            }
+        });
+
+        view.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft()
+            {
+                currentDay--;
+                if (currentDay == 0) currentDay = 5;
+                writeWeekDay();
+                printTimetable();
+            }
+
+            @Override
+            public void onSwipeRight()
             {
                 currentDay++;
                 if (currentDay == 6) currentDay = 1;

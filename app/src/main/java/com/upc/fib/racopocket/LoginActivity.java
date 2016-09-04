@@ -5,14 +5,13 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.app.Activity;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +32,7 @@ public class LoginActivity extends Activity
     Button loginButton;
     ProgressBar progressBar;
 
-    boolean workInProgress;
+    Boolean workInProgress;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
     OAuthProvider provider = new DefaultOAuthProvider(Constants.REQUEST_URL, Constants.ACCESS_URL, Constants.AUTHORIZE_URL);
@@ -44,23 +43,19 @@ public class LoginActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        workInProgress = false;
+
         loginButton = (Button) findViewById(R.id.buttonLogin);
         progressBar = (ProgressBar) findViewById(R.id.progressBarLogin);
 
-        progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorLogo), PorterDuff.Mode.MULTIPLY);
-
-        loginButton.setOnClickListener(new OnClickListener()
-        {
+        loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                if (!workInProgress) {
+                if (!workInProgress)
                     new AskForRequestTokenAsync().execute();
-                }
             }
         });
-
-        workInProgress = false;
     }
 
     // When back from authorizing requestToken, recover them and start accessToken exchange
@@ -86,8 +81,6 @@ public class LoginActivity extends Activity
         @Override
         protected void onPreExecute()
         {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
             workInProgress = true;
         }
 
@@ -114,7 +107,6 @@ public class LoginActivity extends Activity
             if (response.equals("ERROR"))
                 Toast.makeText(LoginActivity.this, "Something went wrong, check your connection and try it again", Toast.LENGTH_SHORT).show();
             workInProgress = false;
-            progressBar.setVisibility(View.GONE);
         }
 
     }
@@ -124,13 +116,13 @@ public class LoginActivity extends Activity
         @Override
         protected void onPreExecute()
         {
-            super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
             workInProgress = true;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... params)
+        {
             try {
                 provider.retrieveAccessToken(consumer, null);
                 PreferencesUtils.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
@@ -150,38 +142,47 @@ public class LoginActivity extends Activity
         }
     }
 
-    private class GetStudentInfo extends AsyncTask<Void, Void, String>
+    private class GetStudentInfo extends AsyncTask<Void, Integer, String>
     {
+        ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+
         @Override
         protected void onPreExecute()
         {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+            progressDialog.setTitle("Downloading necessary data");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setProgress(0);
+            progressDialog.show();
         }
 
         @Override
         protected String doInBackground(Void... params)
         {
-            // Personal Data
+            int currentProgress = 0;
+
             if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json"))
                 return "ERROR";
-            // Personal Subjects
+            publishProgress(++currentProgress);
             if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json"))
                 return "ERROR";
-            // Timetable Data
+            publishProgress(++currentProgress);
             if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json"))
                 return "ERROR";
-            // Subjects List
+            publishProgress(++currentProgress);
             if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json"))
-            return "ERROR";
-            // Notifications Data
-            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            // Schedule Data
-            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
-            // Class Availability Data
-            FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
+                return "ERROR";
+            publishProgress(++currentProgress);
 
-            // Subjects Data
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            publishProgress(++currentProgress);
+            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+            publishProgress(++currentProgress);
+            FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
+            publishProgress(++currentProgress);
+
             String subjects = FileUtils.readFileToString(getApplicationContext(), "llista.json");
             try {
                 JSONArray subjectsJSONArray = new JSONArray(subjects);
@@ -195,12 +196,20 @@ public class LoginActivity extends Activity
                             return "ERROR";
                         }
                     }
+                    publishProgress(++currentProgress);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+            publishProgress(100);
             return "OK";
+        }
+
+        @Override
+        public void onProgressUpdate(Integer... args)
+        {
+            progressDialog.setProgress(args[0]);
         }
 
         @Override
@@ -217,7 +226,7 @@ public class LoginActivity extends Activity
                 startActivity(intent);
             }
             workInProgress = false;
-            progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
         }
     }
 

@@ -190,8 +190,11 @@ public class SettingsActivity extends PreferenceActivity
             @Override
             protected void onPreExecute()
             {
+                progressDialog.setTitle("Downloading necessary data");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(false);
                 progressDialog.setProgress(0);
                 progressDialog.show();
             }
@@ -251,7 +254,8 @@ public class SettingsActivity extends PreferenceActivity
             }
 
             @Override
-            public void onProgressUpdate(Integer... args) {
+            public void onProgressUpdate(Integer... args)
+            {
                 progressDialog.setProgress(args[0]);
             }
 

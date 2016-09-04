@@ -72,8 +72,8 @@ public class FileUtils {
     }
 
     // Reads a file from 'inputFile' and returns the string if read successfully, otherwise, null.
-    public static String readFileToString(Context context, String inputFile) {
-
+    public static String readFileToString(Context context, String inputFile)
+    {
         try {
             InputStream inputStream = context.openFileInput(inputFile);
             if (inputStream != null) {
@@ -93,7 +93,6 @@ public class FileUtils {
         }
 
         return null;
-
     }
 
 }
