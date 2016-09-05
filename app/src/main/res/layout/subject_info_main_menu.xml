@@ -8,18 +8,42 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:background="@color/white">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <RelativeLayout
+        android:id="@+id/search_Container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
+
+        <AutoCompleteTextView
+            android:id="@+id/subjectSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/write_subject_initials"
+            android:completionThreshold="1"
+            android:backgroundTint="@color/raco_blue"
+            android:singleLine="true"
+            android:layout_toLeftOf="@+id/queryButton"
+            android:layout_toStartOf="@+id/queryButton"
+            tools:targetApi="lollipop"/>
+
+        <ImageButton
+            android:id="@+id/queryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_search_black_24dp"
+            android:layout_alignBottom="@+id/subjectSelector"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/search"/>
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/search_Container"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:scrollbars="none">
@@ -28,37 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_Container"
-                android:layout_marginBottom="20dp">
-
-                <AutoCompleteTextView
-                    android:id="@+id/subjectSelector"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/write_subject_initials"
-                    android:completionThreshold="1"
-                    android:backgroundTint="@color/raco_blue"
-                    android:singleLine="true"
-                    android:layout_toLeftOf="@+id/queryButton"
-                    android:layout_toStartOf="@+id/queryButton"
-                    tools:targetApi="lollipop"/>
-
-                <ImageButton
-                    android:id="@+id/queryButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:src="@drawable/ic_search_black_24dp"
-                    android:layout_alignBottom="@+id/subjectSelector"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:contentDescription="@string/search"/>
-
-            </RelativeLayout>
 
             <!-- Name -->
             <TextView
@@ -101,5 +94,14 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>
