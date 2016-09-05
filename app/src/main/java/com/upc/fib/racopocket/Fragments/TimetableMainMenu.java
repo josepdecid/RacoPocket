@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.upc.fib.racopocket.Activities.MainMenuActivity;
 import com.upc.fib.racopocket.Models.TimetableModel;
 import com.upc.fib.racopocket.R;
+import com.upc.fib.racopocket.Utils.ColorScheme;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.OnSwipeTouchListener;
 
@@ -35,7 +36,7 @@ public class TimetableMainMenu extends Fragment
     ProgressBar progressBar;
 
     int currentDay;
-    HashMap<String, Integer> colorScheme;
+    HashMap<String, Integer> colorSchemeMap;
     ArrayList<ArrayList<TimetableModel>> classroomsInfo;
 
     @Override
@@ -64,9 +65,6 @@ public class TimetableMainMenu extends Fragment
         currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
         if (currentDay == 0 || currentDay == 6)
             currentDay = 1;
-
-        writeWeekDay();
-        setColorScheme();
 
         previousDay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,8 +108,9 @@ public class TimetableMainMenu extends Fragment
             }
         });
 
+        writeWeekDay();
+        colorSchemeMap = new ColorScheme(getContext()).setColorsToSubjects();
         new GetTimetableData().execute();
-
     }
 
     private void writeWeekDay()
@@ -137,34 +136,6 @@ public class TimetableMainMenu extends Fragment
                 day = "";
         }
         currentDayText.setText(day);
-    }
-
-    private void setColorScheme()
-    {
-        int[] colors = {
-                Color.parseColor("#DFE9C6"),
-                Color.parseColor("#FFF3BA"),
-                Color.parseColor("#FFD2A7"),
-                Color.parseColor("#BDDCE9"),
-                Color.parseColor("#DDBFE4"),
-                Color.parseColor("#F4828C"),
-                Color.parseColor("#BD8B5A"),
-                Color.parseColor("#EEABCA"),
-                Color.parseColor("#C2BB63"),
-                Color.parseColor("#297DB5"),
-        };
-
-        colorScheme = new HashMap<>();
-        String mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
-        try {
-            JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
-            for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
-                JSONObject mySubjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
-                colorScheme.put(mySubjectJSONObject.getString("idAssig"), colors[i%colors.length]);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     private class GetTimetableData extends AsyncTask<Void, Void, String>
@@ -233,7 +204,7 @@ public class TimetableMainMenu extends Fragment
                 text2.setText(name);
                 text3.setText(classroom);
 
-                int color = colorScheme.get(subject);
+                int color = colorSchemeMap.get(subject);
                 view.setBackgroundColor(color);
 
                 return view;

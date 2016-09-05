@@ -12,9 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="17sp"
-        android:textColor="#202020"
-        android:ellipsize="end"
-        android:maxLines="1"/>
+        android:textColor="#202020"/>
 
     <TextView
         android:id="@+id/dateSchedule"

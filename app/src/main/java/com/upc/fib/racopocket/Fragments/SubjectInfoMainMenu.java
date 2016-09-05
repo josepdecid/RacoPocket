@@ -1,5 +1,6 @@
 package com.upc.fib.racopocket.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -8,6 +9,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -29,7 +31,7 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
-    ImageButton buttonSearch, dataError;
+    ImageButton buttonSearch;
     ProgressBar progressBar;
 
     String currentCode;
@@ -50,7 +52,6 @@ public class SubjectInfoMainMenu extends Fragment
         subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
 
         buttonSearch = (ImageButton) view.findViewById(R.id.queryButton);
-        dataError = (ImageButton) view.findViewById(R.id.dataError);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -59,13 +60,17 @@ public class SubjectInfoMainMenu extends Fragment
         // Enable bibliography redirect onClick
         subjectBibliography.setClickable(true);
         subjectBibliography.setMovementMethod(LinkMovementMethod.getInstance());
-        // Load Subjects into our Autocomplete
-        loadSubjectsList();
 
         buttonSearch.setOnClickListener(new View.OnClickListener() {
-        @Override
-            public void onClick(View v) {
-                dataError.setVisibility(View.GONE);
+            @Override
+            public void onClick(View v)
+            {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
                 String subjectName = subjectSelector.getText().toString().toUpperCase();
                 if (subjectName.length() == 0) {
                     Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
@@ -82,14 +87,20 @@ public class SubjectInfoMainMenu extends Fragment
 
                         }
                     }
+                    if (!found)
+                        Toast.makeText(getContext(), getResources().getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
                 }
+
+                subjectSelector.setText("");
             }
         });
 
+        loadSubjectsList();
+
     }
 
-    private void loadSubjectsList() {
-
+    private void loadSubjectsList()
+    {
         String subjectsListData = FileUtils.readFileToString(getContext().getApplicationContext(), "llista.json");
         try {
             JSONArray subjectsJSONArray = new JSONArray(subjectsListData);
@@ -115,15 +126,13 @@ public class SubjectInfoMainMenu extends Fragment
 
     }
 
-    private void showSubjectInfo(String fileName) {
-
+    private void showSubjectInfo(String fileName)
+    {
         subjectName.setText("");
         subjectData.setText("");
         subjectBibliography.setText("");
 
         String subjectInfo = FileUtils.readFileToString(getContext().getApplicationContext(), fileName);
-
-        subjectSelector.setText("");
 
         try {
             JSONObject object = new JSONObject(subjectInfo);
@@ -172,11 +181,9 @@ public class SubjectInfoMainMenu extends Fragment
                     subjectBibliography.append(Html.fromHtml(data));
                 }
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
 }

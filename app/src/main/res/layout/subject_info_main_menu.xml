@@ -81,16 +81,6 @@
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
 
-            <ImageButton
-                android:id="@+id/dataError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:src="@drawable/ic_cloud_off_black_24dp"
-                android:clickable="false"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/connection_image_button" />
-
         </LinearLayout>
 
     </ScrollView>
