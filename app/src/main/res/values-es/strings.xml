@@ -24,6 +24,7 @@
     <string name="nav_about">Acerca de</string>
     <string name="nav_settings">Configuración</string>
     <string name="nav_logout">Cerrar sesión</string>
+    <string name="back_button_confirmation">Presiona atrás otra vez para salir</string>
 
     <!-- Strings related to Timetable -->
     <string name="monday">Lunes</string>
@@ -42,10 +43,6 @@
 
     <string name="credits">Créditos</string>
     <string name="description_objectives">Descripción y objetivos</string>
-
-
-
-    <color name="white">#FFFFFF</color>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -138,7 +138,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 if (exit)
                     finish();
                 else {
-                    Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.back_button_confirmation, Toast.LENGTH_SHORT).show();
                     exit = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
