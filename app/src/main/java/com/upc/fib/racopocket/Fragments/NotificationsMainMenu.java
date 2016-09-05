@@ -233,7 +233,7 @@ public class NotificationsMainMenu extends Fragment
 
             if (convertView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = layoutInflater.inflate(R.layout.notifications_list_item, parent, false);
+                convertView = layoutInflater.inflate(R.layout.notifications_item_list, parent, false);
             }
 
             TextView titleNotifications = (TextView) convertView.findViewById(R.id.titleNotifications);
@@ -271,7 +271,7 @@ public class NotificationsMainMenu extends Fragment
             String headerTitle = (String) getGroup(groupPosition);
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.notifications_list_group, parent, false);
+                convertView = inflater.inflate(R.layout.notifications_group_list, parent, false);
             }
 
             TextView lblListHeader = (TextView) convertView.findViewById(R.id.notificationListHeader);
