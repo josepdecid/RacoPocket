@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Activities.MainMenuActivity;
+import com.upc.fib.racopocket.Activities.NotificationDetailsActivity;
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;
@@ -230,7 +233,7 @@ public class NotificationsMainMenu extends Fragment
 
             if (convertView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = layoutInflater.inflate(R.layout.notifications_list_item, null);
+                convertView = layoutInflater.inflate(R.layout.notifications_list_item, parent, false);
             }
 
             TextView titleNotifications = (TextView) convertView.findViewById(R.id.titleNotifications);
@@ -267,8 +270,8 @@ public class NotificationsMainMenu extends Fragment
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             String headerTitle = (String) getGroup(groupPosition);
             if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.notifications_list_group, parent, false);
+                LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.notifications_list_group, parent, false);
             }
 
             TextView lblListHeader = (TextView) convertView.findViewById(R.id.notificationListHeader);

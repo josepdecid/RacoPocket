@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Activities.MainMenuActivity;
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.FileUtils;
 
 import org.json.JSONArray;

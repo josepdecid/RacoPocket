@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,10 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.upc.fib.racopocket.Activities.MainMenuActivity;
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;

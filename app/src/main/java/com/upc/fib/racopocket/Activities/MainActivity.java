@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;
 
 import java.util.Locale;

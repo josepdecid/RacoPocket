@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Fragments;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -13,7 +13,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Activities.MainMenuActivity;
 import com.upc.fib.racopocket.Models.TimetableModel;
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.OnSwipeTouchListener;
 

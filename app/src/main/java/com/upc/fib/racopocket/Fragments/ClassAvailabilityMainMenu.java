@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Fragments;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -19,7 +19,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.upc.fib.racopocket.Activities.MainMenuActivity;
 import com.upc.fib.racopocket.Models.ClassroomModel;
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.FileUtils;
 
 import org.json.JSONArray;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
-    TextView connectionProblemText, lastUpdate, header1ClassAvailability, header2ClassAvailability;
+    TextView connectionProblemText, lastUpdate;
     ImageButton update;
     ListView listView;
     ProgressBar progressBar;
@@ -48,9 +50,6 @@ public class ClassAvailabilityMainMenu extends Fragment
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         listView = (ListView) rootView.findViewById(R.id.listView);
         classAvailabilityInfo = (LinearLayout) rootView.findViewById(R.id.class_info_linear_layout);
-        header1ClassAvailability = (TextView) rootView.findViewById(R.id.header1ClassAvailability);
-        header2ClassAvailability = (TextView) rootView.findViewById(R.id.header2ClassAvailability);
-
         return rootView;
     }
 
@@ -62,8 +61,6 @@ public class ClassAvailabilityMainMenu extends Fragment
             @Override
             public void onClick(View v)
             {
-                header1ClassAvailability.setVisibility(View.GONE);
-                header2ClassAvailability.setVisibility(View.GONE);
                 connectionProblemText.setVisibility(View.GONE);
                 FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
@@ -72,14 +69,11 @@ public class ClassAvailabilityMainMenu extends Fragment
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
             {
                 WebView webView = new WebView(getContext());
-                String building;
-                // TODO: Get by two first letters instead of HARDCODE!
-                if (position < 10) building = "a5";
-                else if (position < 13) building = "b5";
-                else building = "c6";
+                ClassroomModel classroomModel = (ClassroomModel) listView.getItemAtPosition(position);
+                String building = classroomModel.getName().substring(0, 2);
                 webView.loadUrl("https://raco.fib.upc.edu/mapa_ocupades.php?mod=" + building);
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
@@ -111,8 +105,9 @@ public class ClassAvailabilityMainMenu extends Fragment
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+            classAvailabilityInfo.setVisibility(View.GONE);
         }
 
         @Override
@@ -178,8 +173,7 @@ public class ClassAvailabilityMainMenu extends Fragment
 
                 listView.setAdapter(adapter);
 
-                header1ClassAvailability.setVisibility(View.VISIBLE);
-                header2ClassAvailability.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.VISIBLE);
                 classAvailabilityInfo.setVisibility(View.VISIBLE);
             }
 

@@ -1,8 +1,7 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Activities;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,6 +14,7 @@ import android.preference.PreferenceFragment;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;

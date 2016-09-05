@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Activities;
 
 import android.content.ClipboardManager;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
+
+import com.upc.fib.racopocket.R;
 
 public class NotificationDetailsActivity extends AppCompatActivity {
 

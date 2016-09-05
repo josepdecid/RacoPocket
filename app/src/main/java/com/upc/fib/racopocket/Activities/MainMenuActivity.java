@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Fragments.ClassAvailabilityMainMenu;
+import com.upc.fib.racopocket.Fragments.NotificationsMainMenu;
+import com.upc.fib.racopocket.R;
+import com.upc.fib.racopocket.Fragments.ScheduleMainMenu;
+import com.upc.fib.racopocket.Fragments.SubjectInfoMainMenu;
+import com.upc.fib.racopocket.Fragments.TimetableMainMenu;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;
 

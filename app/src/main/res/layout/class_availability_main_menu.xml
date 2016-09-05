@@ -24,43 +24,23 @@
         android:id="@+id/class_info_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/connectionProblemTextClassAvailability"
-        android:layout_toEndOf="@+id/connectionProblemTextClassAvailability">
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
-            android:id="@+id/lastUpdateClassAvailability"
-            android:layout_width="match_parent"
+            android:text="@string/class_name"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"/>
+            android:layout_weight=".6"
+            android:textStyle="bold"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:id="@+id/header1ClassAvailability"
-                android:text="@string/class_name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".6"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/header2ClassAvailability"
-                android:text="@string/class_availability"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".4"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
-        </LinearLayout>
+        <TextView
+            android:text="@string/class_availability"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".4"
+            android:gravity="center"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
@@ -68,15 +48,23 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/lastUpdateClassAvailability"
         android:divider="#0E537B"
         android:dividerHeight="1dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_below="@+id/class_info_linear_layout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/updateNotifications">
+        android:layout_alignParentStart="true">
     </ListView>
+
+    <TextView
+        android:id="@+id/lastUpdateClassAvailability"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_above="@+id/updateNotifications"
+        android:gravity="center"/>
 
     <ImageButton
         android:id="@+id/updateNotifications"
