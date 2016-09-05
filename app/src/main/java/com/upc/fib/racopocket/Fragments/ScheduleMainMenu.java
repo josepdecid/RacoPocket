@@ -1,7 +1,9 @@
 package com.upc.fib.racopocket.Fragments;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -19,9 +21,15 @@ import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -37,6 +45,8 @@ public class ScheduleMainMenu extends Fragment
     ProgressBar progressBar;
 
     boolean workInProgress;
+
+    HashMap<String, Integer> colorScheme;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -71,8 +81,37 @@ public class ScheduleMainMenu extends Fragment
             }
         });
 
+        setColorScheme();
         new GetSchedule().execute();
 
+    }
+
+    private void setColorScheme()
+    {
+        int[] colors = {
+                Color.parseColor("#DFE9C6"),
+                Color.parseColor("#FFF3BA"),
+                Color.parseColor("#FFD2A7"),
+                Color.parseColor("#BDDCE9"),
+                Color.parseColor("#DDBFE4"),
+                Color.parseColor("#F4828C"),
+                Color.parseColor("#BD8B5A"),
+                Color.parseColor("#EEABCA"),
+                Color.parseColor("#C2BB63"),
+                Color.parseColor("#297DB5"),
+        };
+
+        colorScheme = new HashMap<>();
+        String mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+        try {
+            JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+            for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
+                JSONObject mySubjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
+                colorScheme.put(mySubjectJSONObject.getString("idAssig"), colors[i%colors.length]);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private class GetSchedule extends AsyncTask<Void, Void, String>
@@ -147,6 +186,13 @@ public class ScheduleMainMenu extends Fragment
 
                 text1.setText(summary);
                 text2.setText(date);
+
+                for (Map.Entry<String, Integer> entry : colorScheme.entrySet()) {
+                    if (summary.toLowerCase().contains(entry.getKey().toLowerCase())) {
+                        view.setBackgroundColor(entry.getValue());
+                        break;
+                    }
+                }
 
                 return view;
             }
