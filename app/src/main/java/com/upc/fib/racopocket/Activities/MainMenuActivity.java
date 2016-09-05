@@ -45,6 +45,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setActionBarDesign(getResources().getString(R.string.app_name));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,6 +133,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().remove(newFragment).commit();
                 newFragment = null;
+                setActionBarDesign(getResources().getString(R.string.app_name));
             } else {
                 if (exit)
                     finish();
