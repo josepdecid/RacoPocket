@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,25 +13,28 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import biweekly.io.text.ICalReader;
 import oauth.signpost.OAuthConsumer;
 
 public class FileUtils {
 
     // Checks if 'filename' file, exists in the given context.
-    public static boolean fileExists(Context context, String fileName) {
+    public static boolean fileExists(Context context, String fileName)
+    {
         File file = new File(context.getFilesDir(), fileName);
         return file.exists();
     }
 
     // Tries delete 'filename' file in the given context, and returns if file has been deleted.
-    public static boolean fileDelete(Context context, String fileName) {
+    public static boolean fileDelete(Context context, String fileName)
+    {
         File file = new File(context.getFilesDir(), fileName);
         return file.delete();
     }
 
     // Fetch and store url data into 'outputFile' if statusCode is OK, and returns statusCode.
-    public static int fetchAndStoreFile(Context context, OAuthConsumer consumer, String u, String outputFile) {
-
+    public static int fetchAndStoreFile(Context context, OAuthConsumer consumer, String u, String outputFile)
+    {
         try {
             URL url = new URL(u);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -90,6 +94,19 @@ public class FileUtils {
             }
         } catch (IOException e) {
             Log.e("FILE", "Can not read file: " + e.toString());
+        }
+
+        return null;
+    }
+
+
+    public static ICalReader readFileToICal(Context context, String inputFile)
+    {
+        File file = new File(context.getFilesDir(), inputFile);
+        try {
+            return new ICalReader(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
         return null;

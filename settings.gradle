@@ -1,1 +1,1 @@
-include ':app', ':signpost-core-1.2.1.2'
+include ':app', ':signpost-core-1.2.1.2', ':biweekly-0.3.0'
