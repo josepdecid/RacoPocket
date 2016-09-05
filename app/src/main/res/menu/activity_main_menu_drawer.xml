@@ -6,7 +6,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_timetable"
-            android:icon="@drawable/ic_access_alarm_black"
+            android:icon="@drawable/ic_access_time_black"
             android:title="@string/nav_timetable" />
         <item
             android:id="@+id/nav_notifications"
