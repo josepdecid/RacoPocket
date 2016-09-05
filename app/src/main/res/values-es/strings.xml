@@ -2,32 +2,43 @@
 <resources>
 
     <!-- Strings related to login -->
-    <string name="prompt_password">Contraseña</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Entrar</string>
-    <string name="error_invalid_email">Esta dirección de correo es inválida</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
-    <string name="error_field_required">Este campo es obligatorio</string>
+    <string name="login_title">Descargando los datos necesarios</string>
+    <string name="login_failed">Algo ha fallado, comprueba tu conexión y vuelve a intentarlo</string>
 
     <!-- Strings related to Main Menu -->
+    <string name="welcome">Bienvenido</string>
+
     <string name="nav_group1">Menú</string>
 
     <string name="nav_timetable">Horario</string>
     <string name="nav_notifications">Notificaciones</string>
     <string name="nav_schedule">Agenda</string>
     <string name="nav_class_availability">Disponibilidad laboratorios</string>
-    <string name="nav_subject_info">Información de las asignaturas</string>
+    <string name="nav_subject_info">Información asignaturas</string>
+    <string name="nav_uni_map">Mapa de la universidad</string>
 
     <string name="nav_group2">Otras características</string>
 
-    <string name="nav_language">Idioma</string>
     <string name="nav_share">Compartir</string>
     <string name="nav_about">Acerca de</string>
+    <string name="nav_settings">Configuración</string>
     <string name="nav_logout">Cerrar sesión</string>
 
+    <!-- Strings related to Timetable -->
+    <string name="monday">Lunes</string>
+    <string name="tuesday">Martes</string>
+    <string name="wednesday">Miercoles</string>
+    <string name="thursday">Jueves</string>
+    <string name="friday">Viernes</string>
+
+    <!-- Strings related to Class Availability -->
+    <string name="last_update">Última actualización</string>
+    <string name="class_name">Clase</string>
+    <string name="class_availability">Espacios libres</string>
+
     <!-- Strings related to Subject Info -->
-    <string name="connection_problems">Error al establecer una conexión</string>
+    <string name="connection_problems">Servicio temporalmente no disponible, inténtalo más tarde.</string>
 
     <string name="credits">Créditos</string>
     <string name="description_objectives">Descripción y objetivos</string>
@@ -51,7 +62,6 @@
     <string name="write_subject_initials">Siglas de la asignatura</string>
     <string name="delete_data">Borrar todos los datos</string>
     <string name="new_language">Ididoma cambiado a español</string>
-    <string name="language">Idioma</string>
 
     <!-- About -->
     <string name="raco_title">Racó para Android</string>
@@ -61,5 +71,35 @@
         <b><a href="https://es.linkedin.com/in/pau-risa-7ba98aba">Pau Risa</a></b>, orientado a estudiantes de la FIB - UPC.
         Siéntete libre de visitar nuestro repositorio público de <b><a href="https://github.com/JosepRivaille/RacoPocket">Github</a></b>
         i contribuir.</string>
+
+    <!-- Settings -->
+    <string name="nav_language">Idioma</string>
+    <string name="description_language">Cambia el idioma de la aplicación.</string>
+
+    <string name="storage">Almacenamiento</string>
+    <string name="automatic_update">Actualitzaciones automáticas</string>
+    <string name="automatic_update_description">Activar actualizaciones automáticas periódicamente.</string>
+    <string name="network_usage">Uso de la red</string>
+    <string name="network_usage_description">Cambiar frecuencia de actualización de datos volátiles como notificaciones, agenda i disponibilidad de clases.</string>
+
+    <string name="never_update">Nunca (Actualizar manualmente)</string>
+    <string name="weekly_update">Actualizar una vez a la semana</string>
+    <string name="daily_update">Actualizar una vez al día</string>
+    <string name="when_open_update">Actualizar cada vez que consultamos los datos</string>
+
+    <string name="update_data">Actualizar todos los datos</string>
+    <string name="update_data_title">Descargando los datos necesarios</string>
+    <string name="update_data_description">Actualiza todos los datos de la aplicación (Recomendado cada vez que empieza un nuevo curso).</string>
+    <string name="update_data_text">Todos los datos se actualizarán, y eso puede consumir unos cuantos MB de internet. Te recomendamos activar la conexión Wi-Fi.</string>
+    <string name="update_data_successful">Todos los datos se han actualizado correctamente</string>
+    <string name="update_data_unsuccessful">Algo ha fallado, comprueba tu conexión y vuelve a intentarlo</string>
+    <string name="continue_dialog">Continuar</string>
+    <string name="cancel_dialog">Cancelar</string>
+
+    <string name="reports">Informar de errores</string>
+    <string name="reports_mail">E-mail</string>
+    <string name="reports_mail_description">Envíanos un correo explicando tu problema.</string>
+    <string name="reports_github">GitHub</string>
+    <string name="reports_github_description">Abre una \'issue\' en Github para facilitarnos el trabajo.</string>
 
 </resources>

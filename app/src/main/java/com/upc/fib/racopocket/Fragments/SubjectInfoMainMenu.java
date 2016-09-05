@@ -1,7 +1,8 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -14,6 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upc.fib.racopocket.Activities.MainMenuActivity;
+import com.upc.fib.racopocket.R;
+import com.upc.fib.racopocket.Utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +29,10 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
-    ImageButton buttonSearch, dataRefresh, dataRemove, dataError;
+    ImageButton buttonSearch, dataError;
     ProgressBar progressBar;
 
     String currentCode;
-
     ArrayList<Pair<String, String>> subjects_name = new ArrayList<>();
 
     @Override
@@ -46,8 +50,6 @@ public class SubjectInfoMainMenu extends Fragment
         subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
 
         buttonSearch = (ImageButton) view.findViewById(R.id.queryButton);
-        dataRefresh = (ImageButton) view.findViewById(R.id.dataRefresh);
-        dataRemove = (ImageButton) view.findViewById(R.id.dataRemove);
         dataError = (ImageButton) view.findViewById(R.id.dataError);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -57,24 +59,23 @@ public class SubjectInfoMainMenu extends Fragment
         // Enable bibliography redirect onClick
         subjectBibliography.setClickable(true);
         subjectBibliography.setMovementMethod(LinkMovementMethod.getInstance());
-
         // Load Subjects into our Autocomplete
         loadSubjectsList();
 
         buttonSearch.setOnClickListener(new View.OnClickListener() {
         @Override
             public void onClick(View v) {
-                hideImageButtons();
+                dataError.setVisibility(View.GONE);
                 String subjectName = subjectSelector.getText().toString().toUpperCase();
                 if (subjectName.length() == 0) {
                     Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
                 } else {
                     Boolean found = false;
                     for (int i = 0; i < subjects_name.size() && !found; i++) {
-                        if (subjects_name.get(i).getFirst().equals(subjectName)) {
+                        if (subjects_name.get(i).first.equals(subjectName)) {
 
                             found = true;
-                            currentCode = subjects_name.get(i).getSecond();
+                            currentCode = subjects_name.get(i).second;
                             String fileName = "subject_" + currentCode + ".json";
 
                             showSubjectInfo(fileName);
@@ -84,40 +85,12 @@ public class SubjectInfoMainMenu extends Fragment
                 }
             }
         });
-/*
-        dataRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetSubjectInfoWithCode().execute("true");
-            }
-        });
 
-        dataRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File file = new File(getContext().getFilesDir(), "subject_" + currentCode + ".json");
-                if (file.delete()) {
-                    hideImageButtons();
-                    Toast.makeText(getContext(), "Data removed successfully", Toast.LENGTH_SHORT).show();
-                    subjectName.setText("");
-                    subjectData.setText("");
-                    subjectBibliography.setText("");
-                } else {
-                    Toast.makeText(getContext(), "Error while trying to remove the data", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
-    }
-
-    private void hideImageButtons() {
-        dataError.setVisibility(View.GONE);
-        dataRefresh.setVisibility(View.GONE);
-        dataRemove.setVisibility(View.GONE);
     }
 
     private void loadSubjectsList() {
 
-        String subjectsListData = FileHelpers.readFileToString(getContext().getApplicationContext(), "llista.json");
+        String subjectsListData = FileUtils.readFileToString(getContext().getApplicationContext(), "llista.json");
         try {
             JSONArray subjectsJSONArray = new JSONArray(subjectsListData);
             for (int i = 0; i < subjectsJSONArray.length(); i++) {
@@ -134,7 +107,7 @@ public class SubjectInfoMainMenu extends Fragment
 
         ArrayList<String> subjectsId = new ArrayList<>();
         for (int i = 0; i < subjects_name.size(); i++) {
-            subjectsId.add(subjects_name.get(i).getFirst());
+            subjectsId.add(subjects_name.get(i).first);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, subjectsId);
@@ -148,11 +121,9 @@ public class SubjectInfoMainMenu extends Fragment
         subjectData.setText("");
         subjectBibliography.setText("");
 
-        String subjectInfo = FileHelpers.readFileToString(getContext().getApplicationContext(), fileName);
+        String subjectInfo = FileUtils.readFileToString(getContext().getApplicationContext(), fileName);
 
         subjectSelector.setText("");
-        dataRefresh.setVisibility(View.VISIBLE);
-        dataRemove.setVisibility(View.VISIBLE);
 
         try {
             JSONObject object = new JSONObject(subjectInfo);
@@ -206,22 +177,6 @@ public class SubjectInfoMainMenu extends Fragment
             e.printStackTrace();
         }
 
-    }
-
-    // Simplified Pair Implementation
-    private class Pair<A, B> {
-        private A first;
-        private B second;
-
-        public Pair(A first, B second) {
-            super();
-            this.first = first;
-            this.second = second;
-        }
-
-        public A getFirst() { return this.first; }
-
-        public B getSecond() { return this.second; }
     }
 
 }

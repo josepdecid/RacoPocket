@@ -1,4 +1,4 @@
-package com.upc.fib.racopocket;
+package com.upc.fib.racopocket.Activities;
 
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,9 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.upc.fib.racopocket.BuildConfig;
+import com.upc.fib.racopocket.R;
 
 public class AboutActivity extends AppCompatActivity {
 

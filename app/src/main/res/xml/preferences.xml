@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/nav_language">
+
+        <Preference
+            android:key="language"
+            android:title="@string/nav_language"
+            android:summary="@string/description_language"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/storage">
+
+        <CheckBoxPreference
+            android:key="enableAutomaticUpdates"
+            android:title="@string/automatic_update"
+            android:summary="@string/automatic_update_description"
+            android:defaultValue="false">
+        </CheckBoxPreference>
+
+        <ListPreference
+            android:key="applicationUpdates"
+            android:title="@string/network_usage"
+            android:summary="@string/network_usage_description"
+            android:entries="@array/list_update_elements"
+            android:entryValues="@array/list_update_elements_values"
+            android:defaultValue="never"/>
+
+        <Preference
+            android:key="applicationDataUpdate"
+            android:title="@string/update_data"
+            android:summary="@string/update_data_description">
+
+        </Preference>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/reports">
+
+        <Preference
+            android:key="emailReport"
+            android:title="@string/reports_mail"
+            android:summary="@string/reports_mail_description">
+        </Preference>
+
+        <Preference
+            android:key="gitHubReport"
+            android:title="@string/reports_github"
+            android:summary="@string/reports_github_description">
+        </Preference>
+
+    </PreferenceCategory>
+</PreferenceScreen>
