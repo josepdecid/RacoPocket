@@ -1,5 +1,6 @@
 package com.upc.fib.racopocket.Fragments;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -142,13 +143,14 @@ public class ScheduleMainMenu extends Fragment {
                     text1.setText(summary);
                     text2.setText(date);
 
-                    //TODO: Fix color bug
+                    int color = Color.parseColor("#EFEFEF");
                     for (Map.Entry<String, Integer> entry : colorSchemeMap.entrySet()) {
                         if (summary.toLowerCase().contains(entry.getKey().toLowerCase())) {
-                            view.setBackgroundColor(entry.getValue());
+                            color = entry.getValue();
                             break;
                         }
                     }
+                    view.setBackgroundColor(color);
 
                     return view;
                 }

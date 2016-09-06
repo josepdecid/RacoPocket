@@ -7,7 +7,7 @@
         android:id="@+id/listViewSchedule"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_above="@+id/progressBarSchedule"
+        android:layout_above="@+id/updateSchedule"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
