@@ -6,13 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,73 +33,80 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
-    ImageButton buttonSearch;
+    LinearLayout search;
     ProgressBar progressBar;
 
     String currentCode;
     ArrayList<Pair<String, String>> subjects_name = new ArrayList<>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_subject_info));
-        return inflater.inflate(R.layout.subject_info_main_menu, container, false);
+        View rootView = inflater.inflate(R.layout.subject_info_main_menu, container, false);
+
+        subjectName = (TextView) rootView.findViewById(R.id.subjectName);
+        subjectData = (TextView) rootView.findViewById(R.id.subjectData);
+        subjectBibliography = (TextView) rootView.findViewById(R.id.subjectBibliography);
+        subjectSelector = (AutoCompleteTextView) rootView.findViewById(R.id.subjectSelector);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+        return rootView;
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        subjectName = (TextView) view.findViewById(R.id.subjectName);
-        subjectData = (TextView) view.findViewById(R.id.subjectData);
-        subjectBibliography = (TextView) view.findViewById(R.id.subjectBibliography);
-        subjectSelector = (AutoCompleteTextView) view.findViewById(R.id.subjectSelector);
-
-        buttonSearch = (ImageButton) view.findViewById(R.id.queryButton);
-
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
-        progressBar.setMax(100);
-
         // Enable bibliography redirect onClick
         subjectBibliography.setClickable(true);
         subjectBibliography.setMovementMethod(LinkMovementMethod.getInstance());
 
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
+        subjectSelector.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v)
-            {
-                View view = getActivity().getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performSearch();
+                    return true;
                 }
-
-                String subjectName = subjectSelector.getText().toString().toUpperCase();
-                if (subjectName.length() == 0) {
-                    Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
-                } else {
-                    Boolean found = false;
-                    for (int i = 0; i < subjects_name.size() && !found; i++) {
-                        if (subjects_name.get(i).first.equals(subjectName)) {
-
-                            found = true;
-                            currentCode = subjects_name.get(i).second;
-                            String fileName = "subject_" + currentCode + ".json";
-
-                            showSubjectInfo(fileName);
-
-                        }
-                    }
-                    if (!found)
-                        Toast.makeText(getContext(), getResources().getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
-                }
-
-                subjectSelector.setText("");
+                return false;
             }
         });
 
         loadSubjectsList();
-
     }
+
+    private void performSearch()
+    {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        search.setVisibility(View.GONE);
+        String subjectName = subjectSelector.getText().toString().toUpperCase();
+        if (subjectName.length() == 0) {
+            Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
+        } else {
+            Boolean found = false;
+            for (int i = 0; i < subjects_name.size() && !found; i++) {
+                if (subjects_name.get(i).first.equals(subjectName)) {
+
+                    found = true;
+                    currentCode = subjects_name.get(i).second;
+                    String fileName = "subject_" + currentCode + ".json";
+
+                    showSubjectInfo(fileName);
+
+                }
+            }
+            if (!found)
+                Toast.makeText(getContext(), getResources().getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
+        }
+
+        subjectSelector.setText("");
+    }
+
 
     private void loadSubjectsList()
     {
