@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class ClassAvailabilityMainMenu extends Fragment
 {
-    TextView connectionProblemText, lastUpdate;
+    TextView connectionProblemText;
     ImageButton update;
     ListView listView;
     ProgressBar progressBar;
@@ -44,7 +44,6 @@ public class ClassAvailabilityMainMenu extends Fragment
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_class_availability));
         View rootView = inflater.inflate(R.layout.class_availability_main_menu, container, false);
 
-        lastUpdate = (TextView) rootView.findViewById(R.id.lastUpdateClassAvailability);
         update = (ImageButton) rootView.findViewById(R.id.updateNotifications);
         connectionProblemText = (TextView) rootView.findViewById(R.id.connectionProblemTextClassAvailability);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -61,8 +60,8 @@ public class ClassAvailabilityMainMenu extends Fragment
             @Override
             public void onClick(View v)
             {
+                listView.setVisibility(View.GONE);
                 connectionProblemText.setVisibility(View.GONE);
-                FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
                 new GetClassroomsInfo().execute();
             }
         });
@@ -85,7 +84,8 @@ public class ClassAvailabilityMainMenu extends Fragment
                 });
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setView(webView);
+                builder.setView(webView).setTitle(building.toUpperCase());
+                builder.setMessage(getResources().getString(R.string.last_update));
                 builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id)
@@ -101,8 +101,8 @@ public class ClassAvailabilityMainMenu extends Fragment
         new GetClassroomsInfo().execute();
     }
 
-    private class GetClassroomsInfo extends AsyncTask<Void, Void, String> {
-
+    private class GetClassroomsInfo extends AsyncTask<Void, Void, String>
+    {
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
@@ -111,13 +111,11 @@ public class ClassAvailabilityMainMenu extends Fragment
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-
-            if (!FileUtils.fileExists(getContext().getApplicationContext(), "places-lliures.json"))
-                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
-
+        protected String doInBackground(Void... params)
+        {
+            FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
+            FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
             return FileUtils.readFileToString(getContext(), "places-lliures.json");
-
         }
 
         @Override
@@ -130,9 +128,7 @@ public class ClassAvailabilityMainMenu extends Fragment
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
-                    String lastUpdateText = getResources().getString(R.string.last_update) + ": " + jsonObject.getString("update");
-                    lastUpdate.setText(lastUpdateText);
-                    lastUpdate.setVisibility(View.VISIBLE);
+                    classAvailabilityInfo.setVisibility(View.VISIBLE);
                     update.setVisibility(View.VISIBLE);
 
                     JSONArray classroomsJSONArray = jsonObject.getJSONArray("aules");
@@ -147,7 +143,8 @@ public class ClassAvailabilityMainMenu extends Fragment
 
                 final ArrayAdapter<ClassroomModel> adapter = new ArrayAdapter<ClassroomModel>(getContext(), R.layout.class_availability_item_list, R.id.classroomNameClassAvailability, classroomsInfo) {
                     @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
+                    public View getView(int position, View convertView, ViewGroup parent)
+                    {
                         View view = super.getView(position, convertView, parent);
                         TextView text1 = (TextView) view.findViewById(R.id.classroomNameClassAvailability);
                         TextView text2 = (TextView) view.findViewById(R.id.availabilityClassAvailability);
@@ -174,12 +171,9 @@ public class ClassAvailabilityMainMenu extends Fragment
                 listView.setAdapter(adapter);
 
                 listView.setVisibility(View.VISIBLE);
-                classAvailabilityInfo.setVisibility(View.VISIBLE);
             }
-
             progressBar.setVisibility(View.GONE);
         }
-
     }
 
 }

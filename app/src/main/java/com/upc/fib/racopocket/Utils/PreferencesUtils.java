@@ -3,6 +3,10 @@ package com.upc.fib.racopocket.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PreferencesUtils
 {

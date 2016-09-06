@@ -38,7 +38,8 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
 
-public class ScheduleMainMenu extends Fragment {
+public class ScheduleMainMenu extends Fragment
+{
     ImageButton update;
     ListView eventsList;
     ProgressBar progressBar;
@@ -50,7 +51,8 @@ public class ScheduleMainMenu extends Fragment {
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_schedule));
 
         View rootView = inflater.inflate(R.layout.schedule_main_menu, container, false);
@@ -61,7 +63,8 @@ public class ScheduleMainMenu extends Fragment {
         return rootView;
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
         String token = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "OAUTH_TOKEN");
@@ -72,7 +75,8 @@ public class ScheduleMainMenu extends Fragment {
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if (!workInProgress) {
                     new GetSchedule().execute(true);
                 }
@@ -84,25 +88,33 @@ public class ScheduleMainMenu extends Fragment {
 
     }
 
-    private class GetSchedule extends AsyncTask<Boolean, Void, ICalReader> {
+    private class GetSchedule extends AsyncTask<Boolean, Void, ICalReader>
+    {
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected void onPreExecute()
+        {
             progressBar.setVisibility(View.VISIBLE);
             workInProgress = true;
         }
 
         @Override
-        protected ICalReader doInBackground(Boolean... params) {
+        protected ICalReader doInBackground(Boolean... params)
+        {
             Boolean forceUpdate = params[0];
-            if (forceUpdate || !FileUtils.fileExists(getContext().getApplicationContext(), "calendari-portada.ics")) {
+            if (forceUpdate || !FileUtils.fileExists(getContext().getApplicationContext(), "calendari-portada.ics"))
                 FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+            else {
+                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates"))
+                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates"))
+                        FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             }
+
             return FileUtils.readFileToICal(getContext().getApplicationContext(), "calendari-portada.ics");
         }
 
         @Override
-        protected void onPostExecute(ICalReader response) {
+        protected void onPostExecute(ICalReader response)
+        {
             if (response != null)
                 parseICalReader(response);
             workInProgress = false;
@@ -125,14 +137,16 @@ public class ScheduleMainMenu extends Fragment {
             }
 
             Collections.sort(scheduleData, new Comparator<Pair<String, DateStart>>() {
-                public int compare(Pair<String, DateStart> o1, Pair<String, DateStart> o2) {
+                public int compare(Pair<String, DateStart> o1, Pair<String, DateStart> o2)
+                {
                     return o1.second.getValue().compareTo(o2.second.getValue());
                 }
             });
 
             final ArrayAdapter<Pair<String, DateStart>> adapter = new ArrayAdapter<Pair<String, DateStart>>(getContext(), R.layout.schedule_item_list, R.id.summarySchedule, scheduleData) {
                 @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
+                public View getView(int position, View convertView, ViewGroup parent)
+                {
                     View view = super.getView(position, convertView, parent);
                     TextView text1 = (TextView) view.findViewById(R.id.summarySchedule);
                     TextView text2 = (TextView) view.findViewById(R.id.dateSchedule);

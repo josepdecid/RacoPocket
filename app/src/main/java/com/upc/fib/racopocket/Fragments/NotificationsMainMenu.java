@@ -28,9 +28,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -122,29 +130,9 @@ public class NotificationsMainMenu extends Fragment
             if (forceUpdate || !FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json"))
                 statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
             else {
-                String performCase = "never";
-                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
-                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
-                        if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "applicationUpdates")) {
-                            performCase = PreferencesUtils.recoverStringPreference(getContext().getApplicationContext(), "applicationUpdates");
-                        }
-                    }
-                }
-
-                switch (performCase) {
-                    case "weekly":
-                        //TODO: Implement weekly update case
-                        break;
-                    case "daily":
-                        //TODO: Implement weekly update case
-                        break;
-                    case "always":
+                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates"))
+                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates"))
                         statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-                        break;
-                    default:
-                        break;
-                }
-
             }
 
             return new Pair<>(statusCode, FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json"));

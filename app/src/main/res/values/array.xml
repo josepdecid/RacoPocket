@@ -5,18 +5,4 @@
         <item>Español</item>
         <item>English</item>
     </string-array>
-
-    <string-array name="list_update_elements">
-        <item>@string/never_update</item>
-        <item>@string/weekly_update</item>
-        <item>@string/daily_update</item>
-        <item>@string/when_open_update</item>
-    </string-array>
-
-    <string-array name="list_update_elements_values">
-        <item>never</item>
-        <item>weekly</item>
-        <item>daily</item>
-        <item>always</item>
-    </string-array>
 </resources>

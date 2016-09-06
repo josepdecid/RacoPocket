@@ -34,7 +34,7 @@
     <string name="friday">Divendres</string>
 
     <!-- Strings related to Class Availability -->
-    <string name="last_update">Última actualització</string>
+    <string name="last_update">El mapa dels aularis pot mostrar dades desactualitzades. L\'última actualització apareix dalt a l\'esquerra.</string>
     <string name="class_name">Classe</string>
     <string name="class_availability">Espais lliures</string>
 

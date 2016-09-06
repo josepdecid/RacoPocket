@@ -19,14 +19,6 @@
             android:defaultValue="false">
         </CheckBoxPreference>
 
-        <ListPreference
-            android:key="applicationUpdates"
-            android:title="@string/network_usage"
-            android:summary="@string/network_usage_description"
-            android:entries="@array/list_update_elements"
-            android:entryValues="@array/list_update_elements_values"
-            android:defaultValue="never"/>
-
         <Preference
             android:key="applicationDataUpdate"
             android:title="@string/update_data"
