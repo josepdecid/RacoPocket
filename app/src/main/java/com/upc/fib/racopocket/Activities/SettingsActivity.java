@@ -50,15 +50,9 @@ public class SettingsActivity extends PreferenceActivity
         startActivity(intent);
     }
 
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-    }
-
     public static class MyPreferenceFragment extends PreferenceFragment
     {
-        Preference language, enableAutomaticUpdates, networkUsage, updateAll, emailButton, gitHubButton;
+        Preference language, updateAll, emailButton, gitHubButton;
 
         @Override
         public void onCreate(final Bundle savedInstanceState)
@@ -67,14 +61,9 @@ public class SettingsActivity extends PreferenceActivity
             addPreferencesFromResource(R.xml.preferences);
 
             language = findPreference("language");
-            enableAutomaticUpdates = findPreference("enableAutomaticUpdates");
-            networkUsage = findPreference("applicationUpdates");
             updateAll = findPreference("applicationDataUpdate");
             emailButton = findPreference("emailReport");
             gitHubButton = findPreference("gitHubReport");
-
-            boolean automaticUpdate = PreferencesUtils.recoverBooleanPreference(getActivity().getApplicationContext(), "enableAutomaticUpdates");
-            networkUsage.setEnabled(automaticUpdate);
 
             language.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -100,16 +89,6 @@ public class SettingsActivity extends PreferenceActivity
                         }
                     });
                     builder.show();
-                    return false;
-                }
-            });
-
-            enableAutomaticUpdates.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference)
-                {
-                    boolean enabled = PreferencesUtils.recoverBooleanPreference(getActivity(), "enableAutomaticUpdates");
-                    networkUsage.setEnabled(enabled);
                     return false;
                 }
             });

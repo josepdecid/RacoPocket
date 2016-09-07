@@ -33,7 +33,6 @@ public class SubjectInfoMainMenu extends Fragment
 {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
-    LinearLayout search;
     ProgressBar progressBar;
 
     String currentCode;
@@ -83,7 +82,6 @@ public class SubjectInfoMainMenu extends Fragment
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        search.setVisibility(View.GONE);
         String subjectName = subjectSelector.getText().toString().toUpperCase();
         if (subjectName.length() == 0) {
             Toast.makeText(getActivity(), R.string.empty_field, Toast.LENGTH_SHORT).show();
@@ -101,7 +99,7 @@ public class SubjectInfoMainMenu extends Fragment
                 }
             }
             if (!found)
-                Toast.makeText(getContext(), getResources().getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
         }
 
         subjectSelector.setText("");
