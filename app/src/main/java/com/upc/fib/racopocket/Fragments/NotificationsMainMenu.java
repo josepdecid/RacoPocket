@@ -1,6 +1,7 @@
 package com.upc.fib.racopocket.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upc.fib.racopocket.Activities.MainMenuActivity;
+import com.upc.fib.racopocket.Activities.NotificationDetailsActivity;
 import com.upc.fib.racopocket.Models.NotificationModel;
 import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.Constants;
@@ -42,6 +44,8 @@ public class NotificationsMainMenu extends Fragment
 
     String mySubjects, myNotifications;
     List<String> listDataHeader;
+
+    ExpandableListAdapter expandableListAdapter;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -70,7 +74,21 @@ public class NotificationsMainMenu extends Fragment
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
             {
-                //TODO: Implement onClickListener
+                NotificationModel notification = (NotificationModel) expandableListAdapter.getChild(groupPosition, childPosition);
+                String subjectId = (String) expandableListAdapter.getGroup(groupPosition);
+                Intent intent =  new Intent(getContext(), NotificationDetailsActivity.class);
+                intent.putExtra("title", notification.getTitle());
+                intent.putExtra("description", notification.getDescription());
+                intent.putExtra("subjectId", subjectId);
+                intent.putExtra("notificationId", notification.getIdNotification());
+                List<Pair<String, String>> attachments = notification.getAttachmentsList();
+                if (attachments.size() != 0) {
+                    for (int i = 0; i < attachments.size(); i++) {
+                        intent.putExtra("attachment_" + i + "_id", attachments.get(i).first);
+                        intent.putExtra("attachment_" + i + "_title", attachments.get(i).second);
+                    }
+                }
+                startActivity(intent);
                 return true;
             }
         });
@@ -146,14 +164,14 @@ public class NotificationsMainMenu extends Fragment
                         for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
                             // Each subject notifications
                             JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
-                            int idNotification = subjectJSONObject.getInt("id");
+                            String idNotification = subjectJSONObject.getString("id");
                             String title = subjectJSONObject.getString("title");
                             String pubDate = subjectJSONObject.getString("pubDate");
                             JSONArray attachmentsListJSONArray = subjectJSONObject.getJSONArray("attachments");
-                            List<Pair<Integer, String>> attachmentsList = new ArrayList<>();
+                            List<Pair<String, String>> attachmentsList = new ArrayList<>();
                             for (int k = 0; k < attachmentsListJSONArray.length(); k++) {
                                 JSONObject attachmentJSONObject = attachmentsListJSONArray.getJSONObject(k);
-                                Integer id = attachmentJSONObject.getInt("id");
+                                String id = attachmentJSONObject.getString("id");
                                 String filename = attachmentJSONObject.getString("fileName");
                                 attachmentsList.add(new Pair<>(id, filename));
                             }
@@ -171,7 +189,7 @@ public class NotificationsMainMenu extends Fragment
             }
 
             // Set and display the Subjects Array
-            ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+            expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
             expListViewNotifications.setAdapter(expandableListAdapter);
 
             expListViewNotifications.setVisibility(View.VISIBLE);
@@ -192,7 +210,7 @@ public class NotificationsMainMenu extends Fragment
         }
 
         @Override
-        public NotificationModel getChild(int groupPosition, int childPosition) {
+            public Object getChild(int groupPosition, int childPosition) {
             return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosition);
         }
 
@@ -212,7 +230,7 @@ public class NotificationsMainMenu extends Fragment
             TextView titleNotifications = (TextView) convertView.findViewById(R.id.titleNotifications);
             TextView dateNotifications = (TextView) convertView.findViewById(R.id.dateNotifications);
 
-            NotificationModel element = getChild(groupPosition, childPosition);
+            NotificationModel element = (NotificationModel) getChild(groupPosition, childPosition);
             titleNotifications.setText(element.getTitle());
             dateNotifications.setText(element.getPubDate());
 

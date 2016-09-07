@@ -6,13 +6,13 @@ import java.util.List;
 
 public class NotificationModel
 {
-    int idNotification;
+    String idNotification;
     String title;
     String pubDate;
-    List<Pair<Integer, String>> attachmentsList;
+    List<Pair<String, String>> attachmentsList;
     String description;
 
-    public NotificationModel(int idNotification, String title, String pubDate, List<Pair<Integer, String>> attachmentsList, String description)
+    public NotificationModel(String idNotification, String title, String pubDate, List<Pair<String, String>> attachmentsList, String description)
     {
         this.idNotification = idNotification;
         this.title = title;
@@ -21,7 +21,7 @@ public class NotificationModel
         this.description = description;
     }
 
-    public int getIdNotification()
+    public String getIdNotification()
     {
         return this.idNotification;
     }
@@ -36,7 +36,7 @@ public class NotificationModel
         return this.pubDate;
     }
 
-    public List<Pair<Integer, String>> getAttachmentsList()
+    public List<Pair<String, String>> getAttachmentsList()
     {
         return this.attachmentsList;
     }

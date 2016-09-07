@@ -49,6 +49,7 @@ public class ClassAvailabilityMainMenu extends Fragment
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         listView = (ListView) rootView.findViewById(R.id.listView);
         classAvailabilityInfo = (LinearLayout) rootView.findViewById(R.id.class_info_linear_layout);
+
         return rootView;
     }
 
