@@ -1,7 +1,6 @@
 package com.upc.fib.racopocket.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upc.fib.racopocket.Activities.MainMenuActivity;
-import com.upc.fib.racopocket.Activities.NotificationDetailsActivity;
+import com.upc.fib.racopocket.Models.NotificationModel;
 import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.Constants;
 import com.upc.fib.racopocket.Utils.FileUtils;
@@ -28,17 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.StringReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -79,23 +70,7 @@ public class NotificationsMainMenu extends Fragment
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
             {
-                String subjectName = null, title = null, description = null;
-                try {
-                    subjectName = listDataHeader.get(groupPosition);
-                    JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
-                    JSONArray subjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(subjectName);
-                    JSONObject subjectNotificationJSONObject = subjectNotificationsJSONArray.getJSONObject(childPosition);
-                    title = subjectNotificationJSONObject.getString("title");
-                    description = subjectNotificationJSONObject.getString("description");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Intent intent = new Intent(getContext(), NotificationDetailsActivity.class);
-                intent.putExtra("subjectName", subjectName);
-                intent.putExtra("title", title);
-                intent.putExtra("description", description);
-                startActivity(intent);
+                //TODO: Implement onClickListener
                 return true;
             }
         });
@@ -158,12 +133,12 @@ public class NotificationsMainMenu extends Fragment
             }
 
             // TODO: Implement file download
-            HashMap<String, List<Pair<String, String>>> listDataChild = new HashMap<>();
+            HashMap<String, List<NotificationModel>> listDataChild = new HashMap<>();
             try {
                 JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
                 for (int i = 0; i < listDataHeader.size(); i++) {
                     // Each subject
-                    List<Pair<String, String>> dataChild = new ArrayList<>();
+                    List<NotificationModel> dataChild = new ArrayList<>();
                     // If subject has notifications we display the subject's title
                     // Otherwise we don't display the subject's title
                     if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
@@ -171,10 +146,20 @@ public class NotificationsMainMenu extends Fragment
                         for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
                             // Each subject notifications
                             JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
+                            int idNotification = subjectJSONObject.getInt("id");
                             String title = subjectJSONObject.getString("title");
-                            String date = subjectJSONObject.getString("pubDate");
-                            date = date.substring(5, date.length() - 6);
-                            dataChild.add(new Pair<>(title, date));
+                            String pubDate = subjectJSONObject.getString("pubDate");
+                            JSONArray attachmentsListJSONArray = subjectJSONObject.getJSONArray("attachments");
+                            List<Pair<Integer, String>> attachmentsList = new ArrayList<>();
+                            for (int k = 0; k < attachmentsListJSONArray.length(); k++) {
+                                JSONObject attachmentJSONObject = attachmentsListJSONArray.getJSONObject(k);
+                                Integer id = attachmentJSONObject.getInt("id");
+                                String filename = attachmentJSONObject.getString("fileName");
+                                attachmentsList.add(new Pair<>(id, filename));
+                            }
+                            String description = subjectJSONObject.getString("description");
+                            pubDate = pubDate.substring(5, pubDate.length() - 6);
+                            dataChild.add(new NotificationModel(idNotification, title, pubDate, attachmentsList, description));
                         }
                         listDataChild.put(listDataHeader.get(i), dataChild);
                     } else {
@@ -198,16 +183,16 @@ public class NotificationsMainMenu extends Fragment
     private class ExpandableListAdapter extends BaseExpandableListAdapter {
         private Context context;
         private List<String> listDataHeader;
-        private HashMap<String, List<Pair<String, String>>> listDataChild;
+        private HashMap<String, List<NotificationModel>> listDataChild;
 
-        public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<Pair<String, String>>> listChildData) {
+        public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<NotificationModel>> listChildData) {
             this.context = context;
             this.listDataHeader = listDataHeader;
             this.listDataChild = listChildData;
         }
 
         @Override
-        public Pair<String, String> getChild(int groupPosition, int childPosition) {
+        public NotificationModel getChild(int groupPosition, int childPosition) {
             return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosition);
         }
 
@@ -227,9 +212,9 @@ public class NotificationsMainMenu extends Fragment
             TextView titleNotifications = (TextView) convertView.findViewById(R.id.titleNotifications);
             TextView dateNotifications = (TextView) convertView.findViewById(R.id.dateNotifications);
 
-            Pair<String, String> element = getChild(groupPosition, childPosition);
-            titleNotifications.setText(element.first);
-            dateNotifications.setText(element.second);
+            NotificationModel element = getChild(groupPosition, childPosition);
+            titleNotifications.setText(element.getTitle());
+            dateNotifications.setText(element.getPubDate());
 
             return convertView;
         }
