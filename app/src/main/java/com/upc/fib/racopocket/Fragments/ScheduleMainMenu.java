@@ -22,6 +22,7 @@ import com.upc.fib.racopocket.Utils.FileUtils;
 import com.upc.fib.racopocket.Utils.PreferencesUtils;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,6 +48,7 @@ public class ScheduleMainMenu extends Fragment
     boolean workInProgress;
 
     HashMap<String, Integer> colorSchemeMap;
+    SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
@@ -152,7 +154,7 @@ public class ScheduleMainMenu extends Fragment
                     TextView text2 = (TextView) view.findViewById(R.id.dateSchedule);
 
                     String summary = scheduleData.get(position).first;
-                    String date = scheduleData.get(position).second.getValue().toString();
+                    String date = formatDate.format(scheduleData.get(position).second.getValue());
 
                     text1.setText(summary);
                     text2.setText(date);
