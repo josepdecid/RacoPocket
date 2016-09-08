@@ -68,7 +68,9 @@ public class NotificationDetailsActivity extends AppCompatActivity
             getSupportActionBar().setTitle(subjectId);
 
         notificationTitle.setText(title);
-        notificationDescription.setText(Html.fromHtml(description));
+        if (description != "null" && !description.equals("null")) {
+            notificationDescription.setText(Html.fromHtml(description));
+        }
 
         String token = PreferencesUtils.recoverStringPreference(getApplicationContext(), "OAUTH_TOKEN");
         String secret = PreferencesUtils.recoverStringPreference(getApplicationContext(), "OAUTH_TOKEN_SECRET");

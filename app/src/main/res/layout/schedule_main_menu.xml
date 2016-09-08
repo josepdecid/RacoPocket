@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/refresh_image_button"
         android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/refresh_gradient"
+        android:background="@color/raco_blue"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
