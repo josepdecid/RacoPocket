@@ -27,6 +27,9 @@ import java.util.List;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
 
 public class NotificationDetailsActivity extends AppCompatActivity
 {
@@ -68,7 +71,7 @@ public class NotificationDetailsActivity extends AppCompatActivity
             getSupportActionBar().setTitle(subjectId);
 
         notificationTitle.setText(title);
-        if (description != "null" && !description.equals("null")) {
+        if (description != null && !description.equals("null")) {
             notificationDescription.setText(Html.fromHtml(description));
         }
 
@@ -110,11 +113,16 @@ public class NotificationDetailsActivity extends AppCompatActivity
             String attachmentId = params[2];
             String filename = params[3];
             String url = "https://raco.fib.upc.edu/api-v1/attachment?espai=" + subjectId + "&idAvis=" + notificationId + "&idAdjunt=" + attachmentId;
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            downloadManager.enqueue(request);
+            try {
+                consumer.sign(url);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                downloadManager.enqueue(request);
+            } catch (OAuthMessageSignerException | OAuthExpectationFailedException | OAuthCommunicationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

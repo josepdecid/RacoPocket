@@ -9,7 +9,7 @@ public class NotificationModel
     String idNotification;
     String title;
     String pubDate;
-    List<Pair<String, String>> attachmentsList;
+    List<Pair<String, String>> attachmentsList; // idAttachment - attachmentTitle
     String description;
 
     public NotificationModel(String idNotification, String title, String pubDate, List<Pair<String, String>> attachmentsList, String description)

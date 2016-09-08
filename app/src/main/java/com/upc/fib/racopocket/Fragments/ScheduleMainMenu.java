@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.upc.fib.racopocket.Activities.MainMenuActivity;
 import com.upc.fib.racopocket.R;
@@ -119,6 +120,8 @@ public class ScheduleMainMenu extends Fragment
         {
             if (response != null)
                 parseICalReader(response);
+            else
+                Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }
