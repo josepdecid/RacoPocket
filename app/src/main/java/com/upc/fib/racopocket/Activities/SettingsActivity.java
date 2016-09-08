@@ -75,14 +75,14 @@ public class SettingsActivity extends PreferenceActivity
                         public void onClick(DialogInterface dialogInterface, int which)
                         {
                             switch (which) {
-                                case 0:
-                                    setLocale("ca");
-                                    break;
                                 case 1:
                                     setLocale("es");
                                     break;
-                                default:
+                                case 2:
                                     setLocale("en");
+                                    break;
+                                default:
+                                    setLocale("ca");
                             }
                             Toast.makeText(getActivity(), getResources().getString(R.string.new_language), Toast.LENGTH_LONG).show();
                             getActivity().recreate();

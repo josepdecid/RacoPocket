@@ -48,5 +48,6 @@ public class PreferencesUtils
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.edit().remove("OAUTH_TOKEN").apply();
         sharedPreferences.edit().remove("OAUTH_TOKEN_SECRET").apply();
+        sharedPreferences.edit().remove("LOGIN_SUCCESSFUL").apply();
     }
 }

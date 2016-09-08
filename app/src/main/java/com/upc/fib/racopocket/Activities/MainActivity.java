@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity
     // Intent to login or main menu according if you are already logged in or not
     private Intent nextActivity()
     {
-        if (PreferencesUtils.recoverStringPreference(getApplicationContext(), "OAUTH_TOKEN").equals("") || PreferencesUtils.recoverStringPreference(getApplicationContext(), "OAUTH_TOKEN_SECRET").equals("")) {
-            return new Intent(MainActivity.this, LoginActivity.class);
-        } else {
+        if (PreferencesUtils.recoverStringPreference(getApplicationContext(), "LOGIN_SUCCESSFUL").equals("OK")) {
             return new Intent(MainActivity.this, MainMenuActivity.class);
+        } else {
+            return new Intent(MainActivity.this, LoginActivity.class);
         }
     }
 

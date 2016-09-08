@@ -219,6 +219,10 @@ public class LoginActivity extends Activity
             if (response.equals("ERROR")) {
                 Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
                 PreferencesUtils.removeTokens(getApplicationContext());
+                FileUtils.fileDelete(getApplicationContext(), "info-personal.json");
+                FileUtils.fileDelete(getApplicationContext(), "assignatures.json");
+                FileUtils.fileDelete(getApplicationContext(), "horari-setmanal.json");
+                FileUtils.fileDelete(getApplicationContext(), "llista.json");
             } else {
                 Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

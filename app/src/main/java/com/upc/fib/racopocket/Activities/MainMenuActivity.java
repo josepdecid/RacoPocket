@@ -165,6 +165,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             JSONObject object = new JSONObject(studentData);
             String data = getResources().getString(R.string.welcome).toUpperCase() + "\n " + object.getString("nom") + " " + object.getString("cognoms");
             welcomeName.setText(data);
+            PreferencesUtils.storeStringPreference(getApplicationContext(), "LOGIN_SUCCESSFUL", "OK");
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -150,7 +150,6 @@ public class NotificationsMainMenu extends Fragment
                 e.printStackTrace();
             }
 
-            // TODO: Implement file download
             HashMap<String, List<NotificationModel>> listDataChild = new HashMap<>();
             try {
                 JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
