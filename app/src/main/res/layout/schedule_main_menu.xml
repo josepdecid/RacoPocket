@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/refresh_image_button"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:padding="12dp"
         android:background="@color/raco_blue"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
