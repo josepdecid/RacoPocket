@@ -162,7 +162,7 @@ public class ScheduleMainMenu extends Fragment
                     text1.setText(summary);
                     text2.setText(date);
 
-                    int color = Color.parseColor("#EFEFEF");
+                    int color = Color.parseColor("#FFFFFF");
                     for (Map.Entry<String, Integer> entry : colorSchemeMap.entrySet()) {
                         if (summary.toLowerCase().contains(entry.getKey().toLowerCase())) {
                             color = entry.getValue();

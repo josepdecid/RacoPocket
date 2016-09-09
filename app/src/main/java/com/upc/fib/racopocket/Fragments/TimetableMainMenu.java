@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.upc.fib.racopocket.Activities.MainMenuActivity;
-import com.upc.fib.racopocket.Models.TimetableModel;
+import com.upc.fib.racopocket.Models.TimetableSubjectModel;
 import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.ColorScheme;
 import com.upc.fib.racopocket.Utils.FileUtils;
@@ -35,7 +35,7 @@ public class TimetableMainMenu extends Fragment
 
     int currentDay;
     HashMap<String, Integer> colorSchemeMap;
-    ArrayList<ArrayList<TimetableModel>> classroomsInfo;
+    ArrayList<ArrayList<TimetableSubjectModel>> classroomsInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -58,7 +58,7 @@ public class TimetableMainMenu extends Fragment
 
         classroomsInfo = new ArrayList<>();
         for (int i = 0; i < 5; i++)
-            classroomsInfo.add(new ArrayList<TimetableModel>());
+            classroomsInfo.add(new ArrayList<TimetableSubjectModel>());
 
         currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
         if (currentDay == 0 || currentDay == 6)
@@ -149,7 +149,7 @@ public class TimetableMainMenu extends Fragment
                         classroom = classroom.replace("]", "");
                         classroom = classroom.replace("\"", "");
                         classroom = classroom.replace(",", ", ");
-                        classroomsInfo.get(currentClass.getInt("Dia") - 1).add(new TimetableModel(subject, group, timeStart, classroom));
+                        classroomsInfo.get(currentClass.getInt("Dia") - 1).add(new TimetableSubjectModel(subject, group, timeStart, classroom));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -163,7 +163,7 @@ public class TimetableMainMenu extends Fragment
 
     void printTimetable()
     {
-        final ArrayAdapter<TimetableModel> adapter = new ArrayAdapter<TimetableModel>(getContext(), R.layout.timetable_item_list, R.id.timetableStartTime, classroomsInfo.get(currentDay - 1)) {
+        final ArrayAdapter<TimetableSubjectModel> adapter = new ArrayAdapter<TimetableSubjectModel>(getContext(), R.layout.timetable_item_list, R.id.timetableStartTime, classroomsInfo.get(currentDay - 1)) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent)
             {
