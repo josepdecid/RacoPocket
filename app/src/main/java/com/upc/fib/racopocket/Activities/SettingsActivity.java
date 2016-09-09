@@ -218,7 +218,7 @@ public class SettingsActivity extends PreferenceActivity
                         String subjectCode = subjectJSONObject.getString("codi_upc");
                         String filename = "subject_" + subjectCode + ".json";
                         if (200 != FileUtils.fetchAndStoreFile(getActivity().getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename)) {
-                            FileUtils.fileDelete(getActivity().getApplicationContext(), filename);
+                            FileUtils.deleteFile(getActivity().getApplicationContext(), filename);
                             return "ERROR";
                         }
                         publishProgress(++currentProgress);

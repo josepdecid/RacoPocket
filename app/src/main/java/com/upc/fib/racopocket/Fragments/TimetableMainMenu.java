@@ -1,6 +1,5 @@
 package com.upc.fib.racopocket.Fragments;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import com.upc.fib.racopocket.Models.TimetableModel;
 import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.ColorScheme;
 import com.upc.fib.racopocket.Utils.FileUtils;
-import com.upc.fib.racopocket.Utils.OnSwipeTouchListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,26 +86,6 @@ public class TimetableMainMenu extends Fragment
             }
         });
 
-        view.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeLeft()
-            {
-                currentDay--;
-                if (currentDay == 0) currentDay = 5;
-                writeWeekDay();
-                printTimetable();
-            }
-
-            @Override
-            public void onSwipeRight()
-            {
-                currentDay++;
-                if (currentDay == 6) currentDay = 1;
-                writeWeekDay();
-                printTimetable();
-            }
-        });
-
         writeWeekDay();
         colorSchemeMap = new ColorScheme(getContext()).setColorsToSubjects();
         new GetTimetableData().execute();
@@ -150,7 +128,7 @@ public class TimetableMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params)
         {
-            if (!FileUtils.fileExists(getContext().getApplicationContext(), "horari-setmanal.json"))
+            if (!FileUtils.checkFileExists(getContext().getApplicationContext(), "horari-setmanal.json"))
                 FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/horari-setmanal.json" , "horari-setmanal.json");
             return FileUtils.readFileToString(getContext(), "horari-setmanal.json");
         }

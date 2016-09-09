@@ -11,4 +11,7 @@ public class Constants {
 
     public static final String CALLBACK = "raco://raco";
 
+    public static final String TAG_FILE = "FILE";
+    public static final String TAG_JSON = "JSON";
+
 }

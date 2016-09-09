@@ -1,9 +1,7 @@
 package com.upc.fib.racopocket.Utils;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -21,23 +19,37 @@ import oauth.signpost.OAuthConsumer;
 
 public class FileUtils {
 
-    // Checks if 'filename' file, exists in the given context.
-    public static boolean fileExists(Context context, String fileName)
-    {
+    /**
+     * Checks if the file exists in the given context.
+     * @param context Desired context.
+     * @param fileName Name of the file to be checked.
+     * @return Boolean value representing if file exists.
+     */
+    public static boolean checkFileExists(Context context, String fileName) {
         File file = new File(context.getFilesDir(), fileName);
         return file.exists();
     }
 
-    // Tries delete 'filename' file in the given context, and returns if file has been deleted.
-    public static boolean fileDelete(Context context, String fileName)
-    {
+    /**
+     * Tries to delete the file in the given context, and returns if file has been deleted.
+     * @param context Desired context.
+     * @param fileName Name of the file to be deleted.
+     * @return Boolean value representing if file has been removed.
+     */
+    public static boolean deleteFile(Context context, String fileName) {
         File file = new File(context.getFilesDir(), fileName);
         return file.delete();
     }
 
-    // Fetch and store url data into 'outputFile' if statusCode is OK, and returns statusCode.
-    public static int fetchAndStoreFile(Context context, OAuthConsumer consumer, String u, String outputFile)
-    {
+    /**
+     * Fetch and store url data into a file if statusCode is OK, and returns statusCode.
+     * @param context Desired context.
+     * @param consumer OAuth consumer with secret keys already set. Pass null to avoid signing.
+     * @param u URL from which extract the data.
+     * @param outputFile Name of file where the data will be stored.
+     * @return Integer value representing the server response status code, -1 if any error ocurred.
+     */
+    public static int fetchAndStoreFile(Context context, OAuthConsumer consumer, String u, String outputFile) {
         try {
             URL url = new URL(u);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -54,7 +66,6 @@ public class FileUtils {
                     buffer.append(line).append('\n');
 
                 int statusCode = urlConnection.getResponseCode();
-
                 if (statusCode == 200) {
                     String data = buffer.toString();
                     try {
@@ -62,25 +73,31 @@ public class FileUtils {
                         outputStreamWriter.write(data);
                         outputStreamWriter.close();
                     } catch (IOException e) {
-                        Log.e("File", "File write failed: " + e.toString());
+                        Log.e(Constants.TAG_FILE, "File write failed: " + e.toString());
                     }
                 }
+
                 return statusCode;
 
             } finally {
                 urlConnection.disconnect();
             }
         } catch (Exception e) {
-            Log.i("FILE", "" + e.getMessage());
+            Log.e(Constants.TAG_FILE, "Connection error: " + e.getMessage());
         }
 
         return -1;
 
     }
 
-    // Reads a file from 'inputFile' and returns the string if read successfully, otherwise, null.
-    public static String readFileToString(Context context, String inputFile)
-    {
+    /**
+     * Reads a file and returns the String if read successfully, otherwise, null.
+     * @param context Desired context.
+     * @param inputFile Name of file where the data will be read from.
+     * @return String object containing the data, null if any error ocurred.
+     */
+    @Nullable
+    public static String readFileToString(Context context, String inputFile) {
         try {
             InputStream inputStream = context.openFileInput(inputFile);
             if (inputStream != null) {
@@ -96,20 +113,25 @@ public class FileUtils {
                 return stringBuilder.toString();
             }
         } catch (IOException e) {
-            Log.e("FILE", "Can not read file: " + e.toString());
+            Log.e(Constants.TAG_FILE, "File read to string failed: " + e.toString());
         }
 
         return null;
     }
 
-
-    public static ICalReader readFileToICal(Context context, String inputFile)
-    {
+    /**
+     * Reads a file and returns the ICalReader if read successfully, otherwise, null.
+     * @param context Desired context.
+     * @param inputFile Name of file where the data will be read from.
+     * @return ICalReader object containing the data, null if any error ocurred.
+     */
+    @Nullable
+    public static ICalReader readFileToICalReader(Context context, String inputFile) {
         File file = new File(context.getFilesDir(), inputFile);
         try {
             return new ICalReader(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e(Constants.TAG_FILE, "File read to ICalReader failed: " + e.toString());
         }
 
         return null;

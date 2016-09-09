@@ -104,7 +104,7 @@ public class ScheduleMainMenu extends Fragment
         protected ICalReader doInBackground(Boolean... params)
         {
             Boolean forceUpdate = params[0];
-            if (forceUpdate || !FileUtils.fileExists(getContext().getApplicationContext(), "calendari-portada.ics"))
+            if (forceUpdate || !FileUtils.checkFileExists(getContext().getApplicationContext(), "calendari-portada.ics"))
                 FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             else {
                 if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates"))
@@ -112,7 +112,7 @@ public class ScheduleMainMenu extends Fragment
                         FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             }
 
-            return FileUtils.readFileToICal(getContext().getApplicationContext(), "calendari-portada.ics");
+            return FileUtils.readFileToICalReader(getContext().getApplicationContext(), "calendari-portada.ics");
         }
 
         @Override

@@ -120,7 +120,7 @@ public class NotificationsMainMenu extends Fragment
             Boolean forceUpdate = params[0];
             int statusCode = 200;
 
-            if (forceUpdate || !FileUtils.fileExists(getContext().getApplicationContext(), "avisos.json"))
+            if (forceUpdate || !FileUtils.checkFileExists(getContext().getApplicationContext(), "avisos.json"))
                 statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
             else {
                 if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates"))

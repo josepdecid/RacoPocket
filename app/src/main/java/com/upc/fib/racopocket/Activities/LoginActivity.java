@@ -191,9 +191,9 @@ public class LoginActivity extends Activity
                     JSONObject subjectJSONObject = subjectsJSONArray.getJSONObject(i);
                     String subjectCode = subjectJSONObject.getString("codi_upc");
                     String filename = "subject_" + subjectCode + ".json";
-                    if (!FileUtils.fileExists(getApplicationContext(), filename)) {
+                    if (!FileUtils.checkFileExists(getApplicationContext(), filename)) {
                         if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename)) {
-                            FileUtils.fileDelete(getApplicationContext(), filename);
+                            FileUtils.deleteFile(getApplicationContext(), filename);
                             return "ERROR";
                         }
                     }
@@ -219,10 +219,10 @@ public class LoginActivity extends Activity
             if (response.equals("ERROR")) {
                 Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
                 PreferencesUtils.removeTokens(getApplicationContext());
-                FileUtils.fileDelete(getApplicationContext(), "info-personal.json");
-                FileUtils.fileDelete(getApplicationContext(), "assignatures.json");
-                FileUtils.fileDelete(getApplicationContext(), "horari-setmanal.json");
-                FileUtils.fileDelete(getApplicationContext(), "llista.json");
+                FileUtils.deleteFile(getApplicationContext(), "info-personal.json");
+                FileUtils.deleteFile(getApplicationContext(), "assignatures.json");
+                FileUtils.deleteFile(getApplicationContext(), "horari-setmanal.json");
+                FileUtils.deleteFile(getApplicationContext(), "llista.json");
             } else {
                 Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

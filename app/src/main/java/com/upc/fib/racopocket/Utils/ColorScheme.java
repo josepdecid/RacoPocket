@@ -2,6 +2,7 @@ package com.upc.fib.racopocket.Utils;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,10 +10,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class ColorScheme
-{
-    Context context;
-    int[] colors = {
+public class ColorScheme {
+
+    private Context context;
+    private int[] colors = {
             Color.parseColor("#DFE9C6"),
             Color.parseColor("#FFF3BA"),
             Color.parseColor("#FFD2A7"),
@@ -25,13 +26,19 @@ public class ColorScheme
             Color.parseColor("#297DB5"),
     };
 
-    public ColorScheme(Context context)
-    {
+    /**
+     * ColorScheme constructor
+     * @param context Desired context.
+     */
+    public ColorScheme(Context context) {
         this.context = context;
     }
 
-    public HashMap<String, Integer> setColorsToSubjects()
-    {
+    /**
+     * Returns a Hash map with subject as key and color as value for each assigned subject.
+     * @return HashMap containing all subject-color necessary entries.
+     */
+    public HashMap<String, Integer> setColorsToSubjects() {
         HashMap<String, Integer> colorScheme = new HashMap<>();
         String mySubjects = FileUtils.readFileToString(this.context, "assignatures.json");
         try {
@@ -41,7 +48,7 @@ public class ColorScheme
                 colorScheme.put(mySubjectJSONObject.getString("idAssig"), colors[i % colors.length]);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(Constants.TAG_JSON, "JSON parse failed: " + e.toString());
         }
 
         return colorScheme;

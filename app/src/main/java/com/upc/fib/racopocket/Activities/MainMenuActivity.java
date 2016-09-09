@@ -94,12 +94,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_logout) {
             PreferencesUtils.removeTokens(getApplicationContext());
 
-            FileUtils.fileDelete(getApplicationContext(), "info-personal.json");
-            FileUtils.fileDelete(getApplicationContext(), "assignatures.json");
-            FileUtils.fileDelete(getApplicationContext(), "horari-setmanal.json");
-            FileUtils.fileDelete(getApplicationContext(), "avisos.json");
-            FileUtils.fileDelete(getApplicationContext(), "calendari-portada.ics");
-            FileUtils.fileDelete(getApplicationContext(), "places-lliures.json");
+            FileUtils.deleteFile(getApplicationContext(), "info-personal.json");
+            FileUtils.deleteFile(getApplicationContext(), "assignatures.json");
+            FileUtils.deleteFile(getApplicationContext(), "horari-setmanal.json");
+            FileUtils.deleteFile(getApplicationContext(), "avisos.json");
+            FileUtils.deleteFile(getApplicationContext(), "calendari-portada.ics");
+            FileUtils.deleteFile(getApplicationContext(), "places-lliures.json");
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

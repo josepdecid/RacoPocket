@@ -114,7 +114,7 @@ public class ClassAvailabilityMainMenu extends Fragment
         @Override
         protected String doInBackground(Void... params)
         {
-            FileUtils.fileDelete(getContext().getApplicationContext(), "places-lliures.json");
+            FileUtils.deleteFile(getContext().getApplicationContext(), "places-lliures.json");
             FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json" , "places-lliures.json");
             return FileUtils.readFileToString(getContext(), "places-lliures.json");
         }
