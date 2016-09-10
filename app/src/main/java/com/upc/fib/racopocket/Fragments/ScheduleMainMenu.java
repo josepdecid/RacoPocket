@@ -118,9 +118,8 @@ public class ScheduleMainMenu extends Fragment {
         protected void onPostExecute(Pair<Integer, ICalReader> response) {
             if (response.first != 200) {
                 Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_LONG).show();
-            } else {
-                parseICalReader(response.second);
             }
+            parseICalReader(response.second);
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }
