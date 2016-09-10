@@ -79,7 +79,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
             String sAux = "\nLet me recommend you this application\n\n";
-            sAux = sAux + "https://play.google.com/store/\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.upc.fib.racopocket\n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "choose one"));
         } else if (id == R.id.nav_about) {

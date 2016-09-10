@@ -28,12 +28,12 @@
     <!-- Strings related to Timetable -->
     <string name="monday">Lunes</string>
     <string name="tuesday">Martes</string>
-    <string name="wednesday">Miercoles</string>
+    <string name="wednesday">Miércoles</string>
     <string name="thursday">Jueves</string>
     <string name="friday">Viernes</string>
 
     <!-- Strings related to Class Availability -->
-    <string name="last_update">El mapa de aularios puede mostrar datos desactualizados. La última actualización aparece arriba a la izquierda.</string>
+    <string name="last_update">El mapa de aularios puede mostrar datos desactualizados</string>
     <string name="class_name">Clase</string>
     <string name="class_availability">Espacios libres</string>
 
@@ -42,9 +42,6 @@
 
     <string name="credits">Créditos</string>
     <string name="description_objectives">Descripción y objetivos</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="refresh_image_button">Actualizar</string>
     <string name="search">Buscar</string>
@@ -82,10 +79,8 @@
     <string name="cancel_dialog">Cancelar</string>
 
     <string name="reports">Informar de errores</string>
-    <string name="reports_mail">E-mail</string>
     <string name="reports_mail_description">Envíanos un correo explicando tu problema.</string>
-    <string name="reports_github">GitHub</string>
     <string name="reports_github_description">Abre una \'issue\' en Github para facilitarnos el trabajo.</string>
-    <string name="connection_problems">Actualización no disponible, comprueba tu conexión y vuelve a intentarlo</string>
+    <string name="connection_problems">No se ha podido actualizar, comprueba tu conexión y vuelve a intentarlo</string>
 
 </resources>

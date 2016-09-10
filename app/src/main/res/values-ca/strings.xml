@@ -3,7 +3,7 @@
     <string name="action_sign_in_short">Entrar</string>
     <string name="automatic_update">Actualitzacions automàtiques</string>
     <string name="login_title">Descarregant les dades necessàries</string>
-    <string name="login_failed">Algo ha fallat, comprova la teva connexió i torna a intentar-ho</string>
+    <string name="login_failed">Alguna cosa ha fallat, comprova la teva connexió i torna a intentar-ho</string>
     <string name="welcome">Benvingut</string>
     <string name="nav_group1">Menú</string>
     <string name="nav_timetable">Horari</string>
@@ -22,14 +22,12 @@
     <string name="wednesday">Dimecres</string>
     <string name="thursday">Dijous</string>
     <string name="friday">Divendres</string>
-    <string name="last_update">El mapa dels aularis pot mostrar dades desactualitzades. L\'última actualització apareix dalt a l\'esquerra.</string>
+    <string name="last_update">El mapa dels aularis pot mostrar dades desactualitzades.</string>
     <string name="class_name">Classe</string>
     <string name="class_availability">Espais lliures</string>
     <string name="connection_problems_unavailable">Servei temporalment no disponible, intenta-ho més tard.</string>
     <string name="credits">Crèdits</string>
     <string name="description_objectives">Descripció i objectius</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="refresh_image_button">Actualitzar</string>
     <string name="search">Cercar</string>
     <string name="bibliography">Bibliografia</string>
@@ -58,10 +56,8 @@
     <string name="continue_dialog">Continuar</string>
     <string name="cancel_dialog">Cancel·lar</string>
     <string name="reports">Informar d\'errors</string>
-    <string name="reports_mail">E-mail</string>
     <string name="reports_mail_description">Envia\'ns un correu explicant el teu problema.</string>
-    <string name="reports_github">GitHub</string>
     <string name="reports_github_description">Obre una \'issue\' a Github per a facilitar-nos la feina.</string>
-    <string name="connection_problems">Actualització no disponible, comprova la teva connexió i torna a intentar-ho</string>
+    <string name="connection_problems">No s\'ha pogut actualitzar, comprova la teva connexió i torna a intentar-ho</string>
 
 </resources>
