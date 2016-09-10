@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="languages_array">
+    <string-array name="languages_array" translatable="false">
         <item>Català</item>
         <item>Español</item>
         <item>English</item>
