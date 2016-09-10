@@ -17,7 +17,7 @@
         android:textStyle="bold"
         android:textSize="30sp"
         android:gravity="center"
-        android:text="@string/connection_problems"
+        android:text="@string/connection_problems_unavailable"
         android:visibility="gone"/>
 
     <LinearLayout

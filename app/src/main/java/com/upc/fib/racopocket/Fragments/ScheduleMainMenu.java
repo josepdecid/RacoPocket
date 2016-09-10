@@ -100,9 +100,9 @@ public class ScheduleMainMenu extends Fragment {
         protected ICalReader doInBackground(Boolean... params) {
             Boolean forceUpdate = params[0];
             FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), consumer);
-            if (forceUpdate || !fileUtils.checkFileExists("calendari-portada.ics"))
+            if (forceUpdate || !fileUtils.checkFileExists("calendari-portada.ics")) {
                 fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
-            else {
+            } else {
                 if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
                     if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
                         fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
@@ -115,9 +115,9 @@ public class ScheduleMainMenu extends Fragment {
 
         @Override
         protected void onPostExecute(ICalReader response) {
-            if (response != null)
+            if (response != null) {
                 parseICalReader(response);
-            else
+            } else
                 Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
             workInProgress = false;
             progressBar.setVisibility(View.GONE);

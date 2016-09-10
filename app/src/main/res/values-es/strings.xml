@@ -16,7 +16,6 @@
     <string name="nav_schedule">Agenda</string>
     <string name="nav_class_availability">Disponibilidad laboratorios</string>
     <string name="nav_subject_info">Información asignaturas</string>
-    <string name="nav_uni_map">Mapa de la universidad</string>
 
     <string name="nav_group2">Otras características</string>
 
@@ -39,7 +38,7 @@
     <string name="class_availability">Espacios libres</string>
 
     <!-- Strings related to Subject Info -->
-    <string name="connection_problems">Servicio temporalmente no disponible, inténtalo más tarde.</string>
+    <string name="connection_problems_unavailable">Servicio temporalmente no disponible, inténtalo más tarde.</string>
 
     <string name="credits">Créditos</string>
     <string name="description_objectives">Descripción y objetivos</string>
@@ -50,11 +49,7 @@
     <string name="refresh_image_button">Actualizar</string>
     <string name="search">Buscar</string>
     <string name="bibliography">Bibliografía</string>
-    <string name="connection_image_button">Conexión</string>
     <string name="data_not_found">No se encontraron datos</string>
-    <string name="data_remove_fail">Error al intentar eliminar los datos</string>
-    <string name="data_remove_ok">Datos eliminados correctamente</string>
-    <string name="delete_image_button">Borrar</string>
     <string name="empty_field">Escribe algo para buscar</string>
     <string name="write_subject_initials">Siglas de la asignatura</string>
     <string name="delete_data">Borrar todos los datos</string>
@@ -76,13 +71,6 @@
     <string name="storage">Almacenamiento</string>
     <string name="automatic_update">Actualitzaciones automáticas</string>
     <string name="automatic_update_description">Activar actualizaciones automáticas periódicamente.</string>
-    <string name="network_usage">Uso de la red</string>
-    <string name="network_usage_description">Cambiar frecuencia de actualización de datos volátiles como notificaciones, agenda i disponibilidad de clases.</string>
-
-    <string name="never_update">Nunca (Actualizar manualmente)</string>
-    <string name="weekly_update">Actualizar una vez a la semana</string>
-    <string name="daily_update">Actualizar una vez al día</string>
-    <string name="when_open_update">Actualizar cada vez que consultamos los datos</string>
 
     <string name="update_data">Actualizar todos los datos</string>
     <string name="update_data_title">Descargando los datos necesarios</string>
@@ -98,5 +86,6 @@
     <string name="reports_mail_description">Envíanos un correo explicando tu problema.</string>
     <string name="reports_github">GitHub</string>
     <string name="reports_github_description">Abre una \'issue\' en Github para facilitarnos el trabajo.</string>
+    <string name="connection_problems">Actualización no disponible, comprueba tu conexión y vuelve a intentarlo</string>
 
 </resources>

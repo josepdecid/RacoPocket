@@ -1,66 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Strings related to login -->
     <string name="action_sign_in_short">Entrar</string>
+    <string name="automatic_update">Actualitzacions automàtiques</string>
     <string name="login_title">Descarregant les dades necessàries</string>
     <string name="login_failed">Algo ha fallat, comprova la teva connexió i torna a intentar-ho</string>
-
-    <!-- Strings related to Main Menu -->
     <string name="welcome">Benvingut</string>
-
     <string name="nav_group1">Menú</string>
-
     <string name="nav_timetable">Horari</string>
     <string name="nav_notifications">Notificacions</string>
     <string name="nav_schedule">Agenda</string>
     <string name="nav_class_availability">Disponibilitat laboratoris</string>
     <string name="nav_subject_info">Informació assignatures</string>
-    <string name="nav_uni_map">Mapa de la universitat</string>
-
     <string name="nav_group2">Altres característiques</string>
-
     <string name="nav_share">Compartir</string>
     <string name="nav_about">Sobre</string>
     <string name="nav_settings">Configuració</string>
     <string name="nav_logout">Tancar sessió</string>
-    <string name="back_button_confirmation">Presiona enrere un altre cop per sortir</string>
-
-    <!-- Strings related to Timetable -->
+    <string name="back_button_confirmation">Prem enrere un altre cop per sortir</string>
     <string name="monday">Dilluns</string>
     <string name="tuesday">Dimarts</string>
     <string name="wednesday">Dimecres</string>
     <string name="thursday">Dijous</string>
     <string name="friday">Divendres</string>
-
-    <!-- Strings related to Class Availability -->
     <string name="last_update">El mapa dels aularis pot mostrar dades desactualitzades. L\'última actualització apareix dalt a l\'esquerra.</string>
     <string name="class_name">Classe</string>
     <string name="class_availability">Espais lliures</string>
-
-    <!-- Strings related to Subject Info -->
-    <string name="connection_problems">Servei temporalment no disponible, intenta-ho més tard.</string>
-
+    <string name="connection_problems_unavailable">Servei temporalment no disponible, intenta-ho més tard.</string>
     <string name="credits">Crèdits</string>
     <string name="description_objectives">Descripció i objectius</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="refresh_image_button">Actualitzar</string>
     <string name="search">Cercar</string>
     <string name="bibliography">Bibliografia</string>
-    <string name="connection_image_button">Connexió</string>
     <string name="data_not_found">No s\'han trobat dades</string>
-    <string name="data_remove_fail">Error al intentar esborrar les dades</string>
-    <string name="data_remove_ok">Dades esborrades correctament</string>
-    <string name="delete_image_button">Esborrar</string>
     <string name="empty_field">Escriu alguna cosa per cercar</string>
     <string name="write_subject_initials">Sigles de l\'assignatura</string>
     <string name="delete_data">Esborrar totes les dades</string>
     <string name="new_language">Idioma establert a català</string>
-
-    <!-- About -->
     <string name="raco_title">Racó per a Android</string>
     <string name="version">Versió</string>
     <string name="description_about"><b>RacóPocket</b> és un projecte de codi lliure creat per
@@ -68,22 +45,10 @@
         <b><a href="https://es.linkedin.com/in/pau-risa-7ba98aba">Pau Risa</a></b>, orientat a estudiants de la FIB - UPC students.
         Ets lliure de fer una ullada al nostre repositori públic de <b><a href="https://github.com/JosepRivaille/RacoPocket">Github</a></b>
         i contribuir-hi.</string>
-
-    <!-- Settings -->
     <string name="nav_language">Idioma</string>
     <string name="description_language">Canvia l\'idioma de l\'aplicació.</string>
-
     <string name="storage">Emmagatzemament</string>
-    <string name="automatic_update">Actualitzacions automàtiques</string>
     <string name="automatic_update_description">Activar actualitzacions automàtiques periòdicament.</string>
-    <string name="network_usage">Ús de la xarxa</string>
-    <string name="network_usage_description">Canviar freqüència d\'actualització de dades volàtils com notificacions, agenda i disponibilitat de classes.</string>
-
-    <string name="never_update">Mai (Actualitzar manualment)</string>
-    <string name="weekly_update">Actualitzar un cop a la setmana</string>
-    <string name="daily_update">Actualitzar un cop al dia</string>
-    <string name="when_open_update">Actualitzar cada cop que consultem les dades</string>
-
     <string name="update_data">Actualitzar totes les dades</string>
     <string name="update_data_title">Descarregant les dades necessàries</string>
     <string name="update_data_description">Actualitza totes les dades de l\'aplicació (Recomanat cada cop que comença un curs nou).</string>
@@ -92,11 +57,11 @@
     <string name="update_data_unsuccessful">Alguna cosa ha fallat, comprova la teva connexió i torna a intentar-ho</string>
     <string name="continue_dialog">Continuar</string>
     <string name="cancel_dialog">Cancel·lar</string>
-
     <string name="reports">Informar d\'errors</string>
     <string name="reports_mail">E-mail</string>
     <string name="reports_mail_description">Envia\'ns un correu explicant el teu problema.</string>
     <string name="reports_github">GitHub</string>
     <string name="reports_github_description">Obre una \'issue\' a Github per a facilitar-nos la feina.</string>
+    <string name="connection_problems">Actualització no disponible, comprova la teva connexió i torna a intentar-ho</string>
 
 </resources>
