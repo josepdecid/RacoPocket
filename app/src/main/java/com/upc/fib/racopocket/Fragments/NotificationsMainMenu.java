@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -201,10 +202,9 @@ public class NotificationsMainMenu extends Fragment {
             NotificationModel element = (NotificationModel) getChild(groupPosition, childPosition);
             titleNotifications.setText(element.getTitle());
 
-            // TODO: Fix date error
-            final String oldFormat = "EEE',' dd MMM yyyy HH:mm:ss Z";
+            final String oldFormat = "EEE, dd MMM yyyy HH:mm:ss Z";
             final String newFormat = "dd/MM/yyyy HH':'mm':'ss";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(oldFormat);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(oldFormat, Locale.ENGLISH);
             try {
                 Date date = simpleDateFormat.parse(element.getPubDate());
                 simpleDateFormat.applyPattern(newFormat);
@@ -212,7 +212,6 @@ public class NotificationsMainMenu extends Fragment {
                 dateNotifications.setText(dateNewFormat);
             } catch (ParseException e) {
                 e.printStackTrace();
-                dateNotifications.setText(element.getPubDate());
             }
 
             return convertView;
