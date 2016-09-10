@@ -88,7 +88,7 @@ public class ScheduleMainMenu extends Fragment {
 
     }
 
-    private class GetSchedule extends AsyncTask<Boolean, Void, ICalReader> {
+    private class GetSchedule extends AsyncTask<Boolean, Void, Pair<Integer, ICalReader>> {
 
         @Override
         protected void onPreExecute() {
@@ -97,28 +97,30 @@ public class ScheduleMainMenu extends Fragment {
         }
 
         @Override
-        protected ICalReader doInBackground(Boolean... params) {
+        protected Pair<Integer, ICalReader> doInBackground(Boolean... params) {
             Boolean forceUpdate = params[0];
+            int statusCode = 200;
             FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), consumer);
             if (forceUpdate || !fileUtils.checkFileExists("calendari-portada.ics")) {
-                fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+                statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             } else {
                 if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
                     if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
-                        fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+                        statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
                     }
                 }
             }
 
-            return fileUtils.readFileToICalReader("calendari-portada.ics");
+            return new Pair<>(statusCode, fileUtils.readFileToICalReader("calendari-portada.ics"));
         }
 
         @Override
-        protected void onPostExecute(ICalReader response) {
-            if (response != null) {
-                parseICalReader(response);
-            } else
+        protected void onPostExecute(Pair<Integer, ICalReader> response) {
+            if (response.first != 200) {
                 Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_LONG).show();
+            } else {
+                parseICalReader(response.second);
+            }
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }
