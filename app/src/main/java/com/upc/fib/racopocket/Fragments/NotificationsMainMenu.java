@@ -100,7 +100,7 @@ public class NotificationsMainMenu extends Fragment {
         new GetNotifications().execute(false);
     }
 
-    private class GetNotifications extends AsyncTask<Boolean, Void, Pair<Integer, String>> {
+    private class GetNotifications extends AsyncTask<Boolean, Void, List<Pair<Integer, String>>> {
 
         FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), consumer);
 
@@ -111,26 +111,35 @@ public class NotificationsMainMenu extends Fragment {
         }
 
         @Override
-        protected Pair<Integer, String> doInBackground(Boolean... params) {
+        protected List<Pair<Integer, String>> doInBackground(Boolean... params) {
             Boolean forceUpdate = params[0];
-            int statusCode = 200;
 
-            if (forceUpdate || !fileUtils.checkFileExists("avisos.json")) {
-                statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            } else {
-                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
-                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
-                        statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            List<Pair<Integer, String>> subjectsRss = new ArrayList<>();
+            String mySubjects = fileUtils.readFileToString("assignatures.json");
+            try {
+                JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+                for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
+                    JSONObject mySubjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
+                    String subjectID = mySubjectJSONObject.getString("codi_upc");
+                    int statusCode = 200;
+                    if (forceUpdate || !fileUtils.checkFileExists("notifications_" + subjectID + ".rss")
+                            || PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")
+                            || PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
+                        statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos-assignatura.rss?espai=" + subjectID, "notifications_" + subjectID + ".rss");
                     }
+                    String subjectData = fileUtils.readFileToString("notifications_" + subjectID + ".rss");
+                    subjectsRss.add(new Pair<>(statusCode, subjectData));
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            return new Pair<>(statusCode, fileUtils.readFileToString("avisos.json"));
+            return subjectsRss;
         }
 
         @Override
-        protected void onPostExecute(Pair response) {
-            if (!response.first.toString().equals("200")) {
+        protected void onPostExecute(List<Pair<Integer, String>> response) {
+            /*if (!response.first.toString().equals("200")) {
                 Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
             }
             myNotifications = response.second.toString();
@@ -188,7 +197,7 @@ public class NotificationsMainMenu extends Fragment {
             expListViewNotifications.setAdapter(expandableListAdapter);
 
             expListViewNotifications.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);*/
         }
 
     }
