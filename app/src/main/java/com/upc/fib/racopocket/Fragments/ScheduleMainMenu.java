@@ -118,7 +118,7 @@ public class ScheduleMainMenu extends Fragment {
             if (response != null) {
                 parseICalReader(response);
             } else
-                Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_LONG).show();
             workInProgress = false;
             progressBar.setVisibility(View.GONE);
         }

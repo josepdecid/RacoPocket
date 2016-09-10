@@ -134,7 +134,7 @@ public class NotificationsMainMenu extends Fragment {
         protected void onPostExecute(List<Pair<Integer, String>> response) {
             for (Pair<Integer, String> subjectNotifications: response) {
                 if (subjectNotifications.first != 200) {
-                    Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_LONG).show();
                     break;
                 }
             }
