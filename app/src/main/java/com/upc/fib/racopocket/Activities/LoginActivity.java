@@ -28,40 +28,32 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LoginActivity extends Activity
-{
+public class LoginActivity extends Activity {
+
     Button loginButton;
     ProgressBar progressBar;
-
-    Boolean workInProgress;
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
     OAuthProvider provider = new DefaultOAuthProvider(Constants.REQUEST_URL, Constants.ACCESS_URL, Constants.AUTHORIZE_URL);
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        workInProgress = false;
 
         loginButton = (Button) findViewById(R.id.buttonLogin);
         progressBar = (ProgressBar) findViewById(R.id.progressBarLogin);
 
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if (!workInProgress)
-                    new AskForRequestTokenAsync().execute();
+            public void onClick(View view) {
+                new AskForRequestTokenAsync().execute();
             }
         });
     }
 
     // When back from authorizing requestToken, recover them and start accessToken exchange
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         Uri uri = this.getIntent().getData();
 
@@ -77,17 +69,15 @@ public class LoginActivity extends Activity
         }
     }
 
-    private class AskForRequestTokenAsync extends AsyncTask<Void, Void, String>
-    {
+    private class AskForRequestTokenAsync extends AsyncTask<Void, Void, String> {
+
         @Override
-        protected void onPreExecute()
-        {
-            workInProgress = true;
+        protected void onPreExecute() {
+            loginButton.setEnabled(false);
         }
 
         @Override
-        protected String doInBackground(Void... params)
-        {
+        protected String doInBackground(Void... params) {
             try {
                 Log.i("OAuth", "Retrieving request token from Raco servers");
                 String authURL = provider.retrieveRequestToken(consumer, Constants.CALLBACK);
@@ -103,27 +93,25 @@ public class LoginActivity extends Activity
         }
 
         @Override
-        protected void onPostExecute(String response)
-        {
-            if (response.equals("ERROR"))
+        protected void onPostExecute(String response) {
+            if (response.equals("ERROR")) {
                 Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
-            workInProgress = false;
+            }
+            loginButton.setEnabled(true);
         }
 
     }
 
-    private class AskForAccessTokenAsync extends AsyncTask<Void, Void, Void>
-    {
+    private class AskForAccessTokenAsync extends AsyncTask<Void, Void, Void> {
+
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
-            workInProgress = true;
+            loginButton.setEnabled(false);
         }
 
         @Override
-        protected Void doInBackground(Void... params)
-        {
+        protected Void doInBackground(Void... params) {
             try {
                 provider.retrieveAccessToken(consumer, null);
                 PreferencesUtils.storeTokens(getApplicationContext(), consumer.getToken(), consumer.getTokenSecret());
@@ -136,20 +124,20 @@ public class LoginActivity extends Activity
         }
 
         @Override
-        protected void onPostExecute(Void response)
-        {
+        protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
             new GetStudentInfo().execute();
         }
+
     }
 
-    private class GetStudentInfo extends AsyncTask<Void, Integer, String>
-    {
+    private class GetStudentInfo extends AsyncTask<Void, Integer, String> {
+
         ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        FileUtils fileUtils = new FileUtils(getApplicationContext(), consumer);
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             progressDialog.setTitle(R.string.login_title);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setCanceledOnTouchOutside(false);
@@ -160,40 +148,43 @@ public class LoginActivity extends Activity
         }
 
         @Override
-        protected String doInBackground(Void... params)
-        {
+        protected String doInBackground(Void... params) {
             int currentProgress = 0;
 
-            if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json"))
+            if (200 != fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/info-personal.json", "info-personal.json")) {
                 return "ERROR";
+            }
             publishProgress(++currentProgress);
-            if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json"))
+            if (200 != fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/assignatures.json", "assignatures.json")) {
                 return "ERROR";
+            }
             publishProgress(++currentProgress);
-            if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json"))
+            if (200 != fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/horari-setmanal.json", "horari-setmanal.json")) {
                 return "ERROR";
+            }
             publishProgress(++currentProgress);
-            if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json"))
+            if (200 != fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api/assignatures/llista.json", "llista.json")) {
                 return "ERROR";
+            }
             publishProgress(++currentProgress);
 
-            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
             publishProgress(++currentProgress);
-            FileUtils.fetchAndStoreFile(getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
+            fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             publishProgress(++currentProgress);
-            FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
+            fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
             publishProgress(++currentProgress);
 
-            String subjects = FileUtils.readFileToString(getApplicationContext(), "llista.json");
+            String subjects = fileUtils.readFileToString("llista.json");
             try {
                 JSONArray subjectsJSONArray = new JSONArray(subjects);
                 for (int i = 0; i < subjectsJSONArray.length(); i++) {
                     JSONObject subjectJSONObject = subjectsJSONArray.getJSONObject(i);
                     String subjectCode = subjectJSONObject.getString("codi_upc");
                     String filename = "subject_" + subjectCode + ".json";
-                    if (!FileUtils.checkFileExists(getApplicationContext(), filename)) {
-                        if (200 != FileUtils.fetchAndStoreFile(getApplicationContext(), null, "https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename)) {
-                            FileUtils.deleteFile(getApplicationContext(), filename);
+                    if (!fileUtils.checkFileExists(filename)) {
+                        if (200 != fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api/assignatures/info.json?codi_upc=" + subjectCode, filename)) {
+                            fileUtils.deleteFile(filename);
                             return "ERROR";
                         }
                     }
@@ -208,21 +199,19 @@ public class LoginActivity extends Activity
         }
 
         @Override
-        public void onProgressUpdate(Integer... args)
-        {
+        public void onProgressUpdate(Integer... args) {
             progressDialog.setProgress(args[0]);
         }
 
         @Override
-        protected void onPostExecute(String response)
-        {
+        protected void onPostExecute(String response) {
             if (response.equals("ERROR")) {
                 Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
                 PreferencesUtils.removeTokens(getApplicationContext());
-                FileUtils.deleteFile(getApplicationContext(), "info-personal.json");
-                FileUtils.deleteFile(getApplicationContext(), "assignatures.json");
-                FileUtils.deleteFile(getApplicationContext(), "horari-setmanal.json");
-                FileUtils.deleteFile(getApplicationContext(), "llista.json");
+                fileUtils.deleteFile("info-personal.json");
+                fileUtils.deleteFile("assignatures.json");
+                fileUtils.deleteFile("horari-setmanal.json");
+                fileUtils.deleteFile("llista.json");
             } else {
                 Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -230,9 +219,10 @@ public class LoginActivity extends Activity
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }
-            workInProgress = false;
+            loginButton.setEnabled(true);
             progressDialog.dismiss();
         }
+
     }
 
 }

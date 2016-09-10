@@ -28,14 +28,13 @@ import com.upc.fib.racopocket.Utils.PreferencesUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
-{
+public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     Fragment newFragment = null;
     TextView welcomeName;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
@@ -48,33 +47,34 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setActionBarDesign(getResources().getString(R.string.app_name));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        if (drawer != null)
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        if (drawer != null) {
             drawer.addDrawerListener(toggle);
+        }
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null)
+        if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
+        }
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
+    public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (id == R.id.nav_timetable)
+
+        if (id == R.id.nav_timetable) {
             newFragment = new TimetableMainMenu();
-        else if (id == R.id.nav_notifications)
+        }else if (id == R.id.nav_notifications) {
             newFragment = new NotificationsMainMenu();
-        else if (id == R.id.nav_schedule)
+        } else if (id == R.id.nav_schedule) {
             newFragment = new ScheduleMainMenu();
-        else if (id == R.id.nav_class_availability)
+        } else if (id == R.id.nav_class_availability) {
             newFragment = new ClassAvailabilityMainMenu();
-        else if (id == R.id.nav_subject_info)
+        } else if (id == R.id.nav_subject_info) {
             newFragment = new SubjectInfoMainMenu();
-         else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share) {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "RacoPocket");
@@ -94,12 +94,13 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_logout) {
             PreferencesUtils.removeTokens(getApplicationContext());
 
-            FileUtils.deleteFile(getApplicationContext(), "info-personal.json");
-            FileUtils.deleteFile(getApplicationContext(), "assignatures.json");
-            FileUtils.deleteFile(getApplicationContext(), "horari-setmanal.json");
-            FileUtils.deleteFile(getApplicationContext(), "avisos.json");
-            FileUtils.deleteFile(getApplicationContext(), "calendari-portada.ics");
-            FileUtils.deleteFile(getApplicationContext(), "places-lliures.json");
+            FileUtils fileUtils = new FileUtils(getApplicationContext(), null);
+            fileUtils.deleteFile("info-personal.json");
+            fileUtils.deleteFile("assignatures.json");
+            fileUtils.deleteFile("horari-setmanal.json");
+            fileUtils.deleteFile("avisos.json");
+            fileUtils.deleteFile("calendari-portada.ics");
+            fileUtils.deleteFile("places-lliures.json");
 
             Intent intent = new Intent(MainMenuActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -115,29 +116,29 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null)
+        if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
+        }
 
         return true;
     }
 
     private Boolean exit = false;
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START))
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        else {
+        } else {
             if (newFragment != null) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().remove(newFragment).commit();
                 newFragment = null;
                 setActionBarDesign(getResources().getString(R.string.app_name));
             } else {
-                if (exit)
+                if (exit) {
                     finish();
-                else {
+                } else {
                     Toast.makeText(this, R.string.back_button_confirmation, Toast.LENGTH_SHORT).show();
                     exit = true;
                     new Handler().postDelayed(new Runnable() {
@@ -151,15 +152,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    public void setActionBarDesign(String title)
-    {
-        if (getSupportActionBar() != null)
+    public void setActionBarDesign(String title) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
+        }
     }
 
-    private void setWelcomeText()
-    {
-        String studentData = FileUtils.readFileToString(getApplicationContext(), "info-personal.json");
+    private void setWelcomeText() {
+        FileUtils fileUtils = new FileUtils(getApplicationContext(), null);
+        String studentData = fileUtils.readFileToString("info-personal.json");
 
         try {
             JSONObject object = new JSONObject(studentData);

@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class TimetableMainMenu extends Fragment
-{
+public class TimetableMainMenu extends Fragment {
+
     ImageButton previousDay, nextDay;
     TextView currentDayText;
     ListView listView;
@@ -38,8 +38,7 @@ public class TimetableMainMenu extends Fragment
     ArrayList<ArrayList<TimetableSubjectModel>> classroomsInfo;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_timetable));
         View rootView = inflater.inflate(R.layout.timetable_main_menu, container, false);
 
@@ -52,8 +51,7 @@ public class TimetableMainMenu extends Fragment
         return rootView;
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         classroomsInfo = new ArrayList<>();
@@ -66,8 +64,7 @@ public class TimetableMainMenu extends Fragment
 
         previousDay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 currentDay--;
                 if (currentDay == 0) currentDay = 5;
                 writeWeekDay();
@@ -77,8 +74,7 @@ public class TimetableMainMenu extends Fragment
 
         nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 currentDay++;
                 if (currentDay == 6) currentDay = 1;
                 writeWeekDay();
@@ -91,8 +87,7 @@ public class TimetableMainMenu extends Fragment
         new GetTimetableData().execute();
     }
 
-    private void writeWeekDay()
-    {
+    private void writeWeekDay() {
         String day;
         switch (currentDay) {
             case 1:
@@ -116,26 +111,22 @@ public class TimetableMainMenu extends Fragment
         currentDayText.setText(day);
     }
 
-    private class GetTimetableData extends AsyncTask<Void, Void, String>
-    {
+    private class GetTimetableData extends AsyncTask<Void, Void, String> {
+
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected String doInBackground(Void... params)
-        {
-            if (!FileUtils.checkFileExists(getContext().getApplicationContext(), "horari-setmanal.json"))
-                FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), null, "https://raco.fib.upc.edu/api/aules/horari-setmanal.json" , "horari-setmanal.json");
-            return FileUtils.readFileToString(getContext(), "horari-setmanal.json");
+        protected String doInBackground(Void... params) {
+            FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), null);
+            return fileUtils.readFileToString("horari-setmanal.json");
         }
 
         @Override
-        protected void onPostExecute(String response)
-        {
+        protected void onPostExecute(String response) {
             if (response != null) {
                 try {
                     JSONArray timetableJSONArray = new JSONArray(response);
@@ -159,14 +150,13 @@ public class TimetableMainMenu extends Fragment
             printTimetable();
             progressBar.setVisibility(View.GONE);
         }
+
     }
 
-    void printTimetable()
-    {
+    void printTimetable() {
         final ArrayAdapter<TimetableSubjectModel> adapter = new ArrayAdapter<TimetableSubjectModel>(getContext(), R.layout.timetable_item_list, R.id.timetableStartTime, classroomsInfo.get(currentDay - 1)) {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent)
-            {
+            public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView text1 = (TextView) view.findViewById(R.id.timetableStartTime);
                 TextView text2 = (TextView) view.findViewById(R.id.timetableName);

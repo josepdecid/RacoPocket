@@ -31,8 +31,8 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
-public class NotificationDetailsActivity extends AppCompatActivity
-{
+public class NotificationDetailsActivity extends AppCompatActivity {
+
     TextView notificationDescription, notificationTitle;
     LinearLayout downloadLayout;
     ProgressBar progressBar;
@@ -40,8 +40,7 @@ public class NotificationDetailsActivity extends AppCompatActivity
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_details);
 
@@ -67,8 +66,9 @@ public class NotificationDetailsActivity extends AppCompatActivity
             } else break;
         }
 
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(subjectId);
+        }
 
         notificationTitle.setText(title);
         if (description != null && !description.equals("null")) {
@@ -88,8 +88,7 @@ public class NotificationDetailsActivity extends AppCompatActivity
             downloadButton.setEllipsize(TextUtils.TruncateAt.END);
             downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     new DownloadAttachmentsAsyncTask().execute(subjectId, notificationId, attachment.first, attachment.second);
                 }
             });
@@ -97,17 +96,15 @@ public class NotificationDetailsActivity extends AppCompatActivity
         }
     }
 
-    private class DownloadAttachmentsAsyncTask extends AsyncTask<String, Void, Void>
-    {
+    private class DownloadAttachmentsAsyncTask extends AsyncTask<String, Void, Void> {
+
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected Void doInBackground(String... params)
-        {
+        protected Void doInBackground(String... params) {
             String subjectId = params[0];
             String notificationId = params[1];
             String attachmentId = params[2];
@@ -127,9 +124,10 @@ public class NotificationDetailsActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Void response)
-        {
+        protected void onPostExecute(Void response) {
             progressBar.setVisibility(View.GONE);
         }
+
     }
+
 }

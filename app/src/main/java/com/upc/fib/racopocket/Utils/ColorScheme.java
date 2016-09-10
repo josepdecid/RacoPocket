@@ -40,7 +40,8 @@ public class ColorScheme {
      */
     public HashMap<String, Integer> setColorsToSubjects() {
         HashMap<String, Integer> colorScheme = new HashMap<>();
-        String mySubjects = FileUtils.readFileToString(this.context, "assignatures.json");
+        FileUtils fileUtils = new FileUtils(this.context, null);
+        String mySubjects = fileUtils.readFileToString("assignatures.json");
         try {
             JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
             for (int i = 0; i < mySubjectsJSONArray.length(); i++) {

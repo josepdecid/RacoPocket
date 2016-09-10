@@ -36,8 +36,8 @@ import java.util.List;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
-public class NotificationsMainMenu extends Fragment
-{
+public class NotificationsMainMenu extends Fragment {
+
     ImageButton update;
     ExpandableListView expListViewNotifications;
     ProgressBar progressBar;
@@ -50,8 +50,7 @@ public class NotificationsMainMenu extends Fragment
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_notifications));
         View rootView = inflater.inflate(R.layout.notifications_main_menu, container, false);
 
@@ -66,14 +65,12 @@ public class NotificationsMainMenu extends Fragment
         return rootView;
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         expListViewNotifications.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
-            {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 NotificationModel notification = (NotificationModel) expandableListAdapter.getChild(groupPosition, childPosition);
                 String subjectId = (String) expandableListAdapter.getGroup(groupPosition);
                 Intent intent =  new Intent(getContext(), NotificationDetailsActivity.class);
@@ -95,8 +92,7 @@ public class NotificationsMainMenu extends Fragment
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 new GetNotifications().execute(true);
             }
         });
@@ -104,41 +100,41 @@ public class NotificationsMainMenu extends Fragment
         new GetNotifications().execute(false);
     }
 
-    private class GetNotifications extends AsyncTask<Boolean, Void, Pair<Integer, String>>
-    {
+    private class GetNotifications extends AsyncTask<Boolean, Void, Pair<Integer, String>> {
+
+        FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), consumer);
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected Pair<Integer, String> doInBackground(Boolean... params)
-        {
+        protected Pair<Integer, String> doInBackground(Boolean... params) {
             Boolean forceUpdate = params[0];
             int statusCode = 200;
 
-            if (forceUpdate || !FileUtils.checkFileExists(getContext().getApplicationContext(), "avisos.json"))
-                statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            else {
-                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates"))
-                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates"))
-                        statusCode = FileUtils.fetchAndStoreFile(getContext().getApplicationContext(), consumer, "https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            if (forceUpdate || !fileUtils.checkFileExists("avisos.json")) {
+                statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+            } else {
+                if (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
+                    if (PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
+                        statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
+                    }
+                }
             }
 
-            return new Pair<>(statusCode, FileUtils.readFileToString(getContext().getApplicationContext(), "avisos.json"));
+            return new Pair<>(statusCode, fileUtils.readFileToString("avisos.json"));
         }
 
         @Override
-        protected void onPostExecute(Pair response)
-        {
-            if (!response.first.toString().equals("200"))
+        protected void onPostExecute(Pair response) {
+            if (!response.first.toString().equals("200")) {
                 Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
-
+            }
             myNotifications = response.second.toString();
-            mySubjects = FileUtils.readFileToString(getContext().getApplicationContext(), "assignatures.json");
+            mySubjects = fileUtils.readFileToString("assignatures.json");
             listDataHeader = new ArrayList<>();
             try {
                 JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
@@ -198,6 +194,7 @@ public class NotificationsMainMenu extends Fragment
     }
 
     private class ExpandableListAdapter extends BaseExpandableListAdapter {
+
         private Context context;
         private List<String> listDataHeader;
         private HashMap<String, List<NotificationModel>> listDataChild;
@@ -209,7 +206,7 @@ public class NotificationsMainMenu extends Fragment
         }
 
         @Override
-            public Object getChild(int groupPosition, int childPosition) {
+        public Object getChild(int groupPosition, int childPosition) {
             return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosition);
         }
 
@@ -220,7 +217,6 @@ public class NotificationsMainMenu extends Fragment
 
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-
             if (convertView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = layoutInflater.inflate(R.layout.notifications_item_list, parent, false);

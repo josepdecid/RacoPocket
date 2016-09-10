@@ -28,8 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SubjectInfoMainMenu extends Fragment
-{
+public class SubjectInfoMainMenu extends Fragment {
     AutoCompleteTextView subjectSelector;
     TextView subjectName, subjectData, subjectBibliography;
     ProgressBar progressBar;
@@ -38,8 +37,7 @@ public class SubjectInfoMainMenu extends Fragment
     ArrayList<Pair<String, String>> subjects_name = new ArrayList<>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((MainMenuActivity) getActivity()).setActionBarDesign(getResources().getString(R.string.nav_subject_info));
         View rootView = inflater.inflate(R.layout.subject_info_main_menu, container, false);
 
@@ -73,8 +71,7 @@ public class SubjectInfoMainMenu extends Fragment
         loadSubjectsList();
     }
 
-    private void performSearch()
-    {
+    private void performSearch() {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -97,17 +94,18 @@ public class SubjectInfoMainMenu extends Fragment
 
                 }
             }
-            if (!found)
+            if (!found) {
                 Toast.makeText(getActivity(), getResources().getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
+            }
         }
 
         subjectSelector.setText("");
     }
 
 
-    private void loadSubjectsList()
-    {
-        String subjectsListData = FileUtils.readFileToString(getContext().getApplicationContext(), "llista.json");
+    private void loadSubjectsList() {
+        FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), null);
+        String subjectsListData = fileUtils.readFileToString("llista.json");
         try {
             JSONArray subjectsJSONArray = new JSONArray(subjectsListData);
             for (int i = 0; i < subjectsJSONArray.length(); i++) {
@@ -132,13 +130,13 @@ public class SubjectInfoMainMenu extends Fragment
 
     }
 
-    private void showSubjectInfo(String fileName)
-    {
+    private void showSubjectInfo(String fileName) {
         subjectName.setText("");
         subjectData.setText("");
         subjectBibliography.setText("");
 
-        String subjectInfo = FileUtils.readFileToString(getContext().getApplicationContext(), fileName);
+        FileUtils fileUtils = new FileUtils(getContext().getApplicationContext(), null);
+        String subjectInfo = fileUtils.readFileToString(fileName);
 
         try {
             JSONObject object = new JSONObject(subjectInfo);
