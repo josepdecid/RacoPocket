@@ -6,11 +6,12 @@ import java.util.List;
 
 public class NotificationModel {
 
-    String idNotification;
-    String title;
-    String pubDate;
-    List<Pair<String, String>> attachmentsList; // idAttachment, attachmentTitle
-    String description;
+    private String idNotification;
+    private String title;
+    private String pubDate;
+    private String subjectId;
+    private List<Pair<String, String>> attachmentsList; // idAttachment, attachmentTitle
+    private String description;
 
     /**
      * NotificationModel constructor.
@@ -20,11 +21,12 @@ public class NotificationModel {
      * @param attachmentsList Notification attachments list.
      * @param description Notification description.
      */
-    public NotificationModel(String idNotification, String title, String pubDate,
+    public NotificationModel(String idNotification, String title, String pubDate, String subjectId,
                              List<Pair<String, String>> attachmentsList, String description) {
         this.idNotification = idNotification;
         this.title = title;
         this.pubDate = pubDate;
+        this.subjectId = subjectId;
         this.attachmentsList = attachmentsList;
         this.description = description;
     }
@@ -51,6 +53,14 @@ public class NotificationModel {
      */
     public String getPubDate() {
         return this.pubDate;
+    }
+
+    /**
+     * Gets the subject Id.
+     * @return String object representing the subject Id.
+     */
+    public String getSubjectId() {
+        return this.subjectId;
     }
 
     /**
