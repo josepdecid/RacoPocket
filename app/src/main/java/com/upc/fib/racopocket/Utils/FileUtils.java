@@ -6,11 +6,17 @@ import android.util.Log;
 
 import com.upc.fib.racopocket.Models.NotificationModel;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,6 +28,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import biweekly.io.text.ICalReader;
 import oauth.signpost.OAuthConsumer;
@@ -163,53 +173,36 @@ public class FileUtils {
     @Nullable
     public List<NotificationModel> readFileToRSS(String data) {
         try {
-            XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
-            XmlPullParser myParser = xmlFactoryObject.newPullParser();
-            StringReader stringReader = new StringReader(data);
-            myParser.setInput(stringReader);
 
-            String title, description, pubDate, link;
-            title  = description = pubDate = link = null;
             List<NotificationModel> notificationsList = new ArrayList<>();
 
-            int event = 0;
-            String text = null;
-            while (event != XmlPullParser.END_DOCUMENT) {
-                String name = myParser.getName();
-                switch (event) {
-                    case XmlPullParser.START_TAG:
-                        break;
-                    case XmlPullParser.TEXT:
-                        text = myParser.getText();
-                        break;
-                    case XmlPullParser.END_TAG:
-                        switch (name) {
-                            case "title":
-                                title = text;
-                                break;
-                            case "description":
-                                description = text;
-                                break;
-                            case "pubDate":
-                                pubDate = text;
-                                break;
-                            case "link":
-                                link = text;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+            InputStream inputStream = new ByteArrayInputStream(data.getBytes("UTF-8"));
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = builder.parse(inputStream);
+            doc.getDocumentElement().normalize();
+
+            NodeList nodeList = doc.getElementsByTagName("item");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+
+                    Node valueTitle = element.getElementsByTagName("title").item(0).getChildNodes().item(0);
+                    String title = valueTitle.getNodeValue();
+                    Node valueDescription = element.getElementsByTagName("description").item(0).getChildNodes().item(0);
+                    String description = valueDescription.getNodeValue();
+                    Node valuePubDate = element.getElementsByTagName("pubDate").item(0).getChildNodes().item(0);
+                    String pubDate = valuePubDate.getNodeValue();
+                    Node valueLink = element.getElementsByTagName("link").item(0).getChildNodes().item(0);
+                    String link = valueLink.getNodeValue();
+
+                    notificationsList.add(new NotificationModel(title, description, pubDate, link));
                 }
-                event = myParser.next();
             }
 
-            notificationsList.add(new NotificationModel(title, description, pubDate, link));
             return notificationsList;
 
-        } catch (XmlPullParserException | IOException e1) {
+        } catch (IOException | ParserConfigurationException | SAXException e1) {
             e1.printStackTrace();
         }
 
