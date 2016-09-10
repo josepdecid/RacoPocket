@@ -168,12 +168,23 @@ public class LoginActivity extends Activity {
             }
             publishProgress(++currentProgress);
 
-            fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos.json", "avisos.json");
-            publishProgress(++currentProgress);
             fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/calendari-portada.ics", "calendari-portada.ics");
             publishProgress(++currentProgress);
             fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api/aules/places-lliures.json", "places-lliures.json");
             publishProgress(++currentProgress);
+
+            String mySubjects = fileUtils.readFileToString("assignatures.json");
+            try {
+                JSONArray mySubjectsJSONArray = new JSONArray(mySubjects);
+                for (int i = 0; i < mySubjectsJSONArray.length(); i++) {
+                    JSONObject mySubjectJSONObject = mySubjectsJSONArray.getJSONObject(i);
+                    String subjectID = mySubjectJSONObject.getString("codi_upc");
+                    fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos-assignatura.rss?espai=" + subjectID , "notifications_" + subjectID + ".rss");
+                    publishProgress(++currentProgress);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             String subjects = fileUtils.readFileToString("llista.json");
             try {
