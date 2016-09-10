@@ -28,6 +28,8 @@ import com.upc.fib.racopocket.Utils.PreferencesUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class NotificationsMainMenu extends Fragment {
     ExpandableListView expListViewNotifications;
     ProgressBar progressBar;
 
-    String mySubjects, myNotifications;
+    String mySubjects;
     List<String> listDataHeader;
 
     ExpandableListAdapter expandableListAdapter;
@@ -72,19 +74,10 @@ public class NotificationsMainMenu extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 NotificationModel notification = (NotificationModel) expandableListAdapter.getChild(groupPosition, childPosition);
-                String subjectId = (String) expandableListAdapter.getGroup(groupPosition);
                 Intent intent =  new Intent(getContext(), NotificationDetailsActivity.class);
                 intent.putExtra("title", notification.getTitle());
                 intent.putExtra("description", notification.getDescription());
-                intent.putExtra("subjectId", subjectId);
-                intent.putExtra("notificationId", notification.getIdNotification());
-                List<Pair<String, String>> attachments = notification.getAttachmentsList();
-                if (attachments.size() != 0) {
-                    for (int i = 0; i < attachments.size(); i++) {
-                        intent.putExtra("attachment_" + i + "_id", attachments.get(i).first);
-                        intent.putExtra("attachment_" + i + "_title", attachments.get(i).second);
-                    }
-                }
+                intent.putExtra("link", notification.getLink());
                 startActivity(intent);
                 return true;
             }
@@ -123,8 +116,8 @@ public class NotificationsMainMenu extends Fragment {
                     String subjectID = mySubjectJSONObject.getString("codi_upc");
                     int statusCode = 200;
                     if (forceUpdate || !fileUtils.checkFileExists("notifications_" + subjectID + ".rss")
-                            || PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")
-                            || PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates")) {
+                            || (PreferencesUtils.preferenceExists(getContext().getApplicationContext(), "enableAutomaticUpdates")
+                            && PreferencesUtils.recoverBooleanPreference(getContext().getApplicationContext(), "enableAutomaticUpdates"))) {
                         statusCode = fileUtils.fetchAndStoreFile("https://raco.fib.upc.edu/api-v1/avisos-assignatura.rss?espai=" + subjectID, "notifications_" + subjectID + ".rss");
                     }
                     String subjectData = fileUtils.readFileToString("notifications_" + subjectID + ".rss");
@@ -139,10 +132,13 @@ public class NotificationsMainMenu extends Fragment {
 
         @Override
         protected void onPostExecute(List<Pair<Integer, String>> response) {
-            /*if (!response.first.toString().equals("200")) {
-                Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
+            for (Pair<Integer, String> subjectNotifications: response) {
+                if (subjectNotifications.first != 200) {
+                    Toast.makeText(getContext().getApplicationContext(), getResources().getString(R.string.connection_problems), Toast.LENGTH_SHORT).show();
+                    break;
+                }
             }
-            myNotifications = response.second.toString();
+
             mySubjects = fileUtils.readFileToString("assignatures.json");
             listDataHeader = new ArrayList<>();
             try {
@@ -156,40 +152,9 @@ public class NotificationsMainMenu extends Fragment {
             }
 
             HashMap<String, List<NotificationModel>> listDataChild = new HashMap<>();
-            try {
-                JSONObject subjectsNotificationsJSONObject = new JSONObject(myNotifications);
-                for (int i = 0; i < listDataHeader.size(); i++) {
-                    // Each subject
-                    List<NotificationModel> dataChild = new ArrayList<>();
-                    // If subject has notifications we display the subject's title
-                    // Otherwise we don't display the subject's title
-                    if (subjectsNotificationsJSONObject.has(listDataHeader.get(i))) {
-                        JSONArray iSubjectNotificationsJSONArray = subjectsNotificationsJSONObject.getJSONArray(listDataHeader.get(i));
-                        for (int j = 0; j < iSubjectNotificationsJSONArray.length(); j++) {
-                            // Each subject notifications
-                            JSONObject subjectJSONObject = iSubjectNotificationsJSONArray.getJSONObject(j);
-                            String idNotification = subjectJSONObject.getString("id");
-                            String title = subjectJSONObject.getString("title");
-                            String pubDate = subjectJSONObject.getString("pubDate");
-                            JSONArray attachmentsListJSONArray = subjectJSONObject.getJSONArray("attachments");
-                            List<Pair<String, String>> attachmentsList = new ArrayList<>();
-                            for (int k = 0; k < attachmentsListJSONArray.length(); k++) {
-                                JSONObject attachmentJSONObject = attachmentsListJSONArray.getJSONObject(k);
-                                String id = attachmentJSONObject.getString("id");
-                                String filename = attachmentJSONObject.getString("fileName");
-                                attachmentsList.add(new Pair<>(id, filename));
-                            }
-                            String description = subjectJSONObject.getString("description");
-                            pubDate = pubDate.substring(5, pubDate.length() - 6);
-                            dataChild.add(new NotificationModel(idNotification, title, pubDate, attachmentsList, description));
-                        }
-                        listDataChild.put(listDataHeader.get(i), dataChild);
-                    } else {
-                        listDataHeader.remove(i--);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            for (int i = 0; i < response.size(); i++) {
+                List<NotificationModel> dataChild = fileUtils.readFileToRSS(response.get(i).second);
+                listDataChild.put(listDataHeader.get(i), dataChild);
             }
 
             // Set and display the Subjects Array
@@ -197,7 +162,7 @@ public class NotificationsMainMenu extends Fragment {
             expListViewNotifications.setAdapter(expandableListAdapter);
 
             expListViewNotifications.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);*/
+            progressBar.setVisibility(View.GONE);
         }
 
     }

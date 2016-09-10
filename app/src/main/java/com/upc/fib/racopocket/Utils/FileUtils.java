@@ -4,6 +4,12 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.upc.fib.racopocket.Models.NotificationModel;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,8 +17,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import biweekly.io.text.ICalReader;
 import oauth.signpost.OAuthConsumer;
@@ -144,6 +153,68 @@ public class FileUtils {
         }
 
         return null;
+    }
+
+    /**
+     * Parse a RSSFile into a list of Notifications.
+     * @param data XML RSS data.
+     * @return List of notifications containing the elemental fields filled.
+     */
+    @Nullable
+    public List<NotificationModel> readFileToRSS(String data) {
+        try {
+            XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
+            XmlPullParser myParser = xmlFactoryObject.newPullParser();
+            StringReader stringReader = new StringReader(data);
+            myParser.setInput(stringReader);
+
+            String title, description, pubDate, link;
+            title  = description = pubDate = link = null;
+            List<NotificationModel> notificationsList = new ArrayList<>();
+
+            int event = 0;
+            String text = null;
+            while (event != XmlPullParser.END_DOCUMENT) {
+                String name = myParser.getName();
+                switch (event) {
+                    case XmlPullParser.START_TAG:
+                        break;
+                    case XmlPullParser.TEXT:
+                        text = myParser.getText();
+                        break;
+                    case XmlPullParser.END_TAG:
+                        switch (name) {
+                            case "title":
+                                title = text;
+                                break;
+                            case "description":
+                                description = text;
+                                break;
+                            case "pubDate":
+                                pubDate = text;
+                                break;
+                            case "link":
+                                link = text;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                event = myParser.next();
+            }
+
+            notificationsList.add(new NotificationModel(title, description, pubDate, link));
+            return notificationsList;
+
+        } catch (XmlPullParserException | IOException e1) {
+            e1.printStackTrace();
+        }
+
+        return null;
+
     }
 
 }

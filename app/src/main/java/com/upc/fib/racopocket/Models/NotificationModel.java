@@ -1,42 +1,24 @@
 package com.upc.fib.racopocket.Models;
 
-import android.support.v4.util.Pair;
-
-import java.util.List;
-
 public class NotificationModel {
 
-    private String idNotification;
     private String title;
-    private String pubDate;
-    private String subjectId;
-    private List<Pair<String, String>> attachmentsList; // idAttachment, attachmentTitle
     private String description;
+    private String pubDate;
+    private String link;
 
     /**
      * NotificationModel constructor.
-     * @param idNotification Notification identifier.
      * @param title Notification title.
-     * @param pubDate Notification publication date.
-     * @param attachmentsList Notification attachments list.
      * @param description Notification description.
+     * @param pubDate Notification publication date.
+     * @param link Notification link.
      */
-    public NotificationModel(String idNotification, String title, String pubDate, String subjectId,
-                             List<Pair<String, String>> attachmentsList, String description) {
-        this.idNotification = idNotification;
+    public NotificationModel(String title, String description, String pubDate, String link) {
         this.title = title;
-        this.pubDate = pubDate;
-        this.subjectId = subjectId;
-        this.attachmentsList = attachmentsList;
         this.description = description;
-    }
-
-    /**
-     * Gets the notification identifier.
-     * @return String object representing the notification id.
-     */
-    public String getIdNotification() {
-        return this.idNotification;
+        this.pubDate = pubDate;
+        this.link = link;
     }
 
     /**
@@ -48,6 +30,14 @@ public class NotificationModel {
     }
 
     /**
+     * Gets the notification description.
+     * @return String object representing the notification description.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
      * Gets the notification publication date.
      * @return String object representing the notification pubDate.
      */
@@ -56,27 +46,11 @@ public class NotificationModel {
     }
 
     /**
-     * Gets the subject Id.
-     * @return String object representing the subject Id.
+     * Gets the notification link.
+     * @return String object representing the notification link.
      */
-    public String getSubjectId() {
-        return this.subjectId;
-    }
-
-    /**
-     * Gets the notification attachment list.
-     * @return String object representing the notification attachment list.
-     */
-    public List<Pair<String, String>> getAttachmentsList() {
-        return this.attachmentsList;
-    }
-
-    /**
-     * Gets the notification description.
-     * @return String object representing the notification description.
-     */
-    public String getDescription() {
-        return this.description;
+    public String getLink() {
+        return this.link;
     }
 
 }
