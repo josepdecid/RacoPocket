@@ -11,9 +11,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -23,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -187,16 +183,18 @@ public class FileUtils {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
 
+                    byte plainText[];
                     Node valueTitle = element.getElementsByTagName("title").item(0).getChildNodes().item(0);
-                    String title = valueTitle.getNodeValue();
-                    Node valueDescription = element.getElementsByTagName("description").item(0).getChildNodes().item(0);
-                    String description = valueDescription.getNodeValue();
+                    plainText = valueTitle.getNodeValue().getBytes("ISO-8859-15");
+                    String title = new String(plainText, "UTF-8");
                     Node valuePubDate = element.getElementsByTagName("pubDate").item(0).getChildNodes().item(0);
-                    String pubDate = valuePubDate.getNodeValue();
+                    plainText = valuePubDate.getNodeValue().getBytes("ISO-8859-15");
+                    String pubDate = new String(plainText, "UTF-8");
                     Node valueLink = element.getElementsByTagName("link").item(0).getChildNodes().item(0);
-                    String link = valueLink.getNodeValue();
+                    plainText = valueLink.getNodeValue().getBytes("ISO-8859-15");
+                    String link = new String(plainText, "UTF-8");
 
-                    notificationsList.add(new NotificationModel(title, description, pubDate, link));
+                    notificationsList.add(new NotificationModel(title, pubDate, link));
                 }
             }
 

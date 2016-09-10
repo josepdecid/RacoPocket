@@ -48,7 +48,7 @@ public class ScheduleMainMenu extends Fragment {
     boolean workInProgress;
 
     HashMap<String, Integer> colorSchemeMap;
-    SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 

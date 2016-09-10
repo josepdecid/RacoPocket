@@ -3,6 +3,7 @@ package com.upc.fib.racopocket.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upc.fib.racopocket.Activities.MainMenuActivity;
-import com.upc.fib.racopocket.Activities.NotificationDetailsActivity;
 import com.upc.fib.racopocket.Models.NotificationModel;
 import com.upc.fib.racopocket.R;
 import com.upc.fib.racopocket.Utils.Constants;
@@ -28,10 +28,11 @@ import com.upc.fib.racopocket.Utils.PreferencesUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,10 +75,8 @@ public class NotificationsMainMenu extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 NotificationModel notification = (NotificationModel) expandableListAdapter.getChild(groupPosition, childPosition);
-                Intent intent =  new Intent(getContext(), NotificationDetailsActivity.class);
-                intent.putExtra("title", notification.getTitle());
-                intent.putExtra("description", notification.getDescription());
-                intent.putExtra("link", notification.getLink());
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(notification.getLink()));
                 startActivity(intent);
                 return true;
             }
@@ -201,7 +200,20 @@ public class NotificationsMainMenu extends Fragment {
 
             NotificationModel element = (NotificationModel) getChild(groupPosition, childPosition);
             titleNotifications.setText(element.getTitle());
-            dateNotifications.setText(element.getPubDate());
+
+            // TODO: Fix date error
+            final String oldFormat = "EEE',' dd MMM yyyy HH:mm:ss Z";
+            final String newFormat = "dd/MM/yyyy HH':'mm':'ss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(oldFormat);
+            try {
+                Date date = simpleDateFormat.parse(element.getPubDate());
+                simpleDateFormat.applyPattern(newFormat);
+                String dateNewFormat = simpleDateFormat.format(date);
+                dateNotifications.setText(dateNewFormat);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                dateNotifications.setText(element.getPubDate());
+            }
 
             return convertView;
         }
